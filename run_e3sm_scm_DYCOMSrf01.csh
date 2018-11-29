@@ -2,9 +2,9 @@
 
 #######################################################################
 #######################################################################
-#######  Script to run ACME in SCM for
-#######  ATEX 
-#######  Cumulus under stratocumulus
+#######  Script to run E3SM in SCM for
+#######  DYCOMSrf01 
+#######  Non-precipitating marine stratocumulus
 #######  
 #######  Author: P. Bogenschutz (bogenschutz1@llnl.gov)
 
@@ -12,16 +12,16 @@
 #######  BEGIN USER DEFINED SETTINGS
 
   # Set the name of your case here
-  setenv casename run_acme_scm_ATEX
+  setenv casename run_e3sm_scm_DYCOMSrf01
 
   # Set the case directory here
   setenv casedirectory $CSCRATCH/SCM_runs
  
   # Directory where code lives
-  setenv code_dir $HOME/ACME_code
+  setenv code_dir $HOME/E3SM_code
 
   # Code tag name 
-  setenv code_tag ACME_codetag   
+  setenv code_tag E3SM_codetag   
                                                          
   # Name of machine you are running on (i.e. edison, anvil, etc)                                                    
   setenv machine mach_name
@@ -57,20 +57,20 @@
 ######################################################
 
 # Case specific information kept here
-  set lat = 15.0 # latitude  
-  set lon = 325.0 # longitude
-  set do_iop_srf_prop = .false. # Use surface fluxes in IOP file?
+  set lat = 31.5 # latitude  
+  set lon = 239.0 # longitude
+  set do_iop_srf_prop = .true. # Use surface fluxes in IOP file?
   set do_scm_relaxation = .false. # Relax case to observations?
   set do_turnoff_swrad = .true. # Turn off SW calculation
   set do_turnoff_lwrad = .false. # Turn off LW calculation
   set do_turnoff_precip = .true. # Turn off precipitation
-  set micro_nccons_val = 70.0D6 # cons_droplet value for liquid
+  set micro_nccons_val = 55.0D6 # cons_droplet value for liquid
   set micro_nicons_val = 0.0001D6 # cons_droplet value for ice
-  set startdate = 1969-02-15 # Start date in IOP file
+  set startdate = 1999-07-10 # Start date in IOP file
   set start_in_sec = 0 # start time in seconds in IOP file
-  set stop_option = ndays 
-  set stop_n = 2
-  set iop_file = ATEX_iopfile_4scam.nc #IOP file name
+  set stop_option = nhours 
+  set stop_n = 12
+  set iop_file = DYCOMSrf01_iopfile_4scam.nc #IOP file name
 # End Case specific stuff here
 
   # Location of IOP file
@@ -81,9 +81,9 @@
   set presc_aero_file = mam4_0.9x1.2_L72_2000clim_c170323.nc
 
   set PROJECT=$projectname
-  set ACMEROOT=${code_dir}/${code_tag}
+  set E3SMROOT=${code_dir}/${code_tag}
   
-  cd $ACMEROOT/cime/scripts
+  cd $E3SMROOT/cime/scripts
   set compset=F_SCAM5
   set grid=T42_T42
 
@@ -133,7 +133,7 @@
     ./xmlchange  NTASKS_$component=$npes,NTHRDS_$component=1
   end
 
-# CAM configure options.  By default set up with settings the same as ACMEv1
+# CAM configure options.  By default set up with settings the same as E3SMv1
   set CAM_CONFIG_OPTS="-phys cam5 -scam -nospmd -nosmp -nlev 72 -clubb_sgs"
   if ( $do_cosp == true ) then
     set  CAM_CONFIG_OPTS="$CAM_CONFIG_OPTS -cosp -verbose" 
@@ -170,7 +170,7 @@ cat <<EOF >> user_nl_cam
  scmlon = $lon
 EOF
 
-# CAM namelist options to match ACMEv1 settings
+# CAM namelist options to match E3SMv1 settings
 #  Future implementations this block will not be needed
 #  Match settings in compset 2000_cam5_av1c-04p2
 cat <<EOF >> user_nl_cam
