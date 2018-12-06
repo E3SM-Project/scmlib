@@ -3,8 +3,8 @@
 #######################################################################
 #######################################################################
 #######  Script to run E3SM in SCM for
-#######  MPACEB 
-#######  Mixed phase Arctic clouds Intercomparison Period
+#######  MPACE 
+#######  Mixed phase Arctic clouds Full IOP
 #######  
 #######  Author: P. Bogenschutz (bogenschutz1@llnl.gov)
 
@@ -12,7 +12,7 @@
 #######  BEGIN USER DEFINED SETTINGS
 
   # Set the name of your case here
-  setenv casename run_e3sm_scm_MPACEB
+  setenv casename run_e3sm_scm_MPACE
 
   # Set the case directory here
   setenv casedirectory $CSCRATCH/SCM_runs
@@ -41,8 +41,7 @@
   #                   to a constant)
   #  2) prescribed (uses climatologically prescribed aerosol 
   #                 concentration)
-  #  3) observed (uses observed aerosol concentration from IOP file)                                           
-  setenv init_aero_type observed 
+  setenv init_aero_type prescribed 
 
 # User enter any needed modules to load or use below
 #  EXAMPLE:
@@ -61,8 +60,8 @@
 ###########################################################################
 
 # Case specific information kept here
-  set lat = 71.75 # latitude  
-  set lon = 209.0 # longitude
+  set lat = 70.5 # latitude  
+  set lon = 206.0 # longitude
   set do_iop_srf_prop = .true. # Use surface fluxes in IOP file?
   set do_scm_relaxation = .false. # Relax case to observations?
   set do_turnoff_swrad = .false. # Turn off SW calculation
@@ -70,11 +69,11 @@
   set do_turnoff_precip = .false. # Turn off precipitation
   set micro_nccons_val = 50.0D6 # cons_droplet value for liquid
   set micro_nicons_val = 0.00016D6 # cons_droplet value for ice
-  set startdate = 2004-10-09 # Start date in IOP file
-  set start_in_sec = 61200 # start time in seconds in IOP file
-  set stop_option = nhours 
-  set stop_n = 12
-  set iop_file = MPACEB_iopfile_4scam.nc #IOP file name
+  set startdate = 2004-10-05 # Start date in IOP file
+  set start_in_sec = 7200 # start time in seconds in IOP file
+  set stop_option = ndays 
+  set stop_n = 17
+  set iop_file = MPACE_iopfile_4scam.nc #IOP file name
 # End Case specific stuff here
 
   # Location of IOP file
