@@ -3,8 +3,8 @@
 #######################################################################
 #######################################################################
 #######  Script to run E3SM in SCM for
-#######  GOAMAZON 
-#######  ARM's Green Ocean Amazon
+#######  SGP_continuous 
+#######  Continuous forcing (2004-2015) over ARM SGP site
 #######  
 #######  Author: P. Bogenschutz (bogenschutz1@llnl.gov)
 
@@ -12,7 +12,7 @@
 #######  BEGIN USER DEFINED SETTINGS
 
   # Set the name of your case here
-  setenv casename run_e3sm_scm_GOAMAZON
+  setenv casename run_e3sm_scm_SGP_continuous
 
   # Set the case directory here
   setenv casedirectory $CSCRATCH/SCM_runs
@@ -44,10 +44,10 @@
   setenv init_aero_type prescribed 
   
   # NOTE: This is a long case! Consider selecting a subset timeperiod to run on
-  # Possible range from Jan. 2014 to Nov. 2015 
-  set startdate = 2014-01-01
-  set stop_option = nmonths
-  set stop_n = 23
+  # Possible range from Jan. 2004 to Dec. 2015 
+  set startdate = 2004-01-01
+  set stop_option = nyears
+  set stop_n = 11
 
 # User enter any needed modules to load or use below
 #  EXAMPLE:
@@ -62,8 +62,8 @@
 ###########################################################################
 
 # Case specific information kept here
-  set lat = -3.15 # latitude  
-  set lon = 300.01 # longitude
+  set lat = 36.61 # latitude  
+  set lon = 262.51 # longitude
   set do_iop_srf_prop = .true. # Use surface fluxes in IOP file?
   set do_scm_relaxation = .false. # Relax case to observations?
   set do_turnoff_swrad = .false. # Turn off SW calculation
@@ -72,7 +72,7 @@
   set micro_nccons_val = 100.0D6 # cons_droplet value for liquid
   set micro_nicons_val = 0.0001D6 # cons_droplet value for ice
   set start_in_sec = 0 # start time in seconds in IOP file
-  set iop_file = GOAMAZON_iopfile_4scam.nc #IOP file name
+  set iop_file = SGP_continuous_iopfile_4scam.nc #IOP file name
 # End Case specific stuff here
 
   # Location of IOP file
