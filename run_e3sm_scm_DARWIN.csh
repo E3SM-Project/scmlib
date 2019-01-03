@@ -3,8 +3,8 @@
 #######################################################################
 #######################################################################
 #######  Script to run E3SM in SCM for
-#######  DYNAMO_revelle 
-#######  Dynamics of the Madden Julian Oscillation Revelle
+#######  DARWIN 
+#######  Forcing from Darwin site
 #######  
 #######  Script Author: P. Bogenschutz (bogenschutz1@llnl.gov)
 #######  Forcing provided by: Shuaiqi Tang and Shaocheng Xie
@@ -13,7 +13,7 @@
 #######  BEGIN USER DEFINED SETTINGS
 
   # Set the name of your case here
-  setenv casename run_e3sm_scm_DYNAMO_revelle
+  setenv casename run_e3sm_scm_DARWIN
 
   # Set the case directory here
   setenv casedirectory $CSCRATCH/SCM_runs
@@ -44,6 +44,13 @@
   #                 concentration)
   setenv init_aero_type prescribed 
   
+  # This script is set up to run with the DARWIN_0405_p1_iopfile_4scam.nc (April, 2005) forcingfile
+  # Other time periods exist (see E3SM SCM page)  
+  set startdate = 2004-11-03
+  set stop_option = nsteps
+  set stop_n = 324
+  set start_in_sec = 43200
+  set iop_file = DARWIN_0405_p1_iopfile_4scam.nc
 
 # User enter any needed modules to load or use below
 #  EXAMPLE:
@@ -64,8 +71,8 @@
   setenv dycore Eulerian 
 
 # Case specific information kept here
-  set lat = 3.0 # latitude  
-  set lon = 76.5 # longitude
+  set lat = -12.425 # latitude  
+  set lon = 130.891 # longitude
   set do_iop_srf_prop = .true. # Use surface fluxes in IOP file?
   set do_scm_relaxation = .false. # Relax case to observations?
   set do_turnoff_swrad = .false. # Turn off SW calculation
@@ -73,11 +80,6 @@
   set do_turnoff_precip = .false. # Turn off precipitation
   set micro_nccons_val = 100.0D6 # cons_droplet value for liquid
   set micro_nicons_val = 0.0001D6 # cons_droplet value for ice
-  set startdate = 2011-10-02 # Start date in IOP file
-  set start_in_sec = 0 # start time in seconds in IOP file
-  set stop_option = ndays 
-  set stop_n = 90
-  set iop_file = DYNAMO_revelle_iopfile_4scam.nc #IOP file name
 # End Case specific stuff here
 
   # Location of IOP file

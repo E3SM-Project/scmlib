@@ -6,7 +6,8 @@
 #######  GOAMAZON 
 #######  ARM's Green Ocean Amazon
 #######  
-#######  Author: P. Bogenschutz (bogenschutz1@llnl.gov)
+#######  Script Author: P. Bogenschutz (bogenschutz1@llnl.gov)
+#######  Forcing provided by: Shuaiqi Tang and Shaocheng Xie
 
 #######################################################
 #######  BEGIN USER DEFINED SETTINGS
@@ -61,6 +62,12 @@
 ###########################################################################
 ###########################################################################
 
+  # Set the dynamical core
+  #  Note that currently the default dynamical core for the SCM is
+  #  the Eulerian core.  Soon, this will change.  Currently running 
+  #  with the SE dynamical core is unsupported.
+  setenv dycore Eulerian 
+
 # Case specific information kept here
   set lat = -3.15 # latitude  
   set lon = 300.01 # longitude
@@ -87,7 +94,14 @@
   
   cd $E3SMROOT/cime/scripts
   set compset=F_SCAM5
-  set grid=T42_T42
+  
+  if ($dycore == Eulerian) then
+    set grid=T42_T42
+  endif
+  
+  if ($dycore == SE) then
+    set grid=ne4_ne4
+  endif
 
   set CASEID=$casename   
 
@@ -110,7 +124,9 @@
   cd $temp_case_scripts_dir
 
 # SCM must run in serial mode
-  ./xmlchange --id MPILIB --val mpi-serial
+  if ($dycore == Eulerian) then
+    ./xmlchange --id MPILIB --val mpi-serial
+  endif
   
 # Define executable and run directories
   ./xmlchange --id EXEROOT --val "${case_build_dir}"
@@ -136,7 +152,11 @@
   end
 
 # CAM configure options.  By default set up with settings the same as E3SMv1
-  set CAM_CONFIG_OPTS="-phys cam5 -scam -nospmd -nosmp -nlev 72 -clubb_sgs"
+  set CAM_CONFIG_OPTS="-phys cam5 -scam -nlev 72 -clubb_sgs"
+  if ($dycore == Eulerian) then
+    set CAM_CONFIG_OPTS="$CAM_CONFIG_OPTS -nospmd -nosmp"
+  endif
+  
   if ( $do_cosp == true ) then
     set  CAM_CONFIG_OPTS="$CAM_CONFIG_OPTS -cosp -verbose" 
   endif
@@ -151,11 +171,19 @@
   endif
 
   ./xmlchange CAM_CONFIG_OPTS="$CAM_CONFIG_OPTS" 
+  set clubb_micro_steps = 8
+# If SE dycore is used then we need to change the timestep 
+# to be consistent with ne30 timestep.  Also change the 
+# cld_macmic_num_steps to be consistent
+  if ($dycore == SE) then
+    ./xmlchange ATM_NCPL='48'
+    set clubb_micro_steps = 6
+  endif
 
 # User enter CAM namelist options
 #  Add additional output here for example
 cat <<EOF >> user_nl_cam
- cld_macmic_num_steps = 8
+ cld_macmic_num_steps = $clubb_micro_steps
  cosp_lite = .true.
  use_gw_front = .true.
  iopfile = '$input_data_dir/$iop_path/$iop_file'
@@ -276,9 +304,6 @@ EOF
 #  dy-core (this will be fixed in upcoming PR)
 set CLM_CONFIG_OPTS="-phys clm4_5"
 ./xmlchange CLM_CONFIG_OPTS="$CLM_CONFIG_OPTS"
-cat <<EOF >> user_nl_clm
-  fsurdat = '$input_data_dir/lnd/clm2/surfdata_map/surfdata_64x128_simyr2000_c170111.nc'
-EOF
 
 # Modify the run start and duration parameters for the desired case
   ./xmlchange RUN_STARTDATE="$startdate",START_TOD="$start_in_sec",STOP_OPTION="$stop_option",STOP_N="$stop_n"
