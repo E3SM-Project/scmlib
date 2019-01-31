@@ -3,17 +3,16 @@
 #######################################################################
 #######################################################################
 #######  Script to run E3SM in SCM for
-#######  THECASENAME 
-#######  THECASEDESCRIPTION
+#######  REPLAY 
+#######  REPLAY an E3SM column
 #######  
 #######  Script Author: P. Bogenschutz (bogenschutz1@llnl.gov)
-#######  Forcing provided by: FORCINGPROVIDER
 
 #######################################################
 #######  BEGIN USER DEFINED SETTINGS
 
   # Set the name of your case here
-  setenv casename run_e3sm_scm_THECASENAME
+  setenv casename run_e3sm_scm_REPLAY
 
   # Set the case directory here
   setenv casedirectory $CSCRATCH/SCM_runs
@@ -42,18 +41,13 @@
   #                   to a constant)
   #  2) prescribed (uses climatologically prescribed aerosol 
   #                 concentration)
-  #  3) OBSERVEDAERO (uses observed aerosol concentration from IOP file)                                           
-  setenv init_aero_type AEROTYPE 
+  setenv init_aero_type none 
   
-  # LENGTHNOTE This is a long case! Consider selecting a subset timeperiod to run on
-  # LENGTHNOTE2 
-  set startdate = CASELONGstartdate
-  set stop_option = CASELONGstopoption
-  set stop_n = CASELONGstopn
-  set start_in_sec = CASELONGstartinsec
-  set iop_file = THECASELONGNAME_iopfile_4scam.nc
-  set lat = CASELONGlat
-  set lon = CASELONGlon
+  set startdate = # set desired start date
+  set stop_option = # set desired stop option
+  set stop_n = # set desired stop n
+  set lat = # set desired latitude
+  set lon = # set desired longitude
 
 # User enter any needed modules to load or use below
 #  EXAMPLE:
@@ -69,25 +63,20 @@
 
   # Set the dynamical core
   #  Note that currently the default dynamical core for the SCM is
-  #  the Eulerian core.  Soon, this will change.  Currently running 
+  #  the SE core.  Soon, this will change.  Currently running 
   #  with the SE dynamical core is unsupported.
-  setenv dycore Eulerian 
+  setenv dycore SE 
 
 # Case specific information kept here
-  set lat = CASElat # latitude  
-  set lon = CASElon # longitude
-  set do_iop_srf_prop = CASEsrfprop # Use surface fluxes in IOP file?
-  set do_scm_relaxation = CASErelax # Relax case to observations?
-  set do_turnoff_swrad = CASEswoff # Turn off SW calculation
-  set do_turnoff_lwrad = CASElwoff # Turn off LW calculation
-  set do_turnoff_precip = CASEprecipoff # Turn off precipitation
-  set micro_nccons_val = CASEnccons # cons_droplet value for liquid
-  set micro_nicons_val = CASEnicons # cons_droplet value for ice
-  set startdate = CASEstartdate # Start date in IOP file
-  set start_in_sec = CASEstartinsec # start time in seconds in IOP file
-  set stop_option = CASEstopoption 
-  set stop_n = CASEstopn
-  set iop_file = THECASENAME_iopfile_4scam.nc #IOP file name
+  set do_iop_srf_prop = .true. # Use surface fluxes in IOP file?
+  set do_scm_relaxation = .false. # Relax case to observations?
+  set do_turnoff_swrad = .false. # Turn off SW calculation
+  set do_turnoff_lwrad = .false. # Turn off LW calculation
+  set do_turnoff_precip = .false. # Turn off precipitation
+  set micro_nccons_val = 70.0D6 # cons_droplet value for liquid
+  set micro_nicons_val = 0.0001D6 # cons_droplet value for ice
+  set start_in_sec = # set start time in seconds # start time in seconds in IOP file
+  set iop_file = REPLAY_iopfile_4scam.nc #IOP file name
 # End Case specific stuff here
 
   # Location of IOP file
@@ -103,12 +92,12 @@
   cd $E3SMROOT/cime/scripts
   set compset=F_SCAM5
   
-  if ($dycore == Eulerian) then
+  if ($dycore == SE) then
     set grid=T42_T42
   endif
   
   if ($dycore == SE) then
-    set grid=ne4_ne4
+    set grid=ne30_ne30
   endif
 
   set CASEID=$casename   
@@ -132,7 +121,7 @@
   cd $temp_case_scripts_dir
 
 # SCM must run in serial mode
-  if ($dycore == Eulerian) then
+  if ($dycore == SE) then
     ./xmlchange --id MPILIB --val mpi-serial
   endif
   
@@ -161,7 +150,7 @@
 
 # CAM configure options.  By default set up with settings the same as E3SMv1
   set CAM_CONFIG_OPTS="-phys cam5 -scam -nlev 72 -clubb_sgs"
-  if ($dycore == Eulerian) then
+  if ($dycore == SE) then
     set CAM_CONFIG_OPTS="$CAM_CONFIG_OPTS -nospmd -nosmp"
   endif
   
@@ -308,7 +297,7 @@ cat <<EOF >> user_nl_cice
   histfreq='y','x','x','x','x'
 EOF
 
-# Use CLM4.5.  Currently need to point to the correct file for Eulerian 
+# Use CLM4.5.  Currently need to point to the correct file for SE 
 #  dy-core (this will be fixed in upcoming PR)
 set CLM_CONFIG_OPTS="-phys clm4_5"
 ./xmlchange CLM_CONFIG_OPTS="$CLM_CONFIG_OPTS"

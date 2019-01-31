@@ -637,6 +637,32 @@ sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/26/ $outfile
 sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
 
+################################
+# REPLAY
+################################
+
+set casename = REPLAY
+set outfile = run_e3sm_scm_$casename.csh 
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"REPLAY an E3SM column"/ $outfile
+sed -i s/ne4_ne4/ne30_ne30/ $outfile
+sed -i s/AEROTYPE/none/ $outfile
+sed -i s/CASELONGstartdate/"# set desired start date"/ $outfile
+sed -i s/CASEstartinsec/"# set start time in seconds"/ $outfile
+sed -i s/CASELONGstopoption/"# set desired stop option"/ $outfile
+sed -i s/CASELONGstopn/"# set desired stop n"/ $outfile
+sed -i s/CASELONGlat/"# set desired latitude"/ $outfile
+sed -i s/CASELONGlon/"# set desired longitude"/ $outfile
+sed -i s/Eulerian/SE/ $outfile
+sed -i s/CASEsrfprop/.true./ $outfile
+sed -i s/CASErelax/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEprecipoff/.false./ $outfile
+sed -i s/CASEnccons/70.0D6/ $outfile
+sed -i s/CASEnicons/0.0001D6/ $outfile
+
 foreach file (*.csh)
   if ($file != run_e3sm_scm_TEMPLATE.csh && $file != generate_scmscripts.csh) then
     sed -i '/OBSERVEDAERO/d' $file
@@ -648,6 +674,8 @@ foreach file (*.csh)
     sed -i '/CASELONGstartdate/d' $file
     sed -i '/CASELONGstopoption/d' $file
     sed -i '/CASELONGstopn/d' $file 
+    sed -i '/CASElat/d' $file
+    sed -i '/CASElon/d' $file
     sed -i '/CASELONGstartinsec/d' $file 
     sed -i '/FORCINGPROVIDER/d' $file 
     sed -i '/THECASELONGNAME/d' $file
