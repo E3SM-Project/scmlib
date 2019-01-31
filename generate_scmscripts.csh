@@ -647,14 +647,15 @@ cp -r run_e3sm_scm_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"REPLAY an E3SM column"/ $outfile
 sed -i s/ne4_ne4/ne30_ne30/ $outfile
-sed -i s/AEROTYPE/none/ $outfile
+sed -i s/AEROTYPE/"none # keep this as none for REPLAY option"/ $outfile
+sed -i s/THECASELONGNAME_iopfile_4scam.nc/"# supply the name of your forcing file"/ $outfile
 sed -i s/CASELONGstartdate/"# set desired start date"/ $outfile
-sed -i s/CASEstartinsec/"# set start time in seconds"/ $outfile
+sed -i s/CASELONGstartinsec/"# set start time in seconds"/ $outfile
 sed -i s/CASELONGstopoption/"# set desired stop option"/ $outfile
 sed -i s/CASELONGstopn/"# set desired stop n"/ $outfile
 sed -i s/CASELONGlat/"# set desired latitude"/ $outfile
 sed -i s/CASELONGlon/"# set desired longitude"/ $outfile
-sed -i s/Eulerian/SE/ $outfile
+sed -i s/Eulerian/"SE # do NOT change for REPLAY mode"/ $outfile
 sed -i s/CASEsrfprop/.true./ $outfile
 sed -i s/CASErelax/.false./ $outfile
 sed -i s/CASEswoff/.false./ $outfile
@@ -662,6 +663,7 @@ sed -i s/CASElwoff/.false./ $outfile
 sed -i s/CASEprecipoff/.false./ $outfile
 sed -i s/CASEnccons/70.0D6/ $outfile
 sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i '/REPLAY_iopfile_4scam/d' $outfile
 
 foreach file (*.csh)
   if ($file != run_e3sm_scm_TEMPLATE.csh && $file != generate_scmscripts.csh) then
@@ -735,3 +737,7 @@ foreach file (*.csh)
     mv $file current_scripts_{$setupfor}
   endif
 end
+
+# Copy these scripts into scmlib_dev
+cp generate_scmscripts.csh scmlib_dev
+cp run_e3sm_scm_TEMPLATE.csh scmlib_dev
