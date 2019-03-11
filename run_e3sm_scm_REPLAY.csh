@@ -50,6 +50,15 @@
   set iop_file = # supply the name of your forcing file
   set lat = # set desired latitude
   set lon = # set desired longitude
+  
+  # Set the dynamical core
+  #   1) Select "Eulerian" IF you are running E3SMv1 release code 
+  #      (or master branch code before March 10,2019)
+  #   2) Select "SE" IF you are running code from E3SM master branch that
+  #     is AFTER March 10,2019
+  setenv dycore SE # do NOT change for REPLAY mode   
+  #  Eulerian dycore will no longer be an option for the SCM in E3SMv2. 
+  #  Therefore, users are encouraged to use the SE core to prepare for the future!
 
 # User enter any needed modules to load or use below
 #  EXAMPLE:
@@ -62,12 +71,6 @@
 ###########################################################################
 ###########################################################################
 ###########################################################################
-
-  # Set the dynamical core
-  #  Note that currently the default dynamical core for the SCM is
-  #  the SE # do NOT change for REPLAY mode core.  Soon, this will change.  Currently running 
-  #  with the SE dynamical core is unsupported.
-  setenv dycore SE # do NOT change for REPLAY mode 
 
 # Case specific information kept here
   set do_iop_srf_prop = .true. # Use surface fluxes in IOP file?
@@ -92,7 +95,7 @@
   cd $E3SMROOT/cime/scripts
   set compset=F_SCAM5
   
-  if ($dycore == SE # do NOT change for REPLAY mode) then
+  if ($dycore == Eulerian) then
     set grid=T42_T42
   endif
   
@@ -121,7 +124,7 @@
   cd $temp_case_scripts_dir
 
 # SCM must run in serial mode
-  if ($dycore == SE # do NOT change for REPLAY mode) then
+  if ($dycore == Eulerian) then
     ./xmlchange --id MPILIB --val mpi-serial
   endif
   
@@ -150,7 +153,7 @@
 
 # CAM configure options.  By default set up with settings the same as E3SMv1
   set CAM_CONFIG_OPTS="-phys cam5 -scam -nlev 72 -clubb_sgs"
-  if ($dycore == SE # do NOT change for REPLAY mode) then
+  if ($dycore == Eulerian) then
     set CAM_CONFIG_OPTS="$CAM_CONFIG_OPTS -nospmd -nosmp"
   endif
   
@@ -297,7 +300,7 @@ cat <<EOF >> user_nl_cice
   histfreq='y','x','x','x','x'
 EOF
 
-# Use CLM4.5.  Currently need to point to the correct file for SE # do NOT change for REPLAY mode 
+# Use CLM4.5.  Currently need to point to the correct file for Eulerian 
 #  dy-core (this will be fixed in upcoming PR)
 set CLM_CONFIG_OPTS="-phys clm4_5"
 ./xmlchange CLM_CONFIG_OPTS="$CLM_CONFIG_OPTS"

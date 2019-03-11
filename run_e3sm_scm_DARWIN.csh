@@ -51,6 +51,17 @@
   set stop_n = 5
   set start_in_sec = 43200
   set iop_file = DARWIN_0405_p1_iopfile_4scam.nc
+  set lat = CASELONGlat
+  set lon = CASELONGlon
+  
+  # Set the dynamical core
+  #   1) Select "Eulerian" IF you are running E3SMv1 release code 
+  #      (or master branch code before March 10,2019)
+  #   2) Select "SE" IF you are running code from E3SM master branch that
+  #     is AFTER March 10,2019
+  setenv dycore Eulerian   
+  #  Eulerian dycore will no longer be an option for the SCM in E3SMv2. 
+  #  Therefore, users are encouraged to use the SE core to prepare for the future!
 
 # User enter any needed modules to load or use below
 #  EXAMPLE:
@@ -63,12 +74,6 @@
 ###########################################################################
 ###########################################################################
 ###########################################################################
-
-  # Set the dynamical core
-  #  Note that currently the default dynamical core for the SCM is
-  #  the Eulerian core.  Soon, this will change.  Currently running 
-  #  with the SE dynamical core is unsupported.
-  setenv dycore Eulerian 
 
 # Case specific information kept here
   set lat = -12.425 # latitude  
@@ -162,7 +167,7 @@
   endif
 
 # CAM configure options dependant on what aerosol specification is used
-  if ($init_aero_type == cons_droplet) then 
+  if ($init_aero_type == cons_droplet || $init_aero_type == none) then 
     set CAM_CONFIG_OPTS="$CAM_CONFIG_OPTS -chem linoz_mam4_resus_mom_soag -rain_evap_to_coarse_aero -bc_dep_to_snow_updates" 
   endif
 

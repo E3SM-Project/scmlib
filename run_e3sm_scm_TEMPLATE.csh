@@ -54,6 +54,15 @@
   set iop_file = THECASELONGNAME_iopfile_4scam.nc
   set lat = CASELONGlat
   set lon = CASELONGlon
+  
+  # Set the dynamical core
+  #   1) Select "Eulerian" IF you are running E3SMv1 release code 
+  #      (or master branch code before March 10,2019)
+  #   2) Select "SE" IF you are running code from E3SM master branch that
+  #     is AFTER March 10,2019
+  setenv dycore Eulerian   
+  #  Eulerian dycore will no longer be an option for the SCM in E3SMv2. 
+  #  Therefore, users are encouraged to use the SE core to prepare for the future!
 
 # User enter any needed modules to load or use below
 #  EXAMPLE:
@@ -66,12 +75,6 @@
 ###########################################################################
 ###########################################################################
 ###########################################################################
-
-  # Set the dynamical core
-  #  Note that currently the default dynamical core for the SCM is
-  #  the Eulerian core.  Soon, this will change.  Currently running 
-  #  with the SE dynamical core is unsupported.
-  setenv dycore Eulerian 
 
 # Case specific information kept here
   set lat = CASElat # latitude  

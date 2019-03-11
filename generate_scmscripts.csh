@@ -655,7 +655,7 @@ sed -i s/CASELONGstopoption/"# set desired stop option"/ $outfile
 sed -i s/CASELONGstopn/"# set desired stop n"/ $outfile
 sed -i s/CASELONGlat/"# set desired latitude"/ $outfile
 sed -i s/CASELONGlon/"# set desired longitude"/ $outfile
-sed -i s/Eulerian/"SE # do NOT change for REPLAY mode"/ $outfile
+sed -i s/"dycore Eulerian"/"dycore SE # do NOT change for REPLAY mode"/ $outfile
 sed -i s/CASEsrfprop/.true./ $outfile
 sed -i s/CASErelax/.false./ $outfile
 sed -i s/CASEswoff/.false./ $outfile
