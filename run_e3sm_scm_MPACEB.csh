@@ -44,8 +44,6 @@
   #  3) observed (uses observed aerosol concentration from IOP file)                                           
   setenv init_aero_type observed 
   
-  set lat = CASELONGlat
-  set lon = CASELONGlon
   
   # Set the dynamical core
   #   1) Select "Eulerian" IF you are running E3SMv1 release code 

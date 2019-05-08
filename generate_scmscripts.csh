@@ -678,6 +678,8 @@ foreach file (*.csh)
     sed -i '/CASELONGstopn/d' $file 
     sed -i '/CASElat/d' $file
     sed -i '/CASElon/d' $file
+    sed -i '/CASELONGlat/d' $file
+    sed -i '/CASELONGlon/d' $file    
     sed -i '/CASELONGstartinsec/d' $file 
     sed -i '/FORCINGPROVIDER/d' $file 
     sed -i '/THECASELONGNAME/d' $file

@@ -49,8 +49,6 @@
   set startdate = 2014-01-01
   set stop_option = nmonths
   set stop_n = 23
-  set lat = CASELONGlat
-  set lon = CASELONGlon
   
   # Set the dynamical core
   #   1) Select "Eulerian" IF you are running E3SMv1 release code 

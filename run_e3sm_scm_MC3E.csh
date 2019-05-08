@@ -44,8 +44,6 @@
   #                 concentration)
   setenv init_aero_type prescribed 
   
-  set lat = CASELONGlat
-  set lon = CASELONGlon
   
   # Set the dynamical core
   #   1) Select "Eulerian" IF you are running E3SMv1 release code 

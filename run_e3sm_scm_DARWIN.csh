@@ -51,8 +51,6 @@
   set stop_n = 5
   set start_in_sec = 43200
   set iop_file = DARWIN_0405_p1_iopfile_4scam.nc
-  set lat = CASELONGlat
-  set lon = CASELONGlon
   
   # Set the dynamical core
   #   1) Select "Eulerian" IF you are running E3SMv1 release code 

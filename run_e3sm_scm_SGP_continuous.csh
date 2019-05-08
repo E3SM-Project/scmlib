@@ -49,8 +49,6 @@
   set startdate = 2004-01-01
   set stop_option = nyears
   set stop_n = 11
-  set lat = CASELONGlat
-  set lon = CASELONGlon
   
   # Set the dynamical core
   #   1) Select "Eulerian" IF you are running E3SMv1 release code 

@@ -51,8 +51,6 @@
   set stop_n = 20
   set start_in_sec = 63003
   set iop_file = SGP0003_iopfile_4scam.nc
-  set lat = CASELONGlat
-  set lon = CASELONGlon
   
   # Set the dynamical core
   #   1) Select "Eulerian" IF you are running E3SMv1 release code 
