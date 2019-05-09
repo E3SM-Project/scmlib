@@ -26,12 +26,6 @@
                                                          
   # Name of machine you are running on (i.e. edison, anvil, etc)                                                    
   setenv machine mach_name
-
-  # Want to submit run to the queue?
-  #   Setting to false will submit run directly 
-  #   onto the login nodes rather than using
-  #   the batch queue
-  setenv submit_to_queue false
   
   # Name of project to run on, if submitting to queue
   setenv projectname proj_name  
@@ -138,12 +132,7 @@
 # Set to debug, only on certain machines  
   if ($machine == edison) then 
     ./xmlchange --id JOB_QUEUE --val 'debug'
-  endif
-
-  if ($submit_to_queue == false) then
-    ./xmlchange --id RUN_WITH_SUBMIT --val 'TRUE'
-    ./xmlchange --id SAVE_TIMING --val 'FALSE'
-  endif   
+  endif 
 
 # Get local input data directory path
   set input_data_dir = `./xmlquery DIN_LOC_ROOT -value`
@@ -333,12 +322,6 @@ set CLM_CONFIG_OPTS="-phys clm4_5"
 # Build the case 
   ./case.build
 
-# Submit case to queue if set, else submit
-#   via the case.run script
-  if ($submit_to_queue == true) then 
-    ./case.submit
-  else 
-    ./case.submit --no-batch
-  endif
+  ./case.submit
   
   exit
