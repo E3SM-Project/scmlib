@@ -41,12 +41,13 @@
   
   # Set the dynamical core
   #   1) Select "Eulerian" IF you are running E3SMv1 release code 
-  #      (or master branch code before March 10,2019)
+  #    
   #   2) Select "SE" IF you are running code from E3SM master branch that
   #     is AFTER March 10,2019
-  setenv dycore Eulerian   
-  #  Eulerian dycore will no longer be an option for the SCM in E3SMv2. 
-  #  Therefore, users are encouraged to use the SE core to prepare for the future!
+  setenv dycore SE   
+  #  WARNING:  EULERIAN DYCORE SCM IS NO LONGER SUPPORTED. You are only safe
+  #  to use Eulerian dycore SCM if you are using E3SMv1 release code.  Else,
+  #  user be(very)ware
 
 # User enter any needed modules to load or use below
 #  EXAMPLE:
@@ -222,6 +223,8 @@ cat <<EOF >> user_nl_cam
  seasalt_emis_scale = 0.85
  dust_emis_fact = 2.05D0
  clubb_gamma_coef = 0.32
+ clubb_gamma_coefb = 0.32
+ clubb_c1b = 1.335
  clubb_C8 = 4.3
  cldfrc2m_rhmaxi = 1.05D0
  clubb_c_K10 = 0.3 
