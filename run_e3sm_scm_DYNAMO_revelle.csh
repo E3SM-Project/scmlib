@@ -24,7 +24,7 @@
   # Code tag name 
   setenv code_tag E3SM_codetag   
                                                          
-  # Name of machine you are running on (i.e. edison, anvil, etc)                                                    
+  # Name of machine you are running on (i.e. cori, anvil, etc)                                                    
   setenv machine mach_name
   
   # Name of project to run on, if submitting to queue
@@ -132,6 +132,10 @@
   if ($machine =~ 'cori*') then 
     ./xmlchange --id JOB_QUEUE --val 'debug'
   endif 
+  
+  if ($machine == 'quartz' || $machine == 'syrah') then
+    ./xmlchange --id JOB_QUEUE --val 'pdebug'
+  endif
 
 # Get local input data directory path
   set input_data_dir = `./xmlquery DIN_LOC_ROOT -value`
