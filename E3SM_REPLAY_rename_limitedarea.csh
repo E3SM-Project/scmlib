@@ -17,7 +17,7 @@
 
 # simulation id
 setenv simulation E3SM.ne30_ne30.anvil
-# file path 
+# file path where replay data is located
 setenv filepath /lcrc/group/acme/bogensch/ACME_simulations/{$simulation}/run
 # the file containing the E3SM replay data
 setenv replayfile {$simulation}.cam.h1.0001-01-01-00000.nc
