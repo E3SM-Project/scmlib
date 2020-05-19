@@ -158,12 +158,12 @@
     set  CAM_CONFIG_OPTS="$CAM_CONFIG_OPTS -cosp -verbose" 
   endif
 
-# CAM configure options dependant on what aerosol specification is used
-  if ($init_aero_type == cons_droplet || $init_aero_type == none) then 
+# This option ONLY to be used for the REPLAY mode
+  if ($init_aero_type == none) then 
     set CAM_CONFIG_OPTS="$CAM_CONFIG_OPTS -chem linoz_mam4_resus_mom_soag -rain_evap_to_coarse_aero -bc_dep_to_snow_updates" 
   endif
 
-  if ($init_aero_type == prescribed || $init_aero_type == observed) then
+  if ($init_aero_type == cons_droplet || $init_aero_type == prescribed || $init_aero_type == observed) then
     set CAM_CONFIG_OPTS="$CAM_CONFIG_OPTS -chem none"
   endif
 
@@ -268,7 +268,7 @@ EOF
 endif
 
 # if prescribed or observed aerosols set then need to put in settings for prescribed aerosol model
-if ($init_aero_type == prescribed ||$init_aero_type == observed) then
+if ($init_aero_type == cons_droplet || $init_aero_type == prescribed ||$init_aero_type == observed) then
 
 cat <<EOF >> user_nl_cam
   use_hetfrz_classnuc = .false.
