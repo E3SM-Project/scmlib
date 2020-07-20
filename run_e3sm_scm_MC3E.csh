@@ -116,13 +116,15 @@
   setenv do_cosp  false
 
 # Create new case
-  ./create_newcase -case $temp_case_scripts_dir -mach $machine -project $PROJECT -compset $compset -res $grid --walltime $walltime
+  ./create_newcase -case $temp_case_scripts_dir -mach $machine -project $PROJECT -compset $compset -res $grid
   cd $temp_case_scripts_dir
 
 # SCM must run in serial mode
   if ($dycore == Eulerian) then
     ./xmlchange --id MPILIB --val mpi-serial
   endif
+  
+  ./xmlchange JOB_WALLCLOCK_TIME=$walltime
   
 # Define executable and run directories
   ./xmlchange --id EXEROOT --val "${case_build_dir}"

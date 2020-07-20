@@ -741,5 +741,5 @@ foreach file (*.csh)
 end
 
 # Copy these scripts into scmlib_dev
-cp generate_scmscripts.csh scmlib_dev
-cp run_e3sm_scm_TEMPLATE.csh scmlib_dev
+cp generate_scmscripts.csh current_scripts_{$setupfor}
+cp run_e3sm_scm_TEMPLATE.csh current_scripts_{$setupfor}
