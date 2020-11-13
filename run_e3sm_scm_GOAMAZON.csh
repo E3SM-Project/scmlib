@@ -13,7 +13,7 @@
 #######  BEGIN USER DEFINED SETTINGS
 
   # Set the name of your case here
-  setenv casename run_e3sm_scm_GOAMAZON
+  setenv casename e3sm_scm_GOAMAZON
 
   # Set the case directory here
   setenv casedirectory $CSCRATCH/SCM_runs
@@ -44,6 +44,9 @@
   set stop_option = nmonths
   set stop_n = 23
   
+  # What version of E3SM? (v1 or v2)
+  setenv e3sm_version v1
+  
   # Set the dynamical core
   #   1) Select "Eulerian" IF you are running E3SMv1 release code 
   #    
@@ -56,7 +59,7 @@
 
 # User enter any needed modules to load or use below
 #  EXAMPLE:
-  module load python/2.7.5
+#  module load python/2.7.5
 
 ####### END USER DEFINED SETTINGS
 ####### Likely POSSIBLE EXCEPTION (not limited to):  
@@ -91,7 +94,14 @@
   set E3SMROOT=${code_dir}/${code_tag}
   
   cd $E3SMROOT/cime/scripts
-  set compset=F_SCAM5
+  
+  if ($e3sm_version == v1) then
+    set compset=F_SCAM5
+    set atm_mod = cam
+  else
+    set compset=F_SCAM
+    set atm_mod = eam
+  endif
   
   if ($dycore == Eulerian) then
     set grid=T42_T42
@@ -118,7 +128,7 @@
   setenv do_cosp  false
 
 # Create new case
-  ./create_newcase -case $temp_case_scripts_dir -mach $machine -project $PROJECT -compset $compset -res $grid
+  ./create_newcase -case $casename --script-root $temp_case_scripts_dir -mach $machine -project $PROJECT -compset $compset -res $grid
   cd $temp_case_scripts_dir
 
 # SCM must run in serial mode
@@ -178,10 +188,14 @@
     ./xmlchange ATM_NCPL='48'
     set clubb_micro_steps = 6
   endif
+  
+  if ($e3sm_version == v2) then
+    ./xmlchange CAM_TARGET=theta-l
+  endif
 
 # User enter CAM namelist options
 #  Add additional output here for example
-cat <<EOF >> user_nl_cam
+cat <<EOF >> user_nl_${atm_mod}
  cld_macmic_num_steps = $clubb_micro_steps
  cosp_lite = .true.
  use_gw_front = .true.
@@ -202,7 +216,7 @@ EOF
 # CAM namelist options to match E3SMv1 settings
 #  Future implementations this block will not be needed
 #  Match settings in compset 2000_cam5_av1c-04p2
-cat <<EOF >> user_nl_cam
+cat <<EOF >> user_nl_${atm_mod}
  use_hetfrz_classnuc = .true.
  micro_mg_dcs_tdep = .true.
  microp_aero_wsub_scheme = 1
@@ -260,7 +274,7 @@ EOF
 # if constant droplet was selected then modify name list to reflect this
 if ($init_aero_type == cons_droplet) then
 
-cat <<EOF >> user_nl_cam
+cat <<EOF >> user_nl_${atm_mod}
   micro_do_nccons = .true.
   micro_do_nicons = .true.
   micro_nccons = $micro_nccons_val 
@@ -272,7 +286,7 @@ endif
 # if prescribed or observed aerosols set then need to put in settings for prescribed aerosol model
 if ($init_aero_type == cons_droplet || $init_aero_type == prescribed ||$init_aero_type == observed) then
 
-cat <<EOF >> user_nl_cam
+cat <<EOF >> user_nl_${atm_mod}
   use_hetfrz_classnuc = .false.
   aerodep_flx_type = 'CYCLICAL'
   aerodep_flx_datapath = '$input_data_dir/$presc_aero_path' 
@@ -289,7 +303,7 @@ endif
 # if observed aerosols then set flag
 if ($init_aero_type == observed) then
 
-cat <<EOF >> user_nl_cam
+cat <<EOF >> user_nl_${atm_mod}
   scm_observed_aero = .true.
 EOF
 
