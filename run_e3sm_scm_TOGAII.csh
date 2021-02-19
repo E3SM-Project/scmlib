@@ -43,7 +43,7 @@
   #  Select v2 if you are running with up-to-date E3SM master or v2 release code
   #  (If you are running with non-up-to-date master code then you may need to modify
   #    aspects of this script to get it to compile.)
-  setenv e3sm_version v1
+  setenv e3sm_version v2
   
   # Set the dynamical core
   #   1) Select "Eulerian" ONLY if you are running E3SMv1 release code
@@ -98,9 +98,11 @@
   if ($e3sm_version == v1) then
     set compset=F_SCAM5
     set atm_mod = cam
+    set physset = cam5
   else
     set compset=F_SCAM
     set atm_mod = eam
+    set physset = default
   endif
   
   if ($dycore == Eulerian) then
@@ -161,7 +163,7 @@
   end
 
 # CAM configure options.  By default set up with settings the same as E3SMv1
-  set CAM_CONFIG_OPTS="-phys cam5 -scam -nlev 72 -clubb_sgs"
+  set CAM_CONFIG_OPTS="-phys ${physset} -scam -nlev 72 -clubb_sgs"
   if ($dycore == Eulerian) then
     set CAM_CONFIG_OPTS="$CAM_CONFIG_OPTS -nospmd -nosmp"
   endif
