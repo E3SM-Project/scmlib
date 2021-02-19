@@ -1,12 +1,16 @@
-#!/bin/csh
+#!/bin/csh -fe
 
 #  GENERATE SCM scripts for each particular case
 #  Uses a pre-defined template 
 
 # Who to set these scripts up for?
-# valid options = user, edison, anvil, lc
+#  - for general use select: general
 
-setenv setupfor user
+#  - for specific user needs select: user
+#    - if select user go to bottom of script and fill in deserired data paths etc. so that
+#      that the user need not edit all scripts if they planning on running several.
+
+setenv setupfor general
 
 # helpful notes
 # path to prescribed aerosol file = atm/cam/chem/presc_aero
@@ -36,6 +40,7 @@ sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/1/ $outfile
 sed -i s/OBSERVEDAERO/observed/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # ARM95 
@@ -60,6 +65,7 @@ sed -i s/CASEstartdate/1995-07-18/ $outfile
 sed -i s/CASEstartinsec/19800/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/17/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # ARM97 
@@ -84,6 +90,7 @@ sed -i s/CASEstartdate/1997-06-19/ $outfile
 sed -i s/CASEstartinsec/84585/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/26/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # SGP Continuous (LONG CASE)
@@ -111,6 +118,7 @@ sed -i s/CASELONGstopn/11/ $outfile
 sed -i s/LENGTHNOTE2/"Possible range from Jan 2004 to Dec. 2015"/ $outfile
 sed -i s/LENGTHNOTE/NOTE:/ $outfile
 sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # SGP broken cases
@@ -139,6 +147,7 @@ sed -i s/CASELONGstopn/20/ $outfile
 sed -i s/LENGTHNOTE2/"This script is set up to run with the SGP0003_iopfile_4scam.nc (March, 2000) forcingfile\n  # Other time periods exist (see E3SM SCM page) "/ $outfile
 sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
 sed -i '/SGP_iopfile_4scam.nc/d' $outfile 
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # DARWIN broken cases
@@ -166,7 +175,8 @@ sed -i s/CASELONGstopoption/ndays/ $outfile
 sed -i s/CASELONGstopn/5/ $outfile
 sed -i s/LENGTHNOTE2/"This script is set up to run with the DARWIN_0405_p1_iopfile_4scam.nc (April, 2005) forcingfile\n  # Other time periods exist (see E3SM SCM page) "/ $outfile
 sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
-sed -i '/DARWIN_iopfile_4scam.nc/d' $outfile 
+sed -i '/DARWIN_iopfile_4scam.nc/d' $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # GOAMAZON (LONG CASE)
@@ -194,6 +204,7 @@ sed -i s/CASELONGstopn/23/ $outfile
 sed -i s/LENGTHNOTE2/"Possible range from Jan. 2014 to Nov. 2015"/ $outfile
 sed -i s/LENGTHNOTE/NOTE:/ $outfile
 sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # DYNAMO_northsounding
@@ -219,6 +230,7 @@ sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/90/ $outfile
 sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # DYNAMO_revelle
@@ -244,6 +256,7 @@ sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/90/ $outfile
 sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # DYNAMO_amie
@@ -269,6 +282,7 @@ sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/90/ $outfile
 sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # MC3E
@@ -294,6 +308,7 @@ sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/45/ $outfile
 sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # AEROSOLINDIRECT
@@ -319,6 +334,7 @@ sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/29/ $outfile
 sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # ARM Shallow convection 
@@ -343,6 +359,7 @@ sed -i s/CASEstartdate/1997-06-21/ $outfile
 sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEstopn/14/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # ATEX 
@@ -367,6 +384,7 @@ sed -i s/CASEstartdate/1969-02-15/ $outfile
 sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/2/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # BOMEX
@@ -391,6 +409,7 @@ sed -i s/CASEstartdate/1969-06-25/ $outfile
 sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/5/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # DYCOMSRF01
@@ -415,6 +434,7 @@ sed -i s/CASEstartdate/1999-07-10/ $outfile
 sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEstopn/12/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # DYCOMSRF02
@@ -440,6 +460,7 @@ sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEstopn/12/ $outfile
 sed -i s/OBSERVEDAERO/observed/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # GATE
@@ -464,6 +485,7 @@ sed -i s/CASEstartdate/1974-08-30/ $outfile
 sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/20/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # MPACEB
@@ -489,6 +511,7 @@ sed -i s/CASEstartinsec/61200/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEstopn/12/ $outfile
 sed -i s/OBSERVEDAERO/observed/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # MPACE full
@@ -514,6 +537,7 @@ sed -i s/CASEstartinsec/7200/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/17/ $outfile
 sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # ISDAC
@@ -539,6 +563,7 @@ sed -i s/CASEstartinsec/10800/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/29/ $outfile
 sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # RACORO
@@ -563,6 +588,7 @@ sed -i s/CASEstartdate/2009-05-01/ $outfile
 sed -i s/CASEstartinsec/84585/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/26/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # SPARTICUS
@@ -587,6 +613,7 @@ sed -i s/CASEstartdate/2010-04-01/ $outfile
 sed -i s/CASEstartinsec/3599/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/29/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # TOGA
@@ -611,6 +638,7 @@ sed -i s/CASEstartdate/1992-12-18/ $outfile
 sed -i s/CASEstartinsec/64800/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/20/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # TWP06
@@ -636,6 +664,7 @@ sed -i s/CASEstartinsec/10800/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/26/ $outfile
 sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
 # REPLAY
@@ -664,6 +693,7 @@ sed -i s/CASEprecipoff/.false./ $outfile
 sed -i s/CASEnccons/70.0D6/ $outfile
 sed -i s/CASEnicons/0.0001D6/ $outfile
 sed -i '/REPLAY_iopfile_4scam/d' $outfile
+sed -i s/CASEcaltype/NO_LEAP/ $outfile
 
 foreach file (*.csh)
   if ($file != run_e3sm_scm_TEMPLATE.csh && $file != generate_scmscripts.csh) then
@@ -683,63 +713,33 @@ foreach file (*.csh)
     sed -i '/CASELONGstartinsec/d' $file 
     sed -i '/FORCINGPROVIDER/d' $file 
     sed -i '/THECASELONGNAME/d' $file
+    sed -i '/CASEcaltype/d' $file
   endif
 end
 
-# Now process for specific user/machine
-if ($setupfor == anvil) then
+# Fill in each script with specific user info so you don't have to do it for every script,
+#   use example below for how one Peter Bogenschutz sets his scripts for Cori.  Note that 
+#   the following may not be exhaustive to get up and running on your machine.
+if ($setupfor == user) then
 
   foreach file (*.csh)
     if ($file != run_e3sm_scm_TEMPLATE.csh && $file != generate_scmscripts.csh) then
-      sed -i s+'$CSCRATCH/SCM_runs'+/lcrc/group/e3sm/bogensch/e3sm_SCM_sims+ $file
-      sed -i s+'$HOME/e3sm_code'+/home/bogensch/code/e3sm_developments+ $file
-      sed -i s+e3sm_codetag+e3sm_05312017_master+ $file
-      sed -i s+mach_name+anvil+ $file
-      sed -i s+proj_name+e3sm+ $file
-    endif
-  end
 
-endif
-
-if ($setupfor == edison) then
-
-  foreach file (*.csh)
-    if ($file != run_e3sm_scm_TEMPLATE.csh && $file != generate_scmscripts.csh) then
+      # Path to output
       sed -i s+'$CSCRATCH/SCM_runs'+/global/cscratch1/sd/bogensch/SCM_sims+ $file
-      sed -i s+'$HOME/e3sm_code'+/global/homes/b/bogensch/e3sm_development+ $file
-      sed -i s+e3sm_codetag+e3sm_05222017_a+ $file
-      sed -i s+mach_name+edison+ $file
+      
+      # Path to code base
+      sed -i s+'$HOME/e3sm_code'+/global/homes/b/bogensch/ACME_development+ $file
+
+      # Name of code base
+      sed -i s+e3sm_codetag+E3SM_master+ $file
+
+      # Name of machine used
+      sed -i s+mach_name+cori-knl+ $file
+
+      # Name of project to be charged
       sed -i s+proj_name+e3sm+ $file
     endif
   end
 
 endif
-
-if ($setupfor == cab) then
-
-  foreach file (*.csh)
-    if ($file != run_e3sm_scm_TEMPLATE.csh && $file != generate_scmscripts.csh) then
-      sed -i s+'$CSCRATCH/SCM_runs'+/p/lscratchd/bogensch/e3sm_SCM_sims+ $file
-      sed -i s+'$HOME/e3sm_code'+/g/g19/bogensch/code+ $file
-      sed -i s+e3sm_codetag+e3sm_05232017_a+ $file
-      sed -i s+mach_name+syrah+ $file
-      sed -i s+proj_name+cbronze+ $file
-      sed -i s+/bin/csh+'/bin/csh -fe'+ $file
-      sed -i s+'module load python/2.7.5'+'# module load python/2.7.5'+ $file
-    endif
-  end
-
-endif
-
-rm current_scripts_{$setupfor}/*.csh
-
-# Move scripts to different directory
-foreach file (*.csh)
-  if ($file != run_e3sm_scm_TEMPLATE.csh && $file != generate_scmscripts.csh) then
-    mv $file current_scripts_{$setupfor}
-  endif
-end
-
-# Copy these scripts into scmlib_dev
-cp generate_scmscripts.csh current_scripts_{$setupfor}
-cp run_e3sm_scm_TEMPLATE.csh current_scripts_{$setupfor}

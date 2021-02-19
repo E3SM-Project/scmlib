@@ -323,6 +323,7 @@ set CLM_CONFIG_OPTS="-phys clm4_5"
 # Modify the latitude and longitude for the particular case
   ./xmlchange PTS_MODE="TRUE",PTS_LAT="$lat",PTS_LON="$lon"
   ./xmlchange MASK_GRID="USGS"
+  ./xmlchange CALENDAR="GREGORIAN"
 
   ./case.setup 
 
