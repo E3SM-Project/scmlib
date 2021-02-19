@@ -46,13 +46,16 @@
   set lon = # set desired longitude
   
   # What version of E3SM? (v1 or v2)
+  #  Select v1 if you are running with E3SMv1 RELEASE code
+  #  Select v2 if you are running with up-to-date E3SM master or v2 release code
+  #  (If you are running with non-up-to-date master code then you may need to modify
+  #    aspects of this script to get it to compile.)
   setenv e3sm_version v1
   
   # Set the dynamical core
-  #   1) Select "Eulerian" IF you are running E3SMv1 release code 
+  #   1) Select "Eulerian" ONLY if you are running E3SMv1 release code
   #    
-  #   2) Select "SE" IF you are running code from E3SM master branch that
-  #     is AFTER March 10,2019
+  #   2) Select "SE" IF you are running code from recent E3SM master or v2
   setenv dycore SE   
   #  WARNING:  EULERIAN DYCORE SCM IS NO LONGER SUPPORTED. You are only safe
   #  to use Eulerian dycore SCM if you are using E3SMv1 release code.  Else,
@@ -64,8 +67,8 @@
 
 ####### END USER DEFINED SETTINGS
 ####### Likely POSSIBLE EXCEPTION (not limited to):  
-#######  - If the user wants to add addition output, for example, the CAM
-#######	   namelist (user_nl_cam) should be modified below to accomodate for this
+#######  - If the user wants to add addition output, for example, the EAM
+#######	   namelist (user_nl_eam) should be modified below to accomodate for this
 ###########################################################################
 ###########################################################################
 ###########################################################################
@@ -312,10 +315,14 @@ cat <<EOF >> user_nl_cice
   histfreq='y','x','x','x','x'
 EOF
 
-# Use CLM4.5.  Currently need to point to the correct file for Eulerian 
-#  dy-core (this will be fixed in upcoming PR)
-set CLM_CONFIG_OPTS="-phys clm4_5"
-./xmlchange CLM_CONFIG_OPTS="$CLM_CONFIG_OPTS"
+# Set correct version of CLM or ELM (depending on version of code base)
+if ($e3sm_version == v1) then
+  set CLM_CONFIG_OPTS="-phys clm4_5"
+  ./xmlchange CLM_CONFIG_OPTS="$CLM_CONFIG_OPTS"
+else
+  set ELM_CONFIG_OPTS="-phys elm"
+  ./xmlchange ELM_CONFIG_OPTS="$ELM_CONFIG_OPTS"
+endif
 
 # Modify the run start and duration parameters for the desired case
   ./xmlchange RUN_STARTDATE="$startdate",START_TOD="$start_in_sec",STOP_OPTION="$stop_option",STOP_N="$stop_n"
