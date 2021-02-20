@@ -408,7 +408,7 @@ sed -i s/CASEnicons/0.0001D6/ $outfile
 sed -i s/CASEstartdate/1969-06-25/ $outfile
 sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
-sed -i s/CASEstopn/5/ $outfile
+sed -i s/CASEstopn/1/ $outfile
 sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
