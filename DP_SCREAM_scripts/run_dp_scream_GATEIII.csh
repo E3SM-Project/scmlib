@@ -77,7 +77,7 @@
 
   # SET SECOND ORDER VISCOSITY NEAR MODEL TOP
   #  NOTE that if you decrease resolution you will also need to reduce
-  #  the value of "nu_top" (second-rder viscosity applied only near model top).
+  #  the value of "nu_top" (second-order viscosity applied only near model top).
   #  Rule of thumb is that a factor of 2 increase in resolution should equate to a
   #  factor of 2 decrease for this value
 
@@ -106,7 +106,7 @@
   set do_iop_srf_prop = .false. # Use surface fluxes in IOP file?
   set do_iop_nudge_tq = .false. # Relax T&Q to observations?
   set do_iop_nudge_uv = .true. # Relax U&V to observations?
-  set do_iop_subsidence = .false. # compute LS vertical transport?
+  set do_iop_subsidence = .true. # compute LS vertical transport?
   set do_turnoff_swrad = .false. # Turn off SW calculation
   set do_turnoff_lwrad = .false. # Turn off LW calculation
   set startdate = 1974-08-30 # Start date in IOP file
@@ -200,6 +200,9 @@
     set iradlw_in = 3
   endif
 
+# Compute maximum allowable number for processes (number of elements)
+  set dyn_pes_nxny = `expr $num_ne_x \* $num_ne_y`
+
 # Runtime specific namelist information
 cat <<EOF >> user_nl_eam
  use_gw_front = .false.
@@ -229,6 +232,7 @@ EOF
 # NOTE, if you change resolution from default it may be required to
 #  change some of these settings.
 cat <<EOF >> user_nl_eam
+ dyn_npes=$dyn_pes_nxny
  se_tstep=$dyn_dtime
  cldfrc_iceopt = 7
  transport_alg = 0

@@ -113,6 +113,36 @@ sed -i s/CASEwalltime/00:30:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
 
 ################################
+# GATE Idealized
+################################
+
+set casename = GATEIDEAL
+set outfile = run_dp_scream_$casename.csh 
+cp -r run_dp_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Idealized version of GATE"/ $outfile
+sed -i s/CASElat/9.00/ $outfile
+sed -i s/CASElon/336.0/ $outfile
+sed -i s/CASEsrfprop/.false./ $outfile
+sed -i s/CASEswoff/.true./ $outfile
+sed -i s/CASElwoff/.true./ $outfile
+sed -i s/CASEstartdate/1974-09-01/ $outfile
+sed -i s/CASEstartinsec/0/ $outfile
+sed -i s/CASEstopoption/ndays/ $outfile
+sed -i s/CASEstopn/1/ $outfile
+sed -i s/CASEdebug/false/ $outfile
+sed -i s/CASEnumprocs/256/ $outfile
+sed -i s/CASEnex/20/ $outfile
+sed -i s/CASEney/20/ $outfile
+sed -i s/CASElex/200000/ $outfile
+sed -i s/CASEley/200000/ $outfile
+sed -i s/CASEtqnudge/.false./ $outfile
+sed -i s/CASEuvnudge/.true./ $outfile
+sed -i s/CASEdosub/.true./ $outfile
+sed -i s/CASEwalltime/01:00:00/ $outfile
+sed -i s/CASEnhtfrq/-1/ $outfile
+
+################################
 # GATE
 ################################
 
@@ -138,7 +168,7 @@ sed -i s/CASElex/200000/ $outfile
 sed -i s/CASEley/200000/ $outfile
 sed -i s/CASEtqnudge/.false./ $outfile
 sed -i s/CASEuvnudge/.true./ $outfile
-sed -i s/CASEdosub/.false./ $outfile
+sed -i s/CASEdosub/.true./ $outfile
 sed -i s/CASEwalltime/04:00:00/ $outfile
 sed -i s/CASEnhtfrq/-24/ $outfile
 
