@@ -259,9 +259,6 @@ cat <<EOF >> user_nl_eam
  cubed_sphere_map = 2
  cld_macmic_num_steps =  1
  shoc_timestep = -1
- shoc_thl2tune = 1.0
- shoc_qw2tune = 1.0
- shoc_qwthl2tune = 1.0
 EOF
 
 # Settings related to domain size and resolution
