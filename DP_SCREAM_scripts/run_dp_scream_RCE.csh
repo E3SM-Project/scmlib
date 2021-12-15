@@ -272,6 +272,11 @@ cat <<EOF>> user_nl_elm
   hist_empty_htapes = .true.
 EOF
 
+# Turn on UofA surface flux scheme
+cat <<EOF>> user_nl_cpl
+  ocn_surface_flux_scheme = 2
+EOF
+
 
 # Modify the run start and duration parameters for the desired case
   ./xmlchange RUN_STARTDATE="$startdate",START_TOD="$start_in_sec",STOP_OPTION="$stop_option",STOP_N="$stop_n"

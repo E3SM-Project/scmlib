@@ -282,6 +282,11 @@ cat <<EOF>> user_nl_elm
   hist_empty_htapes = .true.
 EOF
 
+# Turn on UofA surface flux scheme
+cat <<EOF>> user_nl_cpl
+  ocn_surface_flux_scheme = 2
+EOF
+
 set ELM_CONFIG_OPTS="-phys elm"
 ./xmlchange ELM_CONFIG_OPTS="$ELM_CONFIG_OPTS"
 
