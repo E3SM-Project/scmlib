@@ -186,7 +186,7 @@
 # need to use single thread
   set npes = $num_procs
   foreach component ( ATM LND ICE OCN CPL GLC ROF WAV )
-    ./xmlchange  NTASKS_$component=$npes,NTHRDS_$component=1
+    ./xmlchange  NTASKS_$component=$npes,NTHRDS_$component=1,ROOTPE_$component=0
   end
 
 # CAM configure options.  Set to SCREAM default settings.
