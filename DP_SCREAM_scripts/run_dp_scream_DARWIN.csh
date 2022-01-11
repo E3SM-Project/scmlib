@@ -16,19 +16,19 @@
   setenv casename scream_dp_DARWIN
 
   # Set the case directory here
-  setenv casedirectory /p/lustre2/bogensch/ACME_simulations
+  setenv casedirectory /global/cscratch1/sd/bogensch/DPSCREAM_simulations
 
   # Directory where code lives
-  setenv code_dir /g/g19/bogensch/code
+  setenv code_dir /global/homes/b/bogensch/ACME_development
 
   # Code tag name
   setenv code_tag SCREAM_DP
 
   # Name of machine you are running on (i.e. cori, anvil, etc)
-  setenv machine quartz
+  setenv machine cori-haswell
 
   # Name of project to run on, if submitting to queue
-  setenv projectname cbronze
+  setenv projectname e3sm
 
   # This script is set up to run with the DARWIN_0405_p1_iopfile_4scam.nc (April, 2005) forcingfile
   # Other time periods exist (see E3SM SCM page) 
@@ -119,15 +119,8 @@
   set start_in_sec = 43200 # start time in seconds in IOP file
 # End Case specific stuff here
 
-  # Aerosol specification (for SCREAM always prescribed)
-  set init_aero_type = prescribed
-
   # Location of IOP file
   set iop_path = atm/cam/scam/iop
-
-  # Prescribed aerosol file path and name
-  set presc_aero_path = atm/cam/chem/trop_mam/aero
-  set presc_aero_file = mam4_0.9x1.2_L128_2000clim_c191106.nc
 
   set PROJECT=$projectname
   set E3SMROOT=${code_dir}/${code_tag}

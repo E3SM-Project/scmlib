@@ -127,15 +127,8 @@
   set sst_val = CASEsstval # set constant SST value (ONLY valid for RCE case)
 # End Case specific stuff here
 
-  # Aerosol specification (for SCREAM always prescribed)
-  set init_aero_type = prescribed
-
   # Location of IOP file
   set iop_path = atm/cam/scam/iop
-
-  # Prescribed aerosol file path and name
-  set presc_aero_path = atm/cam/chem/trop_mam/aero
-  set presc_aero_file = mam4_0.9x1.2_L128_2000clim_c191106.nc
 
   set PROJECT=$projectname
   set E3SMROOT=${code_dir}/${code_tag}
