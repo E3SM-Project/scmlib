@@ -209,6 +209,20 @@
     ./xmlchange CAM_TARGET=theta-l
   endif
 
+# if we want to turn off SW radiation, then set appropriate namelist settings here
+  if ($do_turnoff_swrad == true) then
+    set iradsw_in = 0
+  else
+    set iradsw_in = 1
+  endif
+
+# if we want to turn off LW radiation, then set appropriate namelist settings here
+  if ($do_turnoff_lwrad == true) then
+    set iradlw_in = 0
+  else
+    set iradlw_in = 1
+  endif
+
 # User enter CAM namelist options
 #  Add additional output here for example
 cat <<EOF >> user_nl_${atm_mod}
@@ -220,10 +234,8 @@ cat <<EOF >> user_nl_${atm_mod}
  nhtfrq = 1
  scm_iop_srf_prop = $do_iop_srf_prop
  scm_relaxation = $do_scm_relaxation
- iradlw = 1
- iradsw = 1
- swrad_off = $do_turnoff_swrad
- lwrad_off = $do_turnoff_lwrad
+ iradlw = $iradlw_in
+ iradsw = $iradsw_in
  precip_off = $do_turnoff_precip
  scmlat = $lat
  scmlon = $lon
