@@ -488,6 +488,56 @@ sed -i s/CASEstopn/20/ $outfile
 sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
+# GATEIDEAL
+################################
+
+set casename = GATEIDEAL
+set outfile = run_e3sm_scm_$casename.csh
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Idealized version of GATE"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/9.00/ $outfile
+sed -i s/CASElon/336.0/ $outfile
+sed -i s/CASEsrfprop/.false./ $outfile
+sed -i s/CASErelax/.false./ $outfile
+sed -i s/CASEswoff/.true./ $outfile
+sed -i s/CASElwoff/.true./ $outfile
+sed -i s/CASEprecipoff/.false./ $outfile
+sed -i s/CASEnccons/70.0D6/ $outfile
+sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i s/CASEstartdate/1974-08-30/ $outfile
+sed -i s/CASEstartinsec/0/ $outfile
+sed -i s/CASEstopoption/ndays/ $outfile
+sed -i s/CASEstopn/1/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
+
+################################
+# LBA
+################################
+
+set casename = LBA
+set outfile = run_e3sm_scm_$casename.csh
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"LBA Transition from shallow cumulus to deep convection"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/3.00/ $outfile
+sed -i s/CASElon/300.0/ $outfile
+sed -i s/CASEsrfprop/.true./ $outfile
+sed -i s/CASErelax/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEprecipoff/.false./ $outfile
+sed -i s/CASEnccons/70.0D6/ $outfile
+sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i s/CASEstartdate/1999-02-23/ $outfile
+sed -i s/CASEstartinsec/41400/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/6/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
+
+################################
 # MPACEB
 ################################
 
