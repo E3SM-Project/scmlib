@@ -38,7 +38,7 @@
   setenv debug_queue false
 
   # Set number of processors to use
-  set num_procs = 128
+  set num_procs = 96
 
   # set walltime
   set walltime = '05:00:00'

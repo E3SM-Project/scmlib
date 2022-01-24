@@ -70,7 +70,7 @@ sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEstopn/6/ $outfile
 sed -i s/CASEdebug/true/ $outfile
-sed -i s/CASEnumprocs/16/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
 sed -i s/CASEnex/5/ $outfile
 sed -i s/CASEney/5/ $outfile
 sed -i s/CASElex/50000/ $outfile
@@ -101,7 +101,7 @@ sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEstopn/6/ $outfile
 sed -i s/CASEdebug/true/ $outfile
-sed -i s/CASEnumprocs/16/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
 sed -i s/CASEnex/5/ $outfile
 sed -i s/CASEney/5/ $outfile
 sed -i s/CASElex/50000/ $outfile
@@ -131,7 +131,7 @@ sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/1/ $outfile
 sed -i s/CASEdebug/false/ $outfile
-sed -i s/CASEnumprocs/256/ $outfile
+sed -i s/CASEnumprocs/384/ $outfile
 sed -i s/CASEnex/20/ $outfile
 sed -i s/CASEney/20/ $outfile
 sed -i s/CASElex/200000/ $outfile
@@ -161,7 +161,7 @@ sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/20/ $outfile
 sed -i s/CASEdebug/false/ $outfile
-sed -i s/CASEnumprocs/256/ $outfile
+sed -i s/CASEnumprocs/384/ $outfile
 sed -i s/CASEnex/20/ $outfile
 sed -i s/CASEney/20/ $outfile
 sed -i s/CASElex/200000/ $outfile
@@ -191,7 +191,7 @@ sed -i s/CASEstartinsec/19800/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/17/ $outfile
 sed -i s/CASEdebug/false/ $outfile
-sed -i s/CASEnumprocs/256/ $outfile
+sed -i s/CASEnumprocs/384/ $outfile
 sed -i s/CASEnex/20/ $outfile
 sed -i s/CASEney/20/ $outfile
 sed -i s/CASElex/200000/ $outfile
@@ -221,7 +221,7 @@ sed -i s/CASEstartinsec/84585/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/26/ $outfile
 sed -i s/CASEdebug/false/ $outfile
-sed -i s/CASEnumprocs/256/ $outfile
+sed -i s/CASEnumprocs/384/ $outfile
 sed -i s/CASEnex/20/ $outfile
 sed -i s/CASEney/20/ $outfile
 sed -i s/CASElex/200000/ $outfile
@@ -251,7 +251,7 @@ sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/45/ $outfile
 sed -i s/CASEdebug/false/ $outfile
-sed -i s/CASEnumprocs/256/ $outfile
+sed -i s/CASEnumprocs/384/ $outfile
 sed -i s/CASEnex/20/ $outfile
 sed -i s/CASEney/20/ $outfile
 sed -i s/CASElex/200000/ $outfile
@@ -282,7 +282,7 @@ sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/29/ $outfile
 sed -i s/CASEdebug/false/ $outfile
-sed -i s/CASEnumprocs/128/ $outfile
+sed -i s/CASEnumprocs/96/ $outfile
 sed -i s/CASEnex/10/ $outfile
 sed -i s/CASEney/10/ $outfile
 sed -i s/CASElex/100000/ $outfile
@@ -313,7 +313,7 @@ sed -i s/CASEstartinsec/10800/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/29/ $outfile
 sed -i s/CASEdebug/false/ $outfile
-sed -i s/CASEnumprocs/128/ $outfile
+sed -i s/CASEnumprocs/96/ $outfile
 sed -i s/CASEnex/10/ $outfile
 sed -i s/CASEney/10/ $outfile
 sed -i s/CASElex/100000/ $outfile
@@ -344,7 +344,7 @@ sed -i s/CASEstartinsec/84585/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/26/ $outfile
 sed -i s/CASEdebug/false/ $outfile
-sed -i s/CASEnumprocs/128/ $outfile
+sed -i s/CASEnumprocs/96/ $outfile
 sed -i s/CASEnex/10/ $outfile
 sed -i s/CASEney/10/ $outfile
 sed -i s/CASElex/100000/ $outfile
@@ -375,7 +375,7 @@ sed -i s/CASEstartinsec/3599/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/29/ $outfile
 sed -i s/CASEdebug/false/ $outfile
-sed -i s/CASEnumprocs/128/ $outfile
+sed -i s/CASEnumprocs/96/ $outfile
 sed -i s/CASEnex/10/ $outfile
 sed -i s/CASEney/10/ $outfile
 sed -i s/CASElex/100000/ $outfile
@@ -406,7 +406,7 @@ sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASELONGstopoption/nyears/ $outfile
 sed -i s/CASELONGstopn/11/ $outfile
 sed -i s/CASEdebug/false/ $outfile
-sed -i s/CASEnumprocs/256/ $outfile
+sed -i s/CASEnumprocs/384/ $outfile
 sed -i s/CASEnex/20/ $outfile
 sed -i s/CASEney/20/ $outfile
 sed -i s/CASElex/200000/ $outfile
@@ -440,7 +440,7 @@ sed -i s/CASEstartinsec/63003/ $outfile
 sed -i s/CASELONGstopoption/ndays/ $outfile
 sed -i s/CASELONGstopn/20/ $outfile
 sed -i s/CASEdebug/false/ $outfile
-sed -i s/CASEnumprocs/256/ $outfile
+sed -i s/CASEnumprocs/384/ $outfile
 sed -i s/CASEnex/20/ $outfile
 sed -i s/CASEney/20/ $outfile
 sed -i s/CASElex/200000/ $outfile
@@ -474,7 +474,7 @@ sed -i s/CASEstartinsec/43200/ $outfile
 sed -i s/CASELONGstopoption/ndays/ $outfile
 sed -i s/CASELONGstopn/5/ $outfile
 sed -i s/CASEdebug/false/ $outfile
-sed -i s/CASEnumprocs/256/ $outfile
+sed -i s/CASEnumprocs/384/ $outfile
 sed -i s/CASEnex/20/ $outfile
 sed -i s/CASEney/20/ $outfile
 sed -i s/CASElex/200000/ $outfile
@@ -507,7 +507,7 @@ sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASELONGstopoption/nmonths/ $outfile
 sed -i s/CASELONGstopn/23/ $outfile
 sed -i s/CASEdebug/false/ $outfile
-sed -i s/CASEnumprocs/256/ $outfile
+sed -i s/CASEnumprocs/384/ $outfile
 sed -i s/CASEnex/20/ $outfile
 sed -i s/CASEney/20/ $outfile
 sed -i s/CASElex/200000/ $outfile
@@ -540,7 +540,7 @@ sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/90/ $outfile
 sed -i s/CASEdebug/false/ $outfile
-sed -i s/CASEnumprocs/256/ $outfile
+sed -i s/CASEnumprocs/384/ $outfile
 sed -i s/CASEnex/20/ $outfile
 sed -i s/CASEney/20/ $outfile
 sed -i s/CASElex/200000/ $outfile
@@ -571,7 +571,7 @@ sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/90/ $outfile
 sed -i s/CASEdebug/false/ $outfile
-sed -i s/CASEnumprocs/256/ $outfile
+sed -i s/CASEnumprocs/384/ $outfile
 sed -i s/CASEnex/20/ $outfile
 sed -i s/CASEney/20/ $outfile
 sed -i s/CASElex/200000/ $outfile
@@ -602,7 +602,7 @@ sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/90/ $outfile
 sed -i s/CASEdebug/false/ $outfile
-sed -i s/CASEnumprocs/256/ $outfile
+sed -i s/CASEnumprocs/384/ $outfile
 sed -i s/CASEnex/20/ $outfile
 sed -i s/CASEney/20/ $outfile
 sed -i s/CASElex/200000/ $outfile
@@ -633,7 +633,7 @@ sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEstopn/14/ $outfile
 sed -i s/CASEdebug/false/ $outfile
-sed -i s/CASEnumprocs/16/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
 sed -i s/CASEnex/5/ $outfile
 sed -i s/CASEney/5/ $outfile
 sed -i s/CASElex/50000/ $outfile
@@ -662,7 +662,7 @@ sed -i s/CASEstartdate/1969-06-25/ $outfile
 sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEdebug/true/ $outfile
-sed -i s/CASEnumprocs/16/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
 sed -i s/CASEstopn/6/ $outfile
 sed -i s/CASEnex/5/ $outfile
 sed -i s/CASEney/5/ $outfile
@@ -692,7 +692,7 @@ sed -i s/CASEstartdate/1969-02-15/ $outfile
 sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEdebug/true/ $outfile
-sed -i s/CASEnumprocs/16/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
 sed -i s/CASEstopn/8/ $outfile
 sed -i s/CASEnex/5/ $outfile
 sed -i s/CASEney/5/ $outfile
@@ -722,7 +722,7 @@ sed -i s/CASEstartdate/2004-12-16/ $outfile
 sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEdebug/true/ $outfile
-sed -i s/CASEnumprocs/16/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
 sed -i s/CASEstopn/24/ $outfile
 sed -i s/CASEnex/5/ $outfile
 sed -i s/CASEney/5/ $outfile
@@ -753,7 +753,7 @@ sed -i s/CASEstartinsec/41400/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEstopn/6/ $outfile
 sed -i s/CASEdebug/true/ $outfile
-sed -i s/CASEnumprocs/128/ $outfile
+sed -i s/CASEnumprocs/192/ $outfile
 sed -i s/CASEnex/15/ $outfile
 sed -i s/CASEney/15/ $outfile
 sed -i s/CASElex/150000/ $outfile
@@ -783,7 +783,7 @@ sed -i s/CASEstartinsec/64800/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/20/ $outfile
 sed -i s/CASEdebug/false/ $outfile
-sed -i s/CASEnumprocs/256/ $outfile
+sed -i s/CASEnumprocs/384/ $outfile
 sed -i s/CASEnex/20/ $outfile
 sed -i s/CASEney/20/ $outfile
 sed -i s/CASElex/200000/ $outfile
@@ -813,7 +813,7 @@ sed -i s/CASEstartinsec/10800/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/26/ $outfile
 sed -i s/CASEdebug/false/ $outfile
-sed -i s/CASEnumprocs/256/ $outfile
+sed -i s/CASEnumprocs/384/ $outfile
 sed -i s/CASEnex/20/ $outfile
 sed -i s/CASEney/20/ $outfile
 sed -i s/CASElex/200000/ $outfile
@@ -843,7 +843,7 @@ sed -i s/CASEstartinsec/61200/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEstopn/12/ $outfile
 sed -i s/CASEdebug/true/ $outfile
-sed -i s/CASEnumprocs/16/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
 sed -i s/CASEnex/5/ $outfile
 sed -i s/CASEney/5/ $outfile
 sed -i s/CASElex/50000/ $outfile
@@ -877,7 +877,7 @@ sed -i s/CASEstartdate/2004-10-05/ $outfile
 sed -i s/CASEstartinsec/7200/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEdebug/true/ $outfile
-sed -i s/CASEnumprocs/256/ $outfile
+sed -i s/CASEnumprocs/384/ $outfile
 sed -i s/CASEstopn/17/ $outfile
 sed -i s/CASEnex/20/ $outfile
 sed -i s/CASEney/20/ $outfile
