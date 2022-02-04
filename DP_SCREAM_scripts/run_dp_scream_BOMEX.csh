@@ -36,7 +36,8 @@
   #   else user will need to modify script to submit to debug queue
   setenv debug_queue true
 
-  # Set number of processors to use
+  # Set number of processors to use, should be less than or equal
+  #   to the total number of elements in your domain.
   set num_procs = 24
 
   # set walltime
