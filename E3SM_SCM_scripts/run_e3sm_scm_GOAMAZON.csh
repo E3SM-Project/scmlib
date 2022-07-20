@@ -106,7 +106,7 @@
     set atm_mod = cam
     set physset = cam5
   else
-    set compset=F_SCAM
+    set compset=FSCM
     set atm_mod = eam
     set physset = default
   endif
