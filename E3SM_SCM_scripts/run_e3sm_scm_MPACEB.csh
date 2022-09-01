@@ -39,15 +39,14 @@
   setenv init_aero_type observed
 
 
-  # What version of E3SM? (v1 or v2)
-  #  Select v1 if you are running with E3SMv1 RELEASE code
-  #  Select v2 if you are running with up-to-date E3SM master or v2 release code
+  # What version of E3SM? (v1, v2, or master)
+  #  Select "v1" if you are running with E3SMv1 RELEASE code
+  #  Select "v2" if you are running with E3SMv2 RELEASE code
+  #  Select "master" if you are running with the master development branch of E3SM
   #  (If you are running with non-up-to-date master code then you may need to modify
   #    aspects of this script to get it to compile.)
 
-  # NOTE: v2 tunings provided are subject to change as model release is finalized
-  #  (and if so will be updated here)
-  setenv e3sm_version v2
+  setenv e3sm_version master
 
   # Set the dynamical core
   #   1) Select "Eulerian" ONLY if you are running E3SMv1 release code
@@ -100,13 +99,16 @@
   cd $E3SMROOT/cime/scripts
 
   if ($e3sm_version == v1) then
-    set compset=F_SCAM5
+    set compset = F_SCAM5
     set atm_mod = cam
     set physset = cam5
   else
-    set compset=FSCM
+    # Since v1 the naming convention has changed
     set atm_mod = eam
     set physset = default
+    # SCM compset name has changed since v2 has been tagged
+    if ($e3sm_version == v2) set compset = F_SCAM5
+    if ($e3sm_version == master) set compset = FSCM
   endif
 
   if ($dycore == Eulerian) then
@@ -195,7 +197,7 @@
     set clubb_micro_steps = 6
   endif
 
-  if ($e3sm_version == v2) then
+  if ($e3sm_version != v1) then
     ./xmlchange CAM_TARGET=theta-l
   endif
 
