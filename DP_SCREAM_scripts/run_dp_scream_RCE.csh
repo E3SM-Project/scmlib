@@ -285,6 +285,7 @@ EOF
 
   ./xmlchange DOCN_AQPCONST_VALUE=$sst_val
 
+
 # Set model timesteps
 
   @ ncpl = 86400 / $model_dtime

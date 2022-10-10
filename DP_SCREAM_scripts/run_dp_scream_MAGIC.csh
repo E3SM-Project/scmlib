@@ -3,17 +3,17 @@
 #######################################################################
 #######################################################################
 #######  Script to run SCREAM in doubly periodic (DP) mode
-#######  RACORO
-#######  Continental liquid boundary layer clouds at ARM SGP site
+#######  MAGIC
+#######  Stratocumulus to Cumulus Transition
 #######
 #######  Script Author: P. Bogenschutz (bogenschutz1@llnl.gov)
-#######  Forcing provided by: Shuaiqi Tang and Shaocheng Xie
+#######  Forcing provided by: Xue Zheng
 
 #######################################################
 #######  BEGIN USER DEFINED SETTINGS
 
   # Set the name of your case here
-  setenv casename scream_dp_RACORO
+  setenv casename scream_dp_MAGIC
 
   # Set the case directory here
   setenv casedirectory /global/cscratch1/sd/bogensch/DPSCREAM_simulations
@@ -35,14 +35,14 @@
   # - Some cases are small enough to run on debug queues
   # - Setting to true only supported for NERSC and Livermore Computing,
   #   else user will need to modify script to submit to debug queue
-  setenv debug_queue false
+  setenv debug_queue true
 
   # Set number of processors to use, should be less than or equal
   #   to the total number of elements in your domain.
-  set num_procs = 96
+  set num_procs = 24
 
   # set walltime
-  set walltime = '05:00:00'
+  set walltime = '00:30:00'
 
   ## SET DOMAIN SIZE AND RESOLUTION:
   # - Note that these scripts are set to run with dx=dy=3.33 km
@@ -53,12 +53,12 @@
   # (there are 3x3 unique columns per element, hence the "3" factor)
 
   # Set number of elements in the x&y directions
-  set num_ne_x = 10
-  set num_ne_y = 10
+  set num_ne_x = 5
+  set num_ne_y = 5
 
   # Set domain length [m] in x&y direction
-  set domain_size_x = 100000
-  set domain_size_y = 100000
+  set domain_size_x = 50000
+  set domain_size_y = 50000
 
   # BELOW SETS RESOLUTION DEPENDENT SETTINGS
   # (Note that all default values below are appropriate for dx=dy=3.33 km and do not
@@ -103,19 +103,19 @@
 ###########################################################################
 
 # Case specific information kept here
-  set lat = 36.6 # latitude
-  set lon = 262.5 # longitude
-  set do_iop_srf_prop = .true. # Use surface fluxes in IOP file?
+  set lat = 28 # latitude
+  set lon = 225 # longitude
+  set do_iop_srf_prop = .false. # Use surface fluxes in IOP file?
   set do_iop_nudge_tq = .false. # Relax T&Q to observations?
   set do_iop_nudge_uv = .true. # Relax U&V to observations?
   set do_iop_subsidence = .false. # compute LS vertical transport?
   set do_turnoff_swrad = .false. # Turn off SW calculation
   set do_turnoff_lwrad = .false. # Turn off LW calculation
-  set startdate = 2009-05-01 # Start date in IOP file
-  set start_in_sec = 84585 # start time in seconds in IOP file
-  set stop_option = ndays
-  set stop_n = 26
-  set iop_file = RACORO_iopfile_4scam.nc #IOP file name
+  set startdate = 2013-07-21 # Start date in IOP file
+  set start_in_sec = 19620 # start time in seconds in IOP file
+  set stop_option = nhours
+  set stop_n = 95
+  set iop_file = MAGIC_iopfile_4scam.nc #IOP file name
 # End Case specific stuff here
 
   # Location of IOP file
@@ -212,7 +212,7 @@ cat <<EOF >> user_nl_eam
  micro_tend_output = .false.
  fexcl1='FICE','EXTINCT','FREQI','FREQL','FREQR','FREQS','RELVAR','TOT_CLD_VISTAU','TOT_ICLD_VISTAU','UU','VQ','VT','VU','VV','WSUB','AODABS','AODABSBC','AODALL','AODBC','AODDUST','AODDUST1','AODDUST3','AODMODE1','AODMODE2','AODMODE3','AODNIR','AODPOM','AODSO4','AODSOA','AODSS','AODUV','AODVIS','BURDEN1','BURDEN2','BURDEN3','CCN3' fincl2='CAPE','CIN','CLDLOW','CLDMED','CLDHGH','CLDTOT','CDNUMC','DTENDTH','DTENDTQ','FLDS','FLNS','FLNSC','FLNT','FLNTC','FLUT','FLUTC','FSDS','FSDSC','FSNS','FSNSC','FSNT','FSNTC','FSNTOA','FSNTOAC','FSUTOA','FSUTOAC','LHFLX','SHFLX','LWCF','SWCF','OMEGA500','PRECL','PS','QREFHT','SOLIN','TAUX','TAUY','TGCLDCWP','TGCLDIWP','TGCLDLWP','TH7001000','TMQ','TREFHT','TS','WINDSPD_10M','crm_grid_x','crm_grid_y'
  mfilt = 5000, 5000
- nhtfrq = -24, -1
+ nhtfrq = -1, -1
  avgflag_pertape='A','I'
  scmlat = $lat
  scmlon = $lon
@@ -285,6 +285,10 @@ set ELM_CONFIG_OPTS="-phys elm"
   ./xmlchange CALENDAR="GREGORIAN"
 
 
+  ./xmlchange SSTICE_DATA_FILENAME="$input_data_dir/ocn/docn7/SSTDATA/SCM_MAGIC_15A_sst_v0.3_2013-07-20-13UTC.nc"
+  ./xmlchange SSTICE_YEAR_ALIGN=2013
+  ./xmlchange SSTICE_YEAR_START=2013
+  ./xmlchange SSTICE_YEAR_END=2014
 
 # Set model timesteps
 

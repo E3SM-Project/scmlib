@@ -298,6 +298,11 @@ set ELM_CONFIG_OPTS="-phys elm"
 
   ./xmlchange DOCN_AQPCONST_VALUE=$CASEsstaqua
 
+  ./xmlchange SSTICE_DATA_FILENAME="$input_data_dir/ocn/docn7/SSTDATA/CASESSTdata"
+  ./xmlchange SSTICE_YEAR_ALIGN=CASESSTyearalign
+  ./xmlchange SSTICE_YEAR_START=CASESSTyearstart
+  ./xmlchange SSTICE_YEAR_END=CASESSTyearend
+
 # Set model timesteps
 
   @ ncpl = 86400 / $model_dtime

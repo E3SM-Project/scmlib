@@ -22,6 +22,41 @@ setenv setupfor cori
 # edison /project/projectdirs/e3sm/inputdata
 
 ################################
+# MAGIC
+################################
+
+set casename = MAGIC
+set outfile = run_dp_scream_$casename.csh
+cp -r run_dp_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Stratocumulus to Cumulus Transition"/ $outfile
+sed -i s/CASElat/28/ $outfile
+sed -i s/CASElon/225/ $outfile
+sed -i s/CASEsrfprop/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEstartdate/2013-07-21/ $outfile
+sed -i s/CASEstartinsec/19620/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/95/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
+sed -i s/CASEnex/5/ $outfile
+sed -i s/CASEney/5/ $outfile
+sed -i s/CASElex/50000/ $outfile
+sed -i s/CASEley/50000/ $outfile
+sed -i s/CASEtqnudge/.false./ $outfile
+sed -i s/CASEuvnudge/.true./ $outfile
+sed -i s/CASEdosub/.false./ $outfile
+sed -i s/CASEwalltime/00:30:00/ $outfile
+sed -i s/CASEnhtfrq/-1/ $outfile
+sed -i s/FORCINGPROVIDER/"Xue Zheng"/ $outfile
+sed -i s/CASESSTdata/"SCM_MAGIC_15A_sst_v0.3_2013-07-20-13UTC.nc"/ $outfile
+sed -i s/CASESSTyearalign/2013/ $outfile
+sed -i s/CASESSTyearstart/2013/ $outfile
+sed -i s/CASESSTyearend/2014/ $outfile
+
+################################
 # COMBLE
 ################################
 
@@ -983,6 +1018,10 @@ foreach file (*.csh)
     sed -i '/CASEsstaqua/d' $file
     sed -i '/CASEsstval/d' $file
     sed -i '/CASEncdata/d' $file
+    sed -i '/CASESSTdata/d' $file
+    sed -i '/CASESSTyearalign/d' $file
+    sed -i '/CASESSTyearstart/d' $file
+    sed -i '/CASESSTyearend/d' $file
   endif
 end
 
