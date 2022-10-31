@@ -201,6 +201,7 @@
     ./xmlchange CAM_TARGET=theta-l
   endif
 
+
 # if we want to turn off SW radiation, then set appropriate namelist settings here
   if ($do_turnoff_swrad == true) then
     set iradsw_in = 0
