@@ -88,6 +88,37 @@ sed -i s/CASEnhtfrq/-1/ $outfile
 sed -i s/FORCINGPROVIDER/"Xue Zheng"/ $outfile
 
 ################################
+# CASS
+################################
+
+set casename = CASS
+set outfile = run_dp_scream_$casename.csh
+cp -r run_dp_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Continental Active Surface-forced Shallow-cumulus (CASS)"/ $outfile
+sed -i s/CASElat/36.605/ $outfile
+sed -i s/CASElon/262.515/ $outfile
+sed -i s/CASEsrfprop/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEstartdate/2000-07-24/ $outfile
+sed -i s/CASEstartinsec/18000/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/14/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
+sed -i s/CASEnex/5/ $outfile
+sed -i s/CASEney/5/ $outfile
+sed -i s/CASElex/50000/ $outfile
+sed -i s/CASEley/50000/ $outfile
+sed -i s/CASEtqnudge/.false./ $outfile
+sed -i s/CASEuvnudge/.false./ $outfile
+sed -i s/CASEdosub/.true./ $outfile
+sed -i s/CASEwalltime/00:30:00/ $outfile
+sed -i s/CASEnhtfrq/-1/ $outfile
+sed -i s/FORCINGPROVIDER/"Yunyan Zhang"/ $outfile
+
+################################
 # GABLS
 ################################
 
