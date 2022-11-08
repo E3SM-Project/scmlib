@@ -105,14 +105,14 @@
 # Case specific information kept here
   set lat = 36.605 # latitude
   set lon = 262.515 # longitude
-  set do_iop_srf_prop = .false. # Use surface fluxes in IOP file?
+  set do_iop_srf_prop = .true. # Use surface fluxes in IOP file?
   set do_iop_nudge_tq = .false. # Relax T&Q to observations?
   set do_iop_nudge_uv = .false. # Relax U&V to observations?
   set do_iop_subsidence = .true. # compute LS vertical transport?
   set do_turnoff_swrad = .false. # Turn off SW calculation
   set do_turnoff_lwrad = .false. # Turn off LW calculation
   set startdate = 2000-07-24 # Start date in IOP file
-  set start_in_sec = 18000 # start time in seconds in IOP file
+  set start_in_sec = 39600 # start time in seconds in IOP file
   set stop_option = nhours
   set stop_n = 14
   set iop_file = CASS_iopfile_4scam.nc #IOP file name

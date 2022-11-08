@@ -98,11 +98,11 @@ sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Continental Active Surface-forced Shallow-cumulus (CASS)"/ $outfile
 sed -i s/CASElat/36.605/ $outfile
 sed -i s/CASElon/262.515/ $outfile
-sed -i s/CASEsrfprop/.false./ $outfile
+sed -i s/CASEsrfprop/.true./ $outfile
 sed -i s/CASEswoff/.false./ $outfile
 sed -i s/CASElwoff/.false./ $outfile
 sed -i s/CASEstartdate/2000-07-24/ $outfile
-sed -i s/CASEstartinsec/18000/ $outfile
+sed -i s/CASEstartinsec/39600/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEstopn/14/ $outfile
 sed -i s/CASEdebug/true/ $outfile
