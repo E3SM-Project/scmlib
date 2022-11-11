@@ -260,12 +260,6 @@ cat <<EOF >> user_nl_cice
   histfreq='y','x','x','x','x'
 EOF
 
-# ELM output is temporarily broken for DP-SCREAM.  For now turn it off.
-#  NOTE: this is a to do item to figure out.
-cat <<EOF>> user_nl_elm
-  hist_empty_htapes = .true.
-EOF
-
 # Turn on UofA surface flux scheme
 cat <<EOF>> user_nl_cpl
   ocn_surface_flux_scheme = 2
