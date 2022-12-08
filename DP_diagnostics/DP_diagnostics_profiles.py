@@ -15,7 +15,6 @@ import DP_diagnostics_functions
 
 def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,filelist,caselist,derived_prof): 
     
-#    colorarr=["y","m","r","b","g","c"] # if 10 km and 16 km
     colorarr=["r","b","g","c","m","y"] # standard
     
     numfiles=len(filelist)
@@ -30,9 +29,6 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,filelist,caselist,deri
     # temporarily limit to searching just the first file for speed
     listtodo=filelist[0]
     DP_diagnostics_functions.makevarlist(datadir,listtodo,4,varstoplot)
-    
-#    varstoplot=["CLDLIQICE","TOT_WQW","TOT_WTHL"]
-#    varstoplot=["TOT_WQW"]
 
     # append the derived variables to the list
     numderived=len(derived_prof)
@@ -76,21 +72,6 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,filelist,caselist,deri
                     vartoplot=vartoplot1+vartoplot2
                     theunits="kg/kg"
                     thelongname="Liquid + Ice Condensate"
-                elif (varname == "WT_RES"):
-                    vartoplot1=fh.variables['T'][:]
-                    vartoplot2=fh.variables['OMEGA'][:]
-                    vartoplot3=fh.variables['CLDLIQ'][:]
-                    vartoplot=compute_res_flux(vartoplot1,vartoplot2,vartoplot3,lev)
-                    theunits="W/m2"
-                    thelongname="Resolved Potential Temperature Flux"
-                elif (varname == "WQW_RES2"):
-                    vartoplot1=fh.variables['Q'][:]
-                    vartoplot2=fh.variables['Dyn_w'][:]
-                    vartoplot3=fh.variables['CLDLIQ'][:]
-                    vartoplot4=fh.variables['T'][:]
-                    vartoplot=compute_qwres_flux(vartoplot1,vartoplot2,vartoplot3,vartoplot4,lev)
-                    theunits="W/m2"
-                    thelongname="Resolved Moisture Flux (reconstructed)"		    
                 elif (varname == "TOT_WQW"):
                     vartoplot1=fh.variables['WQW_RES'][:]
                     vartoplot2=fh.variables['WQW_SEC'][:]
@@ -121,11 +102,9 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,filelist,caselist,deri
                 else:
                     plottimes=np.squeeze(np.where((time >= avg_start) & \
                                                   (time <= avg_end)))
-#                print("PLOTTIMES ", plottimes)
                 if (vartoplot.ndim == 4):
                     avgprof=np.mean(vartoplot[plottimes,:,:,:],axis=0)
                     if (plottimes.size == 1):
-#                        avgprof=np.mean(vartoplot[avg_start,:,:,:])
                         avgprof=vartoplot[plottimes,:,0,0]
                 elif (vartoplot.ndim == 3):
                     avgprof=np.mean(vartoplot[plottimes,:,:],axis=0)
@@ -140,11 +119,6 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,filelist,caselist,deri
                     levarr=ilev
             
                 legendlist.append(caselist[f])
-		
-#                if (varname == "CLDLIQ"):
-#                    if (f == 3):
-#                        avgprof=avgprof*0.9;
-		    
                 
                 # Exceptions for plotting ease                
                 if (theunits == "kg/kg"):
@@ -162,11 +136,6 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,filelist,caselist,deri
                     
                 if (varname == "WTHL_RES"):
                     thelongname = "Resolved Heat Flux"
-                    
-#                if (theunits == "fraction"):
-#                    if (f == 1):
-#                        avgprof=avgprof*2.5
-#                        theunits="g/kg"                    
                 
                 # Only plot to top level
                 plotlevs=np.where(levarr > toplev)
@@ -212,76 +181,5 @@ def compute_thetal(temp,cldliq,levarr):
             ((latvap/Cp)*cldliq[t,k,:])
 	    
     vartoplot = pottemp
-    return vartoplot
-
-def compute_res_flux(temp,omega,cldliq,levarr):
-
-    # compute density
-    rgas = 287.058
-    gravit = 9.80665
-    R_over_Cp = 0.286
-    latvap = 2.5*10**6
-    Cp = 1004.0
-    
-    theshape=np.shape(temp)
-    timedim=theshape[0]
-    levdim=theshape[1]
-    ptsdim=theshape[2]
-    
-    rho=np.zeros((ptsdim))
-    vert=np.zeros((timedim,levdim,ptsdim))
-    pottemp=np.zeros((timedim,levdim,ptsdim))
-    avgtemp=np.zeros((timedim,levdim))
-    flux=np.zeros((timedim,levdim,ptsdim))
-    
-    # Compute Omega
-    for t in range(0,timedim):
-        for k in range(0,levdim):
-            rho[:] = (levarr[k]*100.)/(rgas*temp[t,k,:])
-            vert[t,k,:] = -omega[t,k,:]/(rho[:]*gravit)
-            pottemp[t,k,:] = (temp[t,k,:]*(1000.0/levarr[k])**(R_over_Cp)) - \
-            ((latvap/Cp)*cldliq[t,k,:])
-            avgtemp[t,k] = np.mean(pottemp[t,k,:])
-            flux[t,k,:] = vert[t,k,:]*(pottemp[t,k,:]-avgtemp[t,k])
-            flux[t,k,:] = flux[t,k,:]*rho[:]*Cp
-        
-    vartoplot = flux
-    return vartoplot
-    
-def compute_qwres_flux(q,vert,cldliq,temp,levarr):
-
-    # compute density
-    rgas = 287.058
-    gravit = 9.80665
-    R_over_Cp = 0.286
-    latvap = 2.5*10**6
-    Cp = 1004.0
-    
-    theshape=np.shape(q)
-    timedim=theshape[0]
-    levdim=theshape[1]
-    ptsdim=theshape[2]
-    
-    rho=np.zeros((ptsdim))
-    vert=np.zeros((timedim,levdim,ptsdim))
-    totwat=np.zeros((timedim,levdim,ptsdim))
-    avgwat=np.zeros((timedim,levdim))
-    flux=np.zeros((timedim,levdim+1,ptsdim))
-    
-    # Compute Omega
-    for t in range(0,timedim):
-        for k in range(1,levdim):
-
-            rho[:] = (levarr[k]*100.)/(rgas*temp[t,k,:])
-            totwat[t,k,:] = q[t,k,:] + cldliq[t,k,:]
-            avgwat[t,k] = np.mean(totwat[t,k,:])
-	    
-            flux[t,k,:] = vert[t,k,:] * 0.5* \
-            ((totwat[t,k,:]-avgwat[t,k])+ \
-            (totwat[t,k-1,:]-avgwat[t,k-1]))
-	    
-            flux[t,k,:] = flux[t,k,:]*latvap*rho[:]
-        
-    vartoplot = flux
     return vartoplot
         

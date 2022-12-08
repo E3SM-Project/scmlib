@@ -67,17 +67,18 @@ def plot1Dtime(datadir,plotdir,time_start,time_end,filelist,caselist):
                     vartoplot2=np.mean(vartoplot[plottimes,:],axis=1)
             
                 plt.figure(x)
-#                plt.plot(time[plottimes],np.squeeze(vartoplot[plottimes,:,:]),colorarr[f])   
-                plt.plot(time[plottimes],vartoplot2,colorarr[f])
+                plt.plot(time[plottimes],vartoplot2,colorarr[f],linewidth=3)
                 
                 legendlist.append(caselist[f])
         
                 plt.title(fh.variables[varname].long_name + '\n' + \
-                '(' + varname + ')')
-                plt.xlabel('time (days)')
+                '(' + varname + ')',fontsize=16)
+                plt.xlabel('time (days)',fontsize=14)
                 if hasattr(fh.variables[varname],'units'):
-                    plt.ylabel('('+fh.variables[varname].units+')')
+                    plt.ylabel('('+fh.variables[varname].units+')',fontsize=14)
                 plt.grid(True)
+                plt.xticks(fontsize=14)
+                plt.yticks(fontsize=14)
                 
         plt.legend(legendlist)       
         pylab.savefig(plotdir+'/'+varname+'.png')
