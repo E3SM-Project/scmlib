@@ -90,6 +90,14 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,filelist,caselist,deri
                     vartoplot=compute_thetal(vartoplot1,vartoplot2,lev)
                     theunits="K"
                     thelongname="Liquid Water Potential Temperature"
+                elif (varname == "QT"):
+                    vartoplot1=fh.variables['Q'][:]
+                    vartoplot2=fh.variables['CLDLIQ'][:]
+                    vartoplot3=fh.variables['CLDICE'][:]
+                    vartoplot=(vartoplot1+vartoplot2+vartoplot3)*1000.
+                    theunits="g/kg"
+                    thelongname="Total Water Mixing Ratio"
+                    thelet="b)"
                 else:
                     # DEFAULT GOES HERE
                     vartoplot=fh.variables[varname][:]
