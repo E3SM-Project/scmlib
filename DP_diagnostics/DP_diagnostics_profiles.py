@@ -119,7 +119,10 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
                         if (plottimes.size == 1):
                             avgprof=vartoplot[plottimes,:,0,0]
                     elif (vartoplot.ndim == 3):
-                        avgprof=np.mean(vartoplot[plottimes,:,:],axis=0)
+                        if (plottimes.size == 1):
+                            avgprof=vartoplot[plottimes,:,:]
+                        else:
+                            avgprof=np.mean(vartoplot[plottimes,:,:],axis=0)
                         if (lat.size > 1):
                             avgprof=np.mean(avgprof[:,1:lat.size-1],axis=1)
                     elif (vartoplot.ndim == 2):
