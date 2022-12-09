@@ -13,11 +13,12 @@ import pylab
 import os
 import DP_diagnostics_functions
 
-def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,filelist,caselist,derived_prof): 
+def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,caselist,derived_prof):
     
     colorarr=["r","b","g","c","m","y"] # standard
     
     numfiles=len(filelist)
+    numtimes=len(avg_start)
         
     ############################################################
     # Make the variable list for variables to plot
@@ -62,8 +63,8 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,filelist,caselist,deri
             varsinfile=fh.variables.keys()
                 
             # The True check is a temporary hack
-            if (varname in varsinfile or True):
-#            if (varname in varsinfile):
+#            if (varname in varsinfile or True):
+            if (varname in varsinfile):
             
                 # If derived variable search first for that
                 if (varname == "CLDLIQICE"):
@@ -104,62 +105,67 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,filelist,caselist,deri
                     theunits=fh.variables[varname].units
                     #theunits="dummy"
                     thelongname=fh.variables[varname].long_name
-                
-                if (avg_end == "end"):
-                    plottimes=np.squeeze(np.where(time >= avg_start))
-                else:
-                    plottimes=np.squeeze(np.where((time >= avg_start) & \
-                                                  (time <= avg_end)))
-                if (vartoplot.ndim == 4):
-                    avgprof=np.mean(vartoplot[plottimes,:,:,:],axis=0)
-                    if (plottimes.size == 1):
-                        avgprof=vartoplot[plottimes,:,0,0]
-                elif (vartoplot.ndim == 3):
-                    avgprof=np.mean(vartoplot[plottimes,:,:],axis=0)
-                    if (lat.size > 1):
-                        avgprof=np.mean(avgprof[:,1:lat.size-1],axis=1)
-                elif (vartoplot.ndim == 2):
-                    avgprof=np.mean(vartoplot[plottimes,:],axis=0)                    
-           
-                if (len(avgprof) == len(lev)):
-                    levarr=lev
-                elif (len(avgprof) == len(ilev)):
-                    levarr=ilev
-            
-                legendlist.append(caselist[f])
-                
-                # Exceptions for plotting ease                
-                if (theunits == "kg/kg"):
-                    avgprof=avgprof*1000.
-                    theunits="g/kg"
-                    
-                if (varname == "WQW_SEC"):
-                    thelongname="SGS Moisture Flux"
-                    
-                if (varname == "WQW_RES"):
-                    thelongname="Resolved Moisture Flux"
-                    
-                if (varname == "WTHL_SEC"):
-                    thelongname = "SGS Heat Flux"
-                    
-                if (varname == "WTHL_RES"):
-                    thelongname = "Resolved Heat Flux"
-                
-                # Only plot to top level
-                plotlevs=np.where(levarr > toplev)
-            
-                plt.figure(x)
-                plt.plot(np.squeeze(avgprof[plotlevs]),levarr[plotlevs],colorarr[f],linewidth=3)   
-                
-                plt.ylim(max(levarr),toplev)
-                plt.title(thelongname + '\n' + \
-                '(' + varname + ')',fontsize=16)
-                plt.ylabel('P (hPa)',fontsize=14)
-                plt.xlabel('('+theunits+')',fontsize=14)
-                plt.grid(True)
-                plt.ticklabel_format(style='sci', axis='x', scilimits=(-4,4))
-                plt.xticks(fontsize=14)
-                plt.yticks(fontsize=14)
+
+                # Are we plotting several different time periods?
+                for t in range(0,numtimes):
+
+                    if (avg_end == "end"):
+                        plottimes=np.squeeze(np.where(time >= avg_start[t]))
+                    else:
+                        plottimes=np.squeeze(np.where((time >= avg_start[t]) & \
+                                                      (time <= avg_end[t])))
+                    if (vartoplot.ndim == 4):
+                        avgprof=np.mean(vartoplot[plottimes,:,:,:],axis=0)
+                        if (plottimes.size == 1):
+                            avgprof=vartoplot[plottimes,:,0,0]
+                    elif (vartoplot.ndim == 3):
+                        avgprof=np.mean(vartoplot[plottimes,:,:],axis=0)
+                        if (lat.size > 1):
+                            avgprof=np.mean(avgprof[:,1:lat.size-1],axis=1)
+                    elif (vartoplot.ndim == 2):
+                        avgprof=np.mean(vartoplot[plottimes,:],axis=0)
+
+                    if (len(avgprof) == len(lev)):
+                       levarr=lev
+                    elif (len(avgprof) == len(ilev)):
+                       levarr=ilev
+
+                    #legendlist.append(caselist[f+t])
+                    legendstr=caselist[f]+" "+timelist[t]
+                    legendlist.append(legendstr)
+
+                    # Exceptions for plotting ease
+                    if (theunits == "kg/kg"):
+                        avgprof=avgprof*1000.
+                        theunits="g/kg"
+
+                    if (varname == "WQW_SEC"):
+                        thelongname="SGS Moisture Flux"
+
+                    if (varname == "WQW_RES"):
+                        thelongname="Resolved Moisture Flux"
+
+                    if (varname == "WTHL_SEC"):
+                        thelongname = "SGS Heat Flux"
+
+                    if (varname == "WTHL_RES"):
+                        thelongname = "Resolved Heat Flux"
+
+                    # Only plot to top level
+                    plotlevs=np.where(levarr > toplev)
+
+                    plt.figure(x)
+                    plt.plot(np.squeeze(avgprof[plotlevs]),levarr[plotlevs],colorarr[f+f+t],linewidth=3)
+
+                    plt.ylim(max(levarr),toplev)
+                    plt.title(thelongname + '\n' + \
+                    '(' + varname + ')',fontsize=16)
+                    plt.ylabel('P (hPa)',fontsize=14)
+                    plt.xlabel('('+theunits+')',fontsize=14)
+                    plt.grid(True)
+                    plt.ticklabel_format(style='sci', axis='x', scilimits=(-4,4))
+                    plt.xticks(fontsize=14)
+                    plt.yticks(fontsize=14)
                 
         plt.legend(legendlist)        
         pylab.savefig(plotdir+'/'+varname+'.png')
