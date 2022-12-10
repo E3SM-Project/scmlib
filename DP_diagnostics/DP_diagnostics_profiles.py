@@ -15,7 +15,7 @@ import DP_diagnostics_functions
 
 def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,caselist,derived_prof):
     
-    colorarr=["r","b","g","c","m","y"] # standard
+    colorarr=["r","b","g","c","m","y","k"] # standard
     
     numfiles=len(filelist)
     numtimes=len(avg_start)
@@ -35,7 +35,8 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
     numderived=len(derived_prof)
     for d in range(0,numderived):
         varstoplot.append(derived_prof[d])
-    
+
+    print('Now Plotting Profiles')
     ############################################################
     # loop over the variables to plot
     for x in range(0,len(varstoplot)):
@@ -63,8 +64,8 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
             varsinfile=fh.variables.keys()
                 
             # The True check is a temporary hack
-#            if (varname in varsinfile or True):
-            if (varname in varsinfile):
+            if (varname in varsinfile or True):
+#            if (varname in varsinfile):
             
                 # If derived variable search first for that
                 if (varname == "CLDLIQICE"):
@@ -140,7 +141,7 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
                     # Exceptions for plotting ease
                     if (theunits == "kg/kg"):
                         avgprof=avgprof*1000.
-                        theunits="g/kg"
+                        plottheunits="g/kg"
 
                     if (varname == "WQW_SEC"):
                         thelongname="SGS Moisture Flux"
@@ -154,6 +155,9 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
                     if (varname == "WTHL_RES"):
                         thelongname = "Resolved Heat Flux"
 
+                    # Copy units into a temporary arry in case manipulation needs to be done
+                    #   on these variables with similar units (like convert kg/kg to g/kg)
+                    plottheunits=theunits
                     # Only plot to top level
                     plotlevs=np.where(levarr > toplev)
 
@@ -164,7 +168,7 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
                     plt.title(thelongname + '\n' + \
                     '(' + varname + ')',fontsize=16)
                     plt.ylabel('P (hPa)',fontsize=14)
-                    plt.xlabel('('+theunits+')',fontsize=14)
+                    plt.xlabel('('+plottheunits+')',fontsize=14)
                     plt.grid(True)
                     plt.ticklabel_format(style='sci', axis='x', scilimits=(-4,4))
                     plt.xticks(fontsize=14)

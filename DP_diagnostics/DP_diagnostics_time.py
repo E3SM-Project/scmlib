@@ -13,7 +13,9 @@ import pylab
 import os
 import DP_diagnostics_functions
 
-def plot1Dtime(datadir,plotdir,time_start,time_end,filelist,caselist): 
+def plot1Dtime(datadir,plotdir,time_start,time_end,filelist,caselist,\
+               xaxis_opt="default",xaxis_units="time (days)",\
+               xaxis_mult=0,xaxis_start=0):
     
     colorarr=["r","b","g","c","m","y"]
     
@@ -65,6 +67,11 @@ def plot1Dtime(datadir,plotdir,time_start,time_end,filelist,caselist):
                     vartoplot2=np.squeeze(vartoplot[plottimes,:,:])
                 elif (vartoplot.ndim == 2):
                     vartoplot2=np.mean(vartoplot[plottimes,:],axis=1)
+
+                if (xaxis_opt == "custom"):
+                    time=(time*xaxis_mult)+xaxis_start
+                else:
+                    xaxis_units="time (days)"
             
                 plt.figure(x)
                 plt.plot(time[plottimes],vartoplot2,colorarr[f],linewidth=3)
@@ -73,7 +80,7 @@ def plot1Dtime(datadir,plotdir,time_start,time_end,filelist,caselist):
         
                 plt.title(fh.variables[varname].long_name + '\n' + \
                 '(' + varname + ')',fontsize=16)
-                plt.xlabel('time (days)',fontsize=14)
+                plt.xlabel(xaxis_units,fontsize=14)
                 if hasattr(fh.variables[varname],'units'):
                     plt.ylabel('('+fh.variables[varname].units+')',fontsize=14)
                 plt.grid(True)

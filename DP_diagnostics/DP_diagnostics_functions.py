@@ -12,7 +12,8 @@ import numpy as np
 import os
 
 def makevarlist(datadir,filelist,dimtest,varstoplot):
-    
+
+    print('Making list of variables to plot')
 #    numfiles=len(filelist)
     numfiles=1
     for f in range(0,numfiles):
@@ -40,10 +41,10 @@ def makevarlist(datadir,filelist,dimtest,varstoplot):
                 vartotest=fh.variables[varname][:]
                 if (vartotest.ndim == dimtest_rev):
                     theshape=np.shape(vartotest)
-                    print('STUFF ', varname, theshape[vartotest.ndim -1], ncol)
+#                    print('STUFF ', varname, theshape[vartotest.ndim -1], ncol)
                     if (theshape[vartotest.ndim - 1] == ncol):
                         varstoplot.append(varname)   
-                        print('APPEND ', varname)
+#                        print('APPEND ', varname)
                     
     return varstoplot
 
