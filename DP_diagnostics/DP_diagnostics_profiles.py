@@ -46,6 +46,9 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
         legendlist=[];
         # loop over the number of simulations to plot
         for f in range(0,numfiles):
+
+            Rd=287.15 # gas constant for air
+            grav=9.81 # gravity
             
             filename=filelist[f]
             file=datadir+filename
@@ -59,6 +62,29 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
             time=fh.variables['time'][:]
             lev=fh.variables['lev'][:]
             ilev=fh.variables['ilev'][:]
+
+	    # Compute heights
+            temp=fh.variables['T'][:]
+
+            z_mid=np.zeros(lev.size)
+            z_int=np.zeros(ilev.size)
+
+            T_avg=np.mean(temp,axis=2)
+
+	    # Guess the bottom edge
+            z_int[-1]=0.0
+            z_mid[-1]=10.0
+            for k in range(len(lev)-2,-1,-1):
+                z_mid[k] = z_mid[k+1] + Rd*T_avg[0,k]/grav*np.log(lev[k+1]/lev[k])
+
+            for k in range(len(ilev)-2,-1,-1):
+                z_int[k] = z_int[k+1] + Rd*T_avg[0,k]/grav*np.log(ilev[k+1]/ilev[k])
+
+            # Convert from meters to kilometers
+            z_mid=z_mid/1000.
+            z_int=z_int/1000.
+
+            # End compute heights
             
             # Generate a list to see if variables are in there
             varsinfile=fh.variables.keys()
@@ -130,9 +156,9 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
                         avgprof=np.mean(vartoplot[plottimes,:],axis=0)
 
                     if (len(avgprof) == len(lev)):
-                       levarr=lev
+                       levarr=z_mid
                     elif (len(avgprof) == len(ilev)):
-                       levarr=ilev
+                       levarr=z_int
 
                     #legendlist.append(caselist[f+t])
                     legendstr=caselist[f]+" "+timelist[t]
@@ -159,15 +185,16 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
                     #   on these variables with similar units (like convert kg/kg to g/kg)
                     plottheunits=theunits
                     # Only plot to top level
-                    plotlevs=np.where(levarr > toplev)
+                    plotlevs=np.where(levarr < toplev)
 
                     plt.figure(x)
                     plt.plot(np.squeeze(avgprof[plotlevs]),levarr[plotlevs],colorarr[f+f+t],linewidth=3)
 
-                    plt.ylim(max(levarr),toplev)
+                    #plt.ylim(max(levarr),toplev)
+                    plt.ylim(0,toplev)
                     plt.title(thelongname + '\n' + \
                     '(' + varname + ')',fontsize=16)
-                    plt.ylabel('P (hPa)',fontsize=14)
+                    plt.ylabel('height (km)',fontsize=14)
                     plt.xlabel('('+plottheunits+')',fontsize=14)
                     plt.grid(True)
                     plt.ticklabel_format(style='sci', axis='x', scilimits=(-4,4))
