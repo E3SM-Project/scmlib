@@ -94,6 +94,7 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
 #            if (varname in varsinfile):
             
                 # If derived variable search first for that
+                # If you want to add dervied variables, this is the place
                 if (varname == "CLDLIQICE"):
                     vartoplot1=fh.variables['CLDLIQ'][:]
                     vartoplot2=fh.variables['CLDICE'][:]
@@ -115,7 +116,10 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
                 elif (varname == "THETAL"):
                     vartoplot1=fh.variables['T'][:]
                     vartoplot2=fh.variables['CLDLIQ'][:]
-                    vartoplot=compute_thetal(vartoplot1,vartoplot2,lev)
+                    Ps=fh.variables['PS'][:]
+                    hyam=fh.variables['hyam'][:]
+                    hybm=fh.variables['hybm'][:]
+                    vartoplot=compute_thetal(vartoplot1,vartoplot2,Ps,hyam,hybm)
                     theunits="K"
                     thelongname="Liquid Water Potential Temperature"
                 elif (varname == "QT"):
@@ -125,7 +129,6 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
                     vartoplot=(vartoplot1+vartoplot2+vartoplot3)*1000.
                     theunits="g/kg"
                     thelongname="Total Water Mixing Ratio"
-                    thelet="b)"
                 else:
                     # DEFAULT GOES HERE
                     vartoplot=fh.variables[varname][:]
@@ -207,13 +210,14 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
         
     return varstoplot
 
-def compute_thetal(temp,cldliq,levarr):
+def compute_thetal(temp,cldliq,Ps,hyam,hybm):
 
     rgas = 287.058
     Cp = 1004.0
     R_over_Cp = 0.286
     latvap = 2.5*10**6
     Cp = 1004.0
+    P0 = 1000.0
 
     theshape=np.shape(temp)
     timedim=theshape[0]
@@ -221,11 +225,14 @@ def compute_thetal(temp,cldliq,levarr):
     ptsdim=theshape[2]
     
     pottemp=np.zeros((timedim,levdim,ptsdim))
+    Psavg=np.mean(Ps,axis=1)/100.
     
     # Compute thetal
     for t in range(0,timedim):
         for k in range(0,levdim):
-            pottemp[t,k,:] = (temp[t,k,:]*(1000.0/levarr[k])**(R_over_Cp)) - \
+
+            levarr=P0*hyam[k]+Psavg[t]*hybm[k]
+            pottemp[t,k,:] = (temp[t,k,:]*(Psavg[t]/levarr)**(R_over_Cp)) - \
             ((latvap/Cp)*cldliq[t,k,:])
 	    
     vartoplot = pottemp
