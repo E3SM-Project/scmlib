@@ -205,7 +205,7 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
                     plt.yticks(fontsize=14)
                 
         plt.legend(legendlist)        
-        pylab.savefig(plotdir+'/'+varname+'.png')
+        pylab.savefig(plotdir+'/'+varname+'.png',bbox_inches='tight',pad_inches=0.05)
         plt.close(x)
         
     return varstoplot

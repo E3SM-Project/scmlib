@@ -88,7 +88,7 @@ def plot1Dtime(datadir,plotdir,time_start,time_end,filelist,caselist,\
                 plt.yticks(fontsize=14)
                 
         plt.legend(legendlist)       
-        pylab.savefig(plotdir+'/'+varname+'.png')
+        pylab.savefig(plotdir+'/'+varname+'.png',bbox_inches='tight',pad_inches=0.05)
         plt.close(x)
 
     return varstoplot
@@ -140,7 +140,7 @@ def plot2Dtime(datadir,plotdir,toplev,filelist,caselist):
                 # Only plot to top level
                 plotlevs=np.where(levarr > toplev)
 
-                plt.figure(x)  
+                plt.figure(x)
                 vartoplot=np.squeeze(vartoplot[:,plotlevs])
                 vartoplot=np.rot90(vartoplot)
                 levarr=levarr[plotlevs]
