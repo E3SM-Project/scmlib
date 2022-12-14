@@ -107,7 +107,7 @@
   set lon = 262.515 # longitude
   set do_iop_srf_prop = .true. # Use surface fluxes in IOP file?
   set do_iop_nudge_tq = .false. # Relax T&Q to observations?
-  set do_iop_nudge_uv = .false. # Relax U&V to observations?
+  set do_iop_nudge_uv = .true. # Relax U&V to observations?
   set do_iop_subsidence = .true. # compute LS vertical transport?
   set do_turnoff_swrad = .false. # Turn off SW calculation
   set do_turnoff_lwrad = .false. # Turn off LW calculation
