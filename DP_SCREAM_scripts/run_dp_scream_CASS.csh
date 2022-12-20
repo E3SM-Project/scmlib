@@ -112,7 +112,7 @@
   set do_turnoff_swrad = .false. # Turn off SW calculation
   set do_turnoff_lwrad = .false. # Turn off LW calculation
   set startdate = 2000-07-24 # Start date in IOP file
-  set start_in_sec = 39600 # start time in seconds in IOP file
+  set start_in_sec = 43200 # start time in seconds in IOP file
   set stop_option = nhours
   set stop_n = 14
   set iop_file = CASS_iopfile_4scam.nc #IOP file name

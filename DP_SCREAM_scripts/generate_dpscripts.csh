@@ -102,7 +102,7 @@ sed -i s/CASEsrfprop/.true./ $outfile
 sed -i s/CASEswoff/.false./ $outfile
 sed -i s/CASElwoff/.false./ $outfile
 sed -i s/CASEstartdate/2000-07-24/ $outfile
-sed -i s/CASEstartinsec/39600/ $outfile
+sed -i s/CASEstartinsec/43200/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEstopn/14/ $outfile
 sed -i s/CASEdebug/true/ $outfile
