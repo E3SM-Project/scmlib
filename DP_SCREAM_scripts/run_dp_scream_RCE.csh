@@ -126,7 +126,7 @@
 
   cd $E3SMROOT/cime/scripts
 
-  set compset=F2010-SCREAM-HR
+  set compset=F-EAM-RCEMIP
 
   # Note that in DP-SCREAM the grid is set ONLY to initialize
   #  the model from these files
