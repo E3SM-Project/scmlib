@@ -47,7 +47,7 @@ sed -i s/CASElex/50000/ $outfile
 sed -i s/CASEley/50000/ $outfile
 sed -i s/CASEtqnudge/.false./ $outfile
 sed -i s/CASEuvnudge/.true./ $outfile
-sed -i s/CASEdosub/.false./ $outfile
+sed -i s/CASEdosub/.true./ $outfile
 sed -i s/CASEwalltime/00:30:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
 sed -i s/FORCINGPROVIDER/"Xue Zheng"/ $outfile
