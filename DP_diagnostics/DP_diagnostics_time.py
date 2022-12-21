@@ -32,6 +32,7 @@ def plot1Dtime(datadir,plotdir,time_start,time_end,filelist,caselist,\
     listtodo=filelist[0]
     DP_diagnostics_functions.makevarlist(datadir,listtodo,3,varstoplot)
     
+    print('Now Plotting 1D Time Fields')
     ############################################################
     # loop over the variables to plot
     for x in range(0,len(varstoplot)):
@@ -103,7 +104,8 @@ def plot2Dtime(datadir,plotdir,toplev,filelist,caselist):
     # Make list of variables to plot
     varstoplot=[];
     DP_diagnostics_functions.makevarlist(datadir,filelist,4,varstoplot)
-    
+
+    print('Now Plotting 2D Time Fields')
     ############################################################
     # loop over the variables to plot
     for x in range(0,len(varstoplot)):
@@ -163,14 +165,20 @@ def plot2Dtime(datadir,plotdir,toplev,filelist,caselist):
 ################################################################
 ### Plot the 2 dimensional timeseries
 
-def plot2Dtimepanel(datadir,plotdir,toplev,filelist,caselist): 
+def plot2Dtimepanel(datadir,plotdir,toplev,filelist,caselist,\
+               xaxis_opt="default",xaxis_units="time (days)",\
+               xaxis_mult=0,xaxis_start=0):
     
     numfiles=len(filelist)
     
     # Make list of variables to plot
     varstoplot=[];
-    DP_diagnostics_functions.makevarlist(datadir,filelist,4,varstoplot)
-    
+    listtodo=filelist[0];
+    DP_diagnostics_functions.makevarlist(datadir,listtodo,4,varstoplot)
+
+#    varstoplot=["CLOUD"]
+
+    print('Now Plotting 2D Time Fields')
     ############################################################
     # loop over the variables to plot
     for x in range(0,len(varstoplot)):
@@ -192,7 +200,7 @@ def plot2Dtimepanel(datadir,plotdir,toplev,filelist,caselist):
                 
             if varname in varsinfile:      
                 varsinpanel=varsinpanel+1
-                
+
         # start loop again and make in panel
          # loop over the number of simulations to plot
          
@@ -212,6 +220,9 @@ def plot2Dtimepanel(datadir,plotdir,toplev,filelist,caselist):
             pcount=0
 #            plt.figure(x) 
             for f in range(0,numfiles):
+
+                Rd=287.15 # gas constant for air
+                grav=9.81 # gravity
                 
                 filename=filelist[f]
                 file=datadir+filename
@@ -223,6 +234,31 @@ def plot2Dtimepanel(datadir,plotdir,toplev,filelist,caselist):
                 time=fh.variables['time'][:]
                 lev=fh.variables['lev'][:]
                 ilev=fh.variables['ilev'][:]
+
+                ###########################################
+	        # Compute heights
+                temp=fh.variables['T'][:]
+
+                z_mid=np.zeros(lev.size)
+                z_int=np.zeros(ilev.size)
+
+                T_avg=np.mean(temp,axis=2)
+
+	        # Guess the bottom edge
+                z_int[-1]=0.0
+                z_mid[-1]=10.0
+                for k in range(len(lev)-2,-1,-1):
+                    z_mid[k] = z_mid[k+1] + Rd*T_avg[0,k]/grav*np.log(lev[k+1]/lev[k])
+
+                for k in range(len(ilev)-2,-1,-1):
+                    z_int[k] = z_int[k+1] + Rd*T_avg[0,k]/grav*np.log(ilev[k+1]/ilev[k])
+
+                # Convert from meters to kilometers
+                z_mid=z_mid/1000.
+                z_int=z_int/1000.
+
+                # End compute heights
+		###########################################3
                 
                 # Generate a list to see if variables are in there
                 varsinfile=fh.variables.keys()
@@ -231,43 +267,51 @@ def plot2Dtimepanel(datadir,plotdir,toplev,filelist,caselist):
                     vartoplot=fh.variables[varname][:]  
                     
                     avgprof=np.mean(vartoplot,axis=0)
+                    # Horizontal average
+                    vartoplot=np.mean(vartoplot,axis=2)
                     
                     if (len(avgprof) == len(lev)):
-                        levarr=lev
+                        levarr=z_mid
                     elif (len(avgprof) == len(ilev)):
-                        levarr=ilev
+                        levarr=z_int
                 
                     # Only plot to top level
-                    plotlevs=np.where(levarr > toplev)
+                    plotlevs=np.where(levarr < toplev)
                        
                     vartoplot=np.squeeze(vartoplot[:,plotlevs])
                     vartoplot=np.rot90(vartoplot)
                     vartoplot=np.flipud(vartoplot)
                     levarr=levarr[plotlevs]
                     rev_lev=levarr
+
+                    if (xaxis_opt == "custom"):
+                       time=(time*xaxis_mult)+xaxis_start
+                    else:
+                       xaxis_units="time (days)"
+
                     if pcount == 0:
                         fig.suptitle(fh.variables[varname].long_name + \
                     ' (' + varname + ')',y=1.01)
                     if varsinpanel == 1:
                         sc=axes.contourf(time,rev_lev,vartoplot)
-                        axes.set_ylim(max(rev_lev),toplev)
+                        axes.set_ylim(0,toplev)
                         axes.set_title(caselist[f])
-                        axes.set_ylabel('P (hPa)')
+                        axes.set_ylabel('height (km)')
                     elif (varsinpanel > 1) & (varsinpanel <= 4):
                         sc=axes[pcount].contourf(time,rev_lev,vartoplot)
-                        axes[pcount].set_ylim(max(rev_lev),toplev)
+                        axes[pcount].set_ylim(0,toplev)
                         axes[pcount].set_title(caselist[f])
-                        axes[pcount].set_ylabel('P (hPa)')
+                        axes[pcount].set_ylabel('height (km)')
                     elif (varsinpanel > 4) & (pcount % 2 == 0):
                         sc=axes[pcount/2,0].plt.contourf(time,rev_lev,vartoplot)
-                        axes[pcount/2,0].set_ylim(max(rev_lev),toplev)
+                        axes[pcount/2,0].set_ylim(0,toplev)
                         axes[pcount/2,0].set_title(caselist[f])
-                        axes[pcount/2,0].set_ylabel('P (hPa)')                        
+                        axes[pcount/2,0].set_ylabel('height (km)')
                     elif (varsinpanel > 4) & (pcount % 2 != 0):
                         sc=axes[pcount/2,1].plt.contourf(time,rev_lev,vartoplot)
-                        axes[pcount/2,1].set_ylim(max(rev_lev),toplev)
+                        axes[pcount/2,1].set_ylim(0,toplev)
                         axes[pcount/2,1].set_title(caselist[f])
-                        axes[pcount/2,1].set_ylabel('P (hPa)') 
+                        axes[pcount/2,1].set_ylabel('height (km)')
                         
                     # get unit info here because next file may not have it
                     if hasattr(fh.variables[varname],'units'):
@@ -278,7 +322,7 @@ def plot2Dtimepanel(datadir,plotdir,toplev,filelist,caselist):
                     pcount=pcount+1
             
 #            plt.ylabel('P (hPa)')
-            plt.xlabel('time (days)')
+            plt.xlabel(xaxis_units)
             
             fig.tight_layout()
 
