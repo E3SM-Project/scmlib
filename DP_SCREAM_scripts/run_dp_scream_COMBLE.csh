@@ -105,7 +105,7 @@
 # Case specific information kept here
   set lat = 75 # latitude
   set lon = 10.0 # longitude
-  set do_iop_srf_prop = .false. # Use surface fluxes in IOP file?
+  set do_iop_srf_prop = .true. # Use surface fluxes in IOP file?
   set do_iop_nudge_tq = .false. # Relax T&Q to observations?
   set do_iop_nudge_uv = .true. # Relax U&V to observations?
   set do_iop_subsidence = .false. # compute LS vertical transport?
@@ -222,6 +222,7 @@ cat <<EOF >> user_nl_eam
  iopfile = '$input_data_dir/$iop_path/$iop_file'
  pertlim = 0.001
  iop_perturb_high = 900.0D0
+ iop_coriolis = .true.
 EOF
 
 # Timestepping stuff related to DP-SCREAM

@@ -234,6 +234,7 @@ cat <<EOF >> user_nl_eam
  pertlim = 0.001
  iop_perturb_high = 900.0D0
  ncdata='$CASEncdata/atm/cam/inic/homme/cami_mam3_Linoz_ne30np4_SCREAM_L128_c160214.nc'
+ iop_coriolis = CASEcoriolis
 EOF
 
 # Timestepping stuff related to DP-SCREAM
