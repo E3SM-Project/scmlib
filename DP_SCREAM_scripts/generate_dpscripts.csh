@@ -81,7 +81,7 @@ sed -i s/CASEney/20/ $outfile
 sed -i s/CASElex/200000/ $outfile
 sed -i s/CASEley/200000/ $outfile
 sed -i s/CASEtqnudge/.false./ $outfile
-sed -i s/CASEuvnudge/.true./ $outfile
+sed -i s/CASEuvnudge/.false./ $outfile
 sed -i s/CASEdosub/.false./ $outfile
 sed -i s/CASEcoriolis/.true./ $outfile
 sed -i s/CASEwalltime/00:30:00/ $outfile
