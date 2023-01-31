@@ -114,7 +114,7 @@
   set startdate = 2013-07-21 # Start date in IOP file
   set start_in_sec = 19620 # start time in seconds in IOP file
   set stop_option = nhours
-  set stop_n = 95
+  set stop_n = 78
   set iop_file = MAGIC_iopfile_4scam.nc #IOP file name
 # End Case specific stuff here
 

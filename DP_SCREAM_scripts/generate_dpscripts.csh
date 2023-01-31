@@ -38,7 +38,7 @@ sed -i s/CASElwoff/.false./ $outfile
 sed -i s/CASEstartdate/2013-07-21/ $outfile
 sed -i s/CASEstartinsec/19620/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
-sed -i s/CASEstopn/95/ $outfile
+sed -i s/CASEstopn/78/ $outfile
 sed -i s/CASEdebug/true/ $outfile
 sed -i s/CASEnumprocs/24/ $outfile
 sed -i s/CASEnex/5/ $outfile
