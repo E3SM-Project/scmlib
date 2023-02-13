@@ -14,8 +14,8 @@ import os
 import DP_diagnostics_functions
 import SAM_LES_to_SCREAM_matching
 
-def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,caselist,derived_prof,\
-                   LES_model_opt="none",les_file_opt="undefined",les_time_start_opt=0):
+def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,caselist,varstoplot_in,
+                 derived_prof,LES_model_opt="none",les_file_opt="undefined",les_time_start_opt=0):
     
     colorarr=["r","b","g","c","m","y","k"] # standard
     
@@ -25,21 +25,22 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
     ############################################################
     # Make the variable list for variables to plot
     # This will make profile plots for every variable possible
-    
-    # Initialize list
-    varstoplot=[];
-    
-    # temporarily limit to searching just the first file for speed
-    listtodo=filelist[0]
-    DP_diagnostics_functions.makevarlist(datadir,listtodo,4,varstoplot)
 
-    #test here
-    varstoplot=["CLOUD","CLDLIQ","RAINQM","U","V"]
+    if (varstoplot_in[0] == "all"):
+        # Initialize list
+        varstoplot=[];
+
+        # temporarily limit to searching just the first file for speed
+        listtodo=filelist[0]
+        DP_diagnostics_functions.makevarlist(datadir,listtodo,4,varstoplot)
+    else:
+        varstoplot=varstoplot_in
 
     # append the derived variables to the list
-    numderived=len(derived_prof)
-    for d in range(0,numderived):
-        varstoplot.append(derived_prof[d])
+    if (derived_prof[0] != "none"):
+        numderived=len(derived_prof)
+        for d in range(0,numderived):
+            varstoplot.append(derived_prof[d])
 
     doles=False # Initialize to False
     if (LES_model_opt != "none"):

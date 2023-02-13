@@ -41,7 +41,7 @@ def makevarlist_profiles(varstoplot,lesvarstoplot):
 
         # Total water flux (SGS)
         elif (varstoplot[v] == "WQW_SEC"):
-            lesvarstoplot.append("QTFLUXS")
+            lesvarstoplot.append("QTOFLXS")
 
         # Thetal flux (total)
         elif (varstoplot[v] == "TOT_WTHL"):
