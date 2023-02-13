@@ -41,10 +41,8 @@ def makevarlist(datadir,filelist,dimtest,varstoplot):
                 vartotest=fh.variables[varname][:]
                 if (vartotest.ndim == dimtest_rev):
                     theshape=np.shape(vartotest)
-#                    print('STUFF ', varname, theshape[vartotest.ndim -1], ncol)
                     if (theshape[vartotest.ndim - 1] == ncol):
                         varstoplot.append(varname)   
-#                        print('APPEND ', varname)
                     
     return varstoplot
 
