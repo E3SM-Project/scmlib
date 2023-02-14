@@ -8,13 +8,15 @@ Created on Thurs Feb 01 13:24:40 2023
 # Define a function so that we can equate specific SAM LES variables
 # with specific SCREAM variables
 
-def makevarlist_profiles(varstoplot,lesvarstoplot):
+def makevarlist(varstoplot,lesvarstoplot):
 
     print("Getting matching SAM LES variables")
 
     numvars=len(varstoplot)
 
     for v in range(0,numvars):
+        #################################################
+        # BELOW VARIABLES ARE FOR PROFILES
         # Cloud fraction
         if (varstoplot[v] == "CLOUD"):
             lesvarstoplot.append("CLD")
@@ -99,6 +101,94 @@ def makevarlist_profiles(varstoplot,lesvarstoplot):
         elif (varstoplot[v] == "TOT_QW2"):
             lesvarstoplot.append("QT2")
 
+        #################################################
+        # BELOW VARIABLES ARE FOR TIME SERIES
+
+        # Total liquid water path
+        elif (varstoplot[v] == "TGCLDLWP"):
+            lesvarstoplot.append("CWP")
+
+        # Total ice water path
+        elif (varstoplot[v] == "TGCLDIWP"):
+            lesvarstoplot.append("IWP")
+
+        # Precipitable water
+        elif (varstoplot[v] == "TMQ"):
+            lesvarstoplot.append("PW")
+
+        # Convective available potential energy
+        elif (varstoplot[v] == "CAPE"):
+            lesvarstoplot.append("CAPE")
+
+        # Convective inhibition
+        elif (varstoplot[v] == "CIN"):
+            lesvarstoplot.append("CIN")
+
+        # Integrated low cloud amount
+        elif (varstoplot[v] == "CLDLOW"):
+            lesvarstoplot.append("CLDLOW")
+
+        # Integrated mid-level cloud amount
+        elif (varstoplot[v] == "CLDMED"):
+            lesvarstoplot.append("CLDMID")
+
+        # Integrated high-level cloud amount
+        elif (varstoplot[v] == "CLDHGH"):
+            lesvarstoplot.append("CLDHI")
+
+        # Solar insolation
+        elif (varstoplot[v] == "SOLIN"):
+            lesvarstoplot.append("SOLIN")
+
+        # Surface precipitation rate
+        elif (varstoplot[v] == "PRECL" or varstoplot[v] == "PRECT"):
+            lesvarstoplot.append("PREC")
+
+        # Net longwave flux at top of model
+        elif (varstoplot[v] == "FLNT"):
+            lesvarstoplot.append("LWNT")
+
+        # Downwelling longwave flux at surface
+        elif (varstoplot[v] == "FLDS"):
+            lesvarstoplot.append("LWDS")
+
+        # Clear sky net longwave flux at surface
+        elif (varstoplot[v] == "FLNSC"):
+            lesvarstoplot.append("LWNSC")
+
+        # Net longwave flux at surface
+        elif (varstoplot[v] == "FLNS"):
+            lesvarstoplot.append("LWNS")
+
+        # Donwelling solar flux at surface
+        elif(varstoplot[v] == "FSDS"):
+            lesvarstoplot.append("SWDS")
+
+        # Net shortwave flux at surface
+        elif (varstoplot[v] == "FSNS"):
+            lesvarstoplot.append("SWNS")
+
+        # Net shortwave flux at top of model
+        elif(varstoplot[v] == "FSNT"):
+            lesvarstoplot.append("SWNT")
+
+        # Net shortwave flux at top of atmosphere
+        elif(varstoplot[v] == "FSNTOA"):
+            lesvarstoplot.append("SWNTOA")
+
+        # Net clear sky net surface flux at surface
+        elif(varstoplot[v] == "FSNSC"):
+            lesvarstoplot.append("SWNSC")
+
+        # Sensible surface heat flux
+        elif(varstoplot[v] == "SHFLX"):
+            lesvarstoplot.append("SHF")
+
+        # Latent surface heat flux
+        elif(varstoplot[v] == "LHFLX"):
+            lesvarstoplot.append("LHF")
+
+        #################################################
         # Do this if there is no matching LES variable
         else:
             lesvarstoplot.append("NONE")

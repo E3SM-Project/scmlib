@@ -12,12 +12,15 @@ import scipy as sp
 import pylab
 import os
 import DP_diagnostics_functions
+import SAM_LES_to_SCREAM_matching
 
-def plot1Dtime(datadir,plotdir,time_start,time_end,filelist,caselist,\
-               xaxis_opt="default",xaxis_units="time (days)",\
-               xaxis_mult=0,xaxis_start=0):
+def plot1Dtime(datadir,plotdir,time_start,time_end,filelist,caselist,LES_model_opt="none",
+               les_file_opt="undefined",les_time_start_opt=0,xaxis_opt="default",
+               xaxis_units="time (days)",xaxis_mult=0,xaxis_start=0):
 
     colorarr=["r","b","g","c","m","y"]
+    xdir=10 # size of plotting window in xdirection
+    ydir=4 # size of plotting window in ydirection
 
     numfiles=len(filelist)
 
@@ -32,6 +35,25 @@ def plot1Dtime(datadir,plotdir,time_start,time_end,filelist,caselist,\
     listtodo=filelist[0]
     DP_diagnostics_functions.makevarlist(datadir,listtodo,3,varstoplot)
 
+    doles=False # Initialize to False
+    if (LES_model_opt != "none"):
+        # Initialize some stuff
+        lesvarstoplot=[]
+        lesvertcord=[]
+        lestimecord=[]
+
+        doles=True # Set to true, pending checks
+        # Check to make sure supported LES is used
+        if (LES_model_opt != "SAM"):
+            print("Only supported LES data will be plotted.")
+            print("Either add support for your LES or choose a different one.")
+            doles=False
+        elif (LES_model_opt == "SAM"):
+            print("Profiles will be plotted against SAM LES data")
+            # Call function to match SCREAM variables with LES variables
+            SAM_LES_to_SCREAM_matching.makevarlist(varstoplot,lesvarstoplot)
+            lestimecord='time'
+
     print('Now Plotting 1D Time Fields')
     ############################################################
     # loop over the variables to plot
@@ -39,6 +61,30 @@ def plot1Dtime(datadir,plotdir,time_start,time_end,filelist,caselist,\
 
         varname=varstoplot[x]
         legendlist=[];
+        plt.figure(x,figsize=(xdir,ydir))
+        # Read in optional LES data
+        if (doles):
+            # Does this variable exist in LES file?
+            if (lesvarstoplot[x] != "NONE"):
+                fh=Dataset(les_file_opt,mod='r')
+
+                # Read in appropriate variables
+                time_les=fh.variables[lestimecord][:]
+
+                var_les=fh.variables[lesvarstoplot[x]][:]
+
+                # Convert time to same as SCREAM
+                time_les=time_les-les_time_start_opt
+
+                # Eventually need to deal with "end" condition here
+                # Also, currently LES compatibility can only deal with one time period
+                les_plottimes=np.squeeze(np.where((time_les >= time_start) & \
+                                              (time_les <= time_end)))
+
+ #               time_les=time_les[les_plottimes]
+                plt.plot(time_les[les_plottimes],var_les[les_plottimes],'k',linewidth=3)
+                #                plt.plot(np.squeeze(les_avgprof[plotlevs]),z_les[plotlevs],'k',linewidth=3)
+                legendlist.append('LES')
 
         # loop over the number of simulations to plot
         for f in range(0,numfiles):
@@ -74,7 +120,15 @@ def plot1Dtime(datadir,plotdir,time_start,time_end,filelist,caselist,\
                 else:
                     xaxis_units="time (days)"
 
-                plt.figure(x)
+                plottheunits=fh.variables[varname].units
+                if (plottheunits == "kg/m2"):
+                    vartoplot2=vartoplot2*1000.
+                    plottheunits="g/m$^{2}$"
+
+                if (plottheunits == "m/s" and (varname == "PRECL" or varname == "PRECT")):
+                    vartoplot=vartoplot*1000.*86400. # convert from m/s to mm/day
+                    plottheunits="mm/day"
+
                 plt.plot(time[plottimes],vartoplot2,colorarr[f],linewidth=3)
 
                 legendlist.append(caselist[f])
@@ -83,7 +137,8 @@ def plot1Dtime(datadir,plotdir,time_start,time_end,filelist,caselist,\
                 '(' + varname + ')',fontsize=16)
                 plt.xlabel(xaxis_units,fontsize=14)
                 if hasattr(fh.variables[varname],'units'):
-                    plt.ylabel('('+fh.variables[varname].units+')',fontsize=14)
+                    plt.ylabel('('+plottheunits+')',fontsize=14)
+                plt.xlim([time[plottimes[0]],time[plottimes[len(plottimes)-1]]])
                 plt.grid(True)
                 plt.xticks(fontsize=14)
                 plt.yticks(fontsize=14)

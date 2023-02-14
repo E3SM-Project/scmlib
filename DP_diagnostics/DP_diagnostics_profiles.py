@@ -58,7 +58,7 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
         elif (LES_model_opt == "SAM"):
             print("Profiles will be plotted against SAM LES data")
             # Call function to match SCREAM variables with LES variables
-            SAM_LES_to_SCREAM_matching.makevarlist_profiles(varstoplot,lesvarstoplot)
+            SAM_LES_to_SCREAM_matching.makevarlist(varstoplot,lesvarstoplot)
             lesvertcord='z'
             lestimecord='time'
 
