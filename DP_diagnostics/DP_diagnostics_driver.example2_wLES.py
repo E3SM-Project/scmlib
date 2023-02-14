@@ -4,6 +4,9 @@ DP-SCREAM Diagnostics package
 
 Main file to make plots and webpages for the DP-SCREAM
 Diagnsotics package
+
+This example script shows you how to plot several DP-SCREAM model simulations
+against one another, in addition to comparing them to SAM LES
 """
 
 ## ==========================================================

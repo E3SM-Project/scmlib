@@ -1,46 +1,59 @@
 # -*- coding: utf-8 -*-
 """
-DP-SCREAM Diagnostics package 
+DP-SCREAM Diagnostics package
 
 Main file to make plots and webpages for the DP-SCREAM
 Diagnsotics package
+
+This example script shows you how to plot several time profiles from
+a single DP-SCREAM model simulaiton.
 """
 
 ## ==========================================================
 ## ==========================================================
 ## ==========================================================
 # Begin User Defined Settings
-    
-# User defined name used for this comparison, this will be the name 
+
+# User defined name used for this comparison, this will be the name
 #   given the directory for these diagnostics
 casename="DP_SCREAM.CASS.test.001a"
-    
+
 # Directory where output files (i.e. *.eam.h0*) live
-datadir="/global/cscratch1/sd/bogensch/DPSCREAM_simulations/" 
+datadir="/pscratch/sd/b/bogensch/dp_scream/"
 
 # Directory where output will be written to (plots, webpages, etc.)
-outdir="/global/cscratch1/sd/bogensch/IOPSCREAM_simulations/DP_diags/"
+outdir=datadir+"/dp_diags/"
 
-# Here put the output files.  Currently there is a limit of 
+# Here put the output files.  Currently there is a limit of
 #   six cases, but this could be easily fixed if desired.
-          
-filelist_pre=["scream_dp_CASS"]         
-          
-filelist_append="2000-07-24-39600.nc"
-   
+
+filelist_pre=["scream_dp_CASS.pm.001a"]
+
+filelist_append="2000-07-24-43200.nc"
+
 # Easy ID for individual cases, for legends and plot titles
 caselist=["CNTL"]
 
 #################################
-# OPTIONS FOR SET1: PROFILE PLOTS       
+# OPTION FOR LES:
+
+# If activating support for SAM LES then
+#  provie the statistics file in *.nc form
+LESmodel="none" # Set to "none" if no les desired
+lesfile=""
+lestime_start=0.0 # Enter the staring time of your desired LES analysis (in units of your LES)
+                     # Note that at the current time only units of "days" is supported
+
+#################################
+# OPTIONS FOR SET1: PROFILE PLOTS
 # Make profile plots
 makeprofiles=True
-#  Averaging period  
-#  Enter "end" for average_end to end averaging at the end of the simulation 
-#  Simply enter "0" to start at the beginning of the simulation  
+#  Averaging period
+#  Enter "end" for average_end to end averaging at the end of the simulation
+#  Simply enter "0" to start at the beginning of the simulation
 prof_avg_start=[0.0, 0.08, 0.16, 0.25, 0.32, 0.4, 0.5] # units in days
 prof_avg_end=[0.0, 0.09, 0.17, 0.25, 0.34, 0.42, 0.5] # units in days
-# Top layer you would like to make your plots, in units of km (useful for 
+# Top layer you would like to make your plots, in units of km (useful for
 #   boundary layer cloud cases)
 toplev_prof=4.0
 
@@ -48,12 +61,17 @@ toplev_prof=4.0
 #  Optional: Append time period to the legend
 timelist=["6 LST","8 LST","10 LST","12 LST","14 LST","16 LST","18 LST"]
 
+# List variables to plot.  If you wish for ALL three dimensional variables in
+#  your file to be plotted then submit as:
+#  varstoplot_prof=["all"]
+varstoplot_prof=["all"]
+
 # Option to plot derived variables (i.e. variables that are NOT in the standard
 #  output but computed on the fly).
 derived_prof=["CLDLIQICE","TOT_WQW","TOT_WTHL","THETAL","QT"]
 
 #################################
-# OPTIONS FOR SET2: 1D TIME SERIES PLOTS     
+# OPTIONS FOR SET2: 1D TIME SERIES PLOTS
 # Make 1D timeseries plots
 make1Dtime=False
 #  1D time series plotting period
@@ -66,10 +84,10 @@ time1d_xaxis="custom"  # Specify "custom" if you want different units
 #  a different unit you can specify that here
 time1d_xaxis_units="Local Time (hr)"
 time1d_xaxis_mult=24
-time1d_xaxis_start=6 
+time1d_xaxis_start=6
 
 #################################
-# OPTIONS FOR SET3: 2D TIME SERIES PLOTS - CURRENTLY NOT SUPPORTED       
+# OPTIONS FOR SET3: 2D TIME SERIES PLOTS - CURRENTLY NOT SUPPORTED
 # Make 2D timeseries plots
 make2Dtime=False # NOT SUPPORTED AT THIS TIME
 toplev_time2D=0.0
@@ -80,7 +98,7 @@ makeweb=True
 # Generate .tar file for webpage and output
 maketar=True
 
-# End User Defined Settings    
+# End User Defined Settings
 ## ==========================================================
 ## ==========================================================
 ## ==========================================================
@@ -102,29 +120,32 @@ for f in range(0,len(filelist_pre)):
 casedir=outdir+casename
 print("CaseDir", casedir)
 
-    
+
 if not os.path.exists(casedir):
-    os.mkdir(casedir)    
-   
+    os.mkdir(casedir)
+
 if makeprofiles:
-    print("Making set1: Profile plots")    
+    print("Making set1: Profile plots")
     profdir=casedir+'/set1'
     if not os.path.exists(profdir):
         os.mkdir(profdir)
     profwebvars=DP_diagnostics_profiles.plotprofiles(datadir,profdir,toplev_prof,\
                                                       prof_avg_start,prof_avg_end,timelist,\
-                                                      filelisth0,caselist,derived_prof)
-                                                       
+                                                      filelisth0,caselist,varstoplot_prof,derived_prof,\
+                                                      LES_model_opt=LESmodel,les_file_opt=lesfile,\
+                                                      les_time_start_opt=lestime_start)
+
 if make1Dtime:
     print("Making set2: 1D Time series")
     time1Ddir=casedir+'/set2'
     if not os.path.exists(time1Ddir):
         os.mkdir(time1Ddir)
     time1Dwebvars=DP_diagnostics_time.plot1Dtime(datadir,time1Ddir,time1d_start,time1d_end,\
-                                                 filelisth1,caselist,\
+                                                 filelisth1,caselist,LES_model_opt=LESmodel,les_file_opt=lesfile,\
+                                                 les_time_start_opt=lestime_start,\
                                                  xaxis_opt=time1d_xaxis,xaxis_units=time1d_xaxis_units,\
 						 xaxis_mult=time1d_xaxis_mult,xaxis_start=time1d_xaxis_start)
-    
+
 if make2Dtime:
     print("Making set3: 2D Time series")
     time2Ddir=casedir+'/set3'
@@ -135,7 +156,7 @@ if make2Dtime:
 
 ## ============================
 # Make Web Page
- 
+
 if makeweb:
     print("Making webpages")
     DP_diagnostics_webpages.main_web(casename,casedir)
@@ -147,13 +168,13 @@ if makeweb:
                                   "Set 2 - 1D Timeseries Plots","454","318")
     if (make2Dtime):
         DP_diagnostics_webpages.sets_web(casename,casedir,time2Dwebvars,"set3",\
-                                  "Set 3 - 2D Timeseries Plots","454","318")    
+                                  "Set 3 - 2D Timeseries Plots","454","318")
 
-if maketar:    
+if maketar:
     print("Making tar file of case")
     DP_diagnostics_functions.make_tarfile(outdir+casename+'.tar',outdir+casename)
-    
-    
 
 
-    
+
+
+
