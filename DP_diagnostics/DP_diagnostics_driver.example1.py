@@ -73,7 +73,7 @@ derived_prof=["CLDLIQICE","TOT_WQW","TOT_WTHL","THETAL","QT"]
 #################################
 # OPTIONS FOR SET2: 1D TIME SERIES PLOTS
 # Make 1D timeseries plots
-make1Dtime=False
+make1Dtime=True
 #  1D time series plotting period
 #  To plot entire simulation simply put 0 for start and "end" for end
 time1d_start=0 # units in days

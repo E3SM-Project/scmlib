@@ -16,9 +16,10 @@ import SAM_LES_to_SCREAM_matching
 
 def plot1Dtime(datadir,plotdir,time_start,time_end,filelist,caselist,LES_model_opt="none",
                les_file_opt="undefined",les_time_start_opt=0,xaxis_opt="default",
-               xaxis_units="time (days)",xaxis_mult=0,xaxis_start=0):
+               xaxis_units="time (days)",xaxis_mult=0,xaxis_start=0,
+               colorarr=["r","b","g","c","m","y","k"], # default color scheme
+               linesarr=["-","-","-","-","-","-","-"]): # default line style scheme
 
-    colorarr=["r","b","g","c","m","y"]
     xdir=10 # size of plotting window in xdirection
     ydir=4 # size of plotting window in ydirection
 
@@ -53,6 +54,7 @@ def plot1Dtime(datadir,plotdir,time_start,time_end,filelist,caselist,LES_model_o
             # Call function to match SCREAM variables with LES variables
             SAM_LES_to_SCREAM_matching.makevarlist(varstoplot,lesvarstoplot)
             lestimecord='time'
+            lesname='SAM LES'
 
     print('Now Plotting 1D Time Fields')
     ############################################################
@@ -84,7 +86,7 @@ def plot1Dtime(datadir,plotdir,time_start,time_end,filelist,caselist,LES_model_o
  #               time_les=time_les[les_plottimes]
                 plt.plot(time_les[les_plottimes],var_les[les_plottimes],'k',linewidth=3)
                 #                plt.plot(np.squeeze(les_avgprof[plotlevs]),z_les[plotlevs],'k',linewidth=3)
-                legendlist.append('LES')
+                legendlist.append(lesname)
 
         # loop over the number of simulations to plot
         for f in range(0,numfiles):
@@ -129,7 +131,8 @@ def plot1Dtime(datadir,plotdir,time_start,time_end,filelist,caselist,LES_model_o
                     vartoplot=vartoplot*1000.*86400. # convert from m/s to mm/day
                     plottheunits="mm/day"
 
-                plt.plot(time[plottimes],vartoplot2,colorarr[f],linewidth=3)
+                plt.plot(time[plottimes],vartoplot2,color=colorarr[f],
+                         linestyle=linesarr[f],linewidth=3)
 
                 legendlist.append(caselist[f])
 

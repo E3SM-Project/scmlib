@@ -15,13 +15,13 @@ import DP_diagnostics_functions
 import SAM_LES_to_SCREAM_matching
 
 def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,caselist,varstoplot_in,
-                 derived_prof,LES_model_opt="none",les_file_opt="undefined",les_time_start_opt=0):
-    
-    colorarr=["r","b","g","c","m","y","k"] # standard
-    
+                 derived_prof,LES_model_opt="none",les_file_opt="undefined",les_time_start_opt=0,
+                 colorarr=["r","b","g","c","m","y","k"], # default color scheme
+                 linesarr=["-","-","-","-","-","-","-"]): # default line style scheme
+
     numfiles=len(filelist)
     numtimes=len(avg_start)
-        
+
     ############################################################
     # Make the variable list for variables to plot
     # This will make profile plots for every variable possible
@@ -61,14 +61,15 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
             SAM_LES_to_SCREAM_matching.makevarlist(varstoplot,lesvarstoplot)
             lesvertcord='z'
             lestimecord='time'
+            lesname='SAM LES'
 
     print('Now Plotting Profiles')
     ############################################################
     # loop over the variables to plot
     for x in range(0,len(varstoplot)):
-        
+
         varname=varstoplot[x]
-    
+
         legendlist=[];
         plt.figure(x) # initialize figure
         # Read in optional LES data
@@ -97,20 +98,20 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
 
                 plotlevs=np.where(z_les < toplev)
                 plt.plot(np.squeeze(les_avgprof[plotlevs]),z_les[plotlevs],'k',linewidth=3)
-                legendlist.append('LES')
+                legendlist.append(lesname)
 
         # loop over the number of simulations to plot
         for f in range(0,numfiles):
 
             Rd=287.15 # gas constant for air
             grav=9.81 # gravity
-            
+
             filename=filelist[f]
             file=datadir+filename
-            
+
             # Read in file and the dataset information
             fh=Dataset(file,mode='r')
-            
+
             # Read in appropriate coordinate variables
             lat=fh.variables['lat'][:]
             lon=fh.variables['lon'][:]
@@ -140,14 +141,14 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
             z_int=z_int/1000.
 
             # End compute heights
-            
+
             # Generate a list to see if variables are in there
             varsinfile=fh.variables.keys()
-                
+
             # The True check is a temporary hack
             if (varname in varsinfile or True):
 #            if (varname in varsinfile):
-            
+
                 # If derived variable search first for that
                 # If you want to add dervied variables, this is the place
                 if (varname == "CLDLIQICE"):
@@ -274,7 +275,8 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
                     # Only plot to top level
                     plotlevs=np.where(levarr < toplev)
 
-                    plt.plot(np.squeeze(avgprof[plotlevs]),levarr[plotlevs],colorarr[f+f+t],linewidth=3)
+                    plt.plot(np.squeeze(avgprof[plotlevs]),levarr[plotlevs],color=colorarr[f+t],
+                             linestyle=linesarr[f+t],linewidth=3)
 
                     #plt.ylim(max(levarr),toplev)
                     plt.ylim(0,toplev)
@@ -286,11 +288,11 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
                     plt.ticklabel_format(style='sci', axis='x', scilimits=(-4,4))
                     plt.xticks(fontsize=14)
                     plt.yticks(fontsize=14)
-                
-        plt.legend(legendlist)        
+
+        plt.legend(legendlist)
         pylab.savefig(plotdir+'/'+varname+'.png',bbox_inches='tight',pad_inches=0.05)
         plt.close(x)
-        
+
     return varstoplot
 
 def compute_thetal(temp,cldliq,Ps,hyam,hybm):
@@ -306,10 +308,10 @@ def compute_thetal(temp,cldliq,Ps,hyam,hybm):
     timedim=theshape[0]
     levdim=theshape[1]
     ptsdim=theshape[2]
-    
+
     pottemp=np.zeros((timedim,levdim,ptsdim))
     Psavg=np.mean(Ps,axis=1)/100.
-    
+
     # Compute thetal
     for t in range(0,timedim):
         for k in range(0,levdim):
@@ -317,7 +319,7 @@ def compute_thetal(temp,cldliq,Ps,hyam,hybm):
             levarr=P0*hyam[k]+Psavg[t]*hybm[k]
             pottemp[t,k,:] = (temp[t,k,:]*(Psavg[t]/levarr)**(R_over_Cp)) - \
             ((latvap/Cp)*cldliq[t,k,:])
-	    
+
     vartoplot = pottemp
     return vartoplot
-        
+

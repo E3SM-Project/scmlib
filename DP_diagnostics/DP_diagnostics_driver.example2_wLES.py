@@ -16,7 +16,7 @@ against one another, in addition to comparing them to SAM LES
 
 # User defined name used for this comparison, this will be the name
 #   given the directory for these diagnostics
-casename="DP_SCREAM.MAGIC.3km.001a"
+casename="DP_SCREAM.MAGIC.test.001a"
 
 # Directory where output files (i.e. *.eam.h0*) live
 datadir="/pscratch/sd/b/bogensch/dp_scream/"
@@ -35,6 +35,10 @@ filelist_append="2013-07-21-19620.nc"
 
 # Easy ID for individual cases, for legends and plot titles
 caselist=["3 km L128","100 m L128","100 m L526"]
+
+# Pick your color scheme and line styles for each simulation
+colorarr=["b","r","g"]
+linesarr=["-","-","-"]
 
 #################################
 # OPTION FOR LES:
@@ -135,7 +139,8 @@ if makeprofiles:
                                                       prof_avg_start,prof_avg_end,timelist,\
                                                       filelisth0,caselist,varstoplot_prof,derived_prof,\
                                                       LES_model_opt=LESmodel,les_file_opt=lesfile,\
-                                                      les_time_start_opt=lestime_start)
+                                                      les_time_start_opt=lestime_start,\
+                                                      colorarr=colorarr,linesarr=linesarr)
 
 if make1Dtime:
     print("Making set2: 1D Time series")
@@ -146,7 +151,8 @@ if make1Dtime:
                                                  filelisth1,caselist,LES_model_opt=LESmodel,les_file_opt=lesfile,\
                                                  les_time_start_opt=lestime_start,\
                                                  xaxis_opt=time1d_xaxis,xaxis_units=time1d_xaxis_units,\
-						 xaxis_mult=time1d_xaxis_mult,xaxis_start=time1d_xaxis_start)
+						 xaxis_mult=time1d_xaxis_mult,xaxis_start=time1d_xaxis_start,
+                                                 colorarr=colorarr,linesarr=linesarr)
 
 if make2Dtime:
     print("Making set3: 2D Time series")
