@@ -16,7 +16,7 @@
   setenv casename scream_dp_SGP_continuous
 
   # Set the case directory here
-  setenv casedirectory /global/cscratch1/sd/bogensch/DPSCREAM_simulations
+  setenv casedirectory /pscratch/sd/b/bogensch/dp_scream
 
   # Directory where code lives
   setenv code_dir /global/homes/b/bogensch/ACME_development
@@ -25,7 +25,7 @@
   setenv code_tag SCREAM_DP
 
   # Name of machine you are running on (i.e. cori, anvil, etc)
-  setenv machine cori-haswell
+  setenv machine pm-cpu
 
   # Name of project to run on, if submitting to queue
   setenv projectname e3sm

@@ -15,7 +15,7 @@
 
 # For runs, probably want to have more frequent averaged output for BL cases
 
-setenv setupfor cori
+setenv setupfor pm
 
 # helpful notes
 # path to prescribed aerosol file = atm/cam/chem/presc_aero
@@ -1101,6 +1101,30 @@ if ($setupfor == cori) then
 
       # Name of machine used
       sed -i s+'mach_name'+cori-haswell+ $file
+
+      # Name of project to be charged
+      sed -i s+'proj_name'+e3sm+ $file
+    endif
+  end
+
+endif
+
+if ($setupfor == pm) then
+
+  foreach file (*.csh)
+    if ($file != run_dp_scream_TEMPLATE.csh && $file != generate_dpscripts.csh) then
+
+      # Path to output
+      sed -i s+'$CSCRATCH/SCM_runs'+/pscratch/sd/b/bogensch/dp_scream+ $file
+      
+      # Path to code base
+      sed -i s+'$HOME/SCREAM_code'+/global/homes/b/bogensch/ACME_development+ $file
+
+      # Name of code base
+      sed -i s+'SCREAM_codetag'+SCREAM_DP+ $file
+
+      # Name of machine used
+      sed -i s+'mach_name'+pm-cpu+ $file
 
       # Name of project to be charged
       sed -i s+'proj_name'+e3sm+ $file
