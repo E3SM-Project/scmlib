@@ -110,6 +110,12 @@
     if ($e3sm_version == master) set compset = FSCM
   endif
 
+  if ($e3sm_version == master) then
+    set nudge_flag = iop_nudge_tq
+  else
+    set nudge_flag = scm_relaxation
+  endif
+
   if ($dycore == Eulerian) then
     set grid=T42_T42
   endif
@@ -225,7 +231,7 @@ cat <<EOF >> user_nl_${atm_mod}
  mfilt = 10000
  nhtfrq = 1
  scm_iop_srf_prop = $do_iop_srf_prop
- scm_relaxation = $do_scm_relaxation
+ $nudge_flag = $do_scm_relaxation
  iradlw = $iradlw_in
  iradsw = $iradsw_in
  precip_off = $do_turnoff_precip
