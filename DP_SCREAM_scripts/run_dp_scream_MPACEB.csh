@@ -111,7 +111,7 @@
   set do_iop_subsidence = .true. # compute LS vertical transport?
   set do_turnoff_swrad = .false. # Turn off SW calculation
   set do_turnoff_lwrad = .false. # Turn off LW calculation
-  set startdate = 1999-10-09 # Start date in IOP file
+  set startdate = 2004-10-09 # Start date in IOP file
   set start_in_sec = 61200 # start time in seconds in IOP file
   set stop_option = nhours
   set stop_n = 12

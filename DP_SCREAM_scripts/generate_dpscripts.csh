@@ -936,7 +936,7 @@ sed -i s/CASElon/209.0/ $outfile
 sed -i s/CASEsrfprop/.true./ $outfile
 sed -i s/CASEswoff/.false./ $outfile
 sed -i s/CASElwoff/.false./ $outfile
-sed -i s/CASEstartdate/1999-10-09/ $outfile
+sed -i s/CASEstartdate/2004-10-09/ $outfile
 sed -i s/CASEstartinsec/61200/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEstopn/12/ $outfile
