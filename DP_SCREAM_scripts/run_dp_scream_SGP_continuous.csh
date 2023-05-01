@@ -76,11 +76,11 @@
   #  decrease of the model time steps.
 
   # model and physics time step [s]
-  set model_dtime = 75
+  set model_dtime = 100
 
   # dynamics time step [s]
   #  should divide evenly into model_dtime
-  set dyn_dtime = 9.375d0
+  set dyn_dtime = 8.333333333333333d0
 
   # SET SECOND ORDER VISCOSITY NEAR MODEL TOP
   #  NOTE that if you decrease resolution you will also need to reduce
