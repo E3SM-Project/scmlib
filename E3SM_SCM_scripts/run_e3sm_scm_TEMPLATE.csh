@@ -167,7 +167,7 @@
   ./xmlchange --id RUNDIR --val "${case_run_dir}"
 
 # Set to debug, only on certain machines
-  if ($machine =~ 'cori*') then
+  if ($machine =~ 'pm*') then
     ./xmlchange --id JOB_QUEUE --val 'debug'
   endif
 
