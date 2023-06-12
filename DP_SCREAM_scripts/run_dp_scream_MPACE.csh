@@ -155,11 +155,11 @@
 
 # Set to debug, only on certain machines
   if ($debug_queue == 'true') then
-    if ($machine =~ 'cori*' || $machine =~ 'pm*') then
+    if ($machine =~ 'pm*') then
       ./xmlchange --id JOB_QUEUE --val 'debug'
     endif
 
-    if ($machine == 'quartz' || $machine == 'syrah') then
+    if ($machine == 'quartz' || $machine == 'syrah' || $machine == 'ruby') then
       ./xmlchange --id JOB_QUEUE --val 'pdebug'
     endif
   endif
