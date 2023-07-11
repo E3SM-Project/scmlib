@@ -17,8 +17,16 @@ def makevarlist(varstoplot,lesvarstoplot):
     for v in range(0,numvars):
         #################################################
         # BELOW VARIABLES ARE FOR PROFILES
+        # Temperature
+        if (varstoplot[v] == "T"):
+            lesvarstoplot.append("TABS")
+
         # Cloud fraction
-        if (varstoplot[v] == "CLOUD"):
+        elif (varstoplot[v] == "CLOUD"):
+            lesvarstoplot.append("CLD")
+
+        # Cloud fraction
+        elif (varstoplot[v] == "TOT_CLOUD_FRAC"):
             lesvarstoplot.append("CLD")
 
         # Cloud liquid mixing ratio
@@ -32,6 +40,10 @@ def makevarlist(varstoplot,lesvarstoplot):
         # Liquid water potential temperature
         elif (varstoplot[v] == "THETAL"):
             lesvarstoplot.append("THETAL")
+
+        # Water Vapor
+        elif (varstoplot[v] == "Q"):
+            lesvarstoplot.append("QV")
 
         # Total water mixing ratio
         elif (varstoplot[v] == "QT"):
