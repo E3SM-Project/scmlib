@@ -101,6 +101,7 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
                 legendlist.append(lesname)
 
         # loop over the number of simulations to plot
+        counter=0 # set a counter for line and color array styles
         for f in range(0,numfiles):
 
             Rd=287.15 # gas constant for air
@@ -243,10 +244,6 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
                     elif (len(avgprof) == len(ilev)):
                        levarr=z_int
 
-                    #legendlist.append(caselist[f+t])
-                    legendstr=caselist[f]+" "+timelist[t]
-                    legendlist.append(legendstr)
-
                     # Copy units into a temporary arry in case manipulation needs to be done
                     #   on these variables with similar units (like convert kg/kg to g/kg)
                     plottheunits=theunits
@@ -275,8 +272,13 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
                     # Only plot to top level
                     plotlevs=np.where(levarr < toplev)
 
-                    plt.plot(np.squeeze(avgprof[plotlevs]),levarr[plotlevs],color=colorarr[f+t],
-                             linestyle=linesarr[f+t],linewidth=3)
+                    plt.plot(np.squeeze(avgprof[plotlevs]),levarr[plotlevs],color=colorarr[counter],
+                             linestyle=linesarr[counter],linewidth=3)
+
+                    legendstr=caselist[f]+" "+timelist[t]
+                    legendlist.append(legendstr)
+
+                    counter=counter+1
 
                     #plt.ylim(max(levarr),toplev)
                     plt.ylim(0,toplev)
@@ -317,7 +319,7 @@ def compute_thetal(temp,cldliq,Ps,hyam,hybm):
         for k in range(0,levdim):
 
             levarr=P0*hyam[k]+Psavg[t]*hybm[k]
-            pottemp[t,k,:] = (temp[t,k,:]*(Psavg[t]/levarr)**(R_over_Cp)) - \
+            pottemp[t,k,:] = (temp[t,k,:]*(1000.0/levarr)**(R_over_Cp)) - \
             ((latvap/Cp)*cldliq[t,k,:])
 
     vartoplot = pottemp

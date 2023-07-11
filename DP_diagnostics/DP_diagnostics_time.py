@@ -128,8 +128,8 @@ def plot1Dtime(datadir,plotdir,time_start,time_end,filelist,caselist,LES_model_o
                     plottheunits="g/m$^{2}$"
 
                 if (plottheunits == "m/s" and (varname == "PRECL" or varname == "PRECT")):
-                    vartoplot=vartoplot*1000.*86400. # convert from m/s to mm/day
-                    plottheunits="mm/day"
+                    vartoplot2=(vartoplot2*1000.*86400.)/24. # convert from m/s to mm/day
+                    plottheunits="mm/hr"
 
                 plt.plot(time[plottimes],vartoplot2,color=colorarr[f],
                          linestyle=linesarr[f],linewidth=3)
