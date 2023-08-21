@@ -80,7 +80,10 @@ def plot1Dtime(datadir,plotdir,time_start,time_end,filelist,caselist,LES_model_o
 
                 # Eventually need to deal with "end" condition here
                 # Also, currently LES compatibility can only deal with one time period
-                les_plottimes=np.squeeze(np.where((time_les >= time_start) & \
+                if (time_end == "end"):
+                    les_plottimes=np.squeeze(np.where(time_les >= time_start))
+                else:
+                    les_plottimes=np.squeeze(np.where((time_les >= time_start) & \
                                               (time_les <= time_end)))
 
  #               time_les=time_les[les_plottimes]

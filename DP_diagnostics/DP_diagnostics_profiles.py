@@ -126,7 +126,13 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
             z_mid=np.zeros(lev.size)
             z_int=np.zeros(ilev.size)
 
-            T_avg=np.mean(temp,axis=2)
+            # Support for input files that are horizontally averaged
+            if (temp.ndim == 3):
+                # This is default
+                T_avg=np.mean(temp,axis=2)
+            else:
+                # if horizontally averaged
+                T_avg=temp
 
 	    # Guess the bottom edge
             z_int[-1]=0.0
@@ -161,19 +167,28 @@ def plotprofiles(datadir,plotdir,toplev,avg_start,avg_end,timelist,filelist,case
                 elif (varname == "TOT_W2"):
                     vartoplot1=fh.variables['W2_RES'][:]
                     vartoplot2=fh.variables['W_SEC'][:]
-                    vartoplot=vartoplot1[:,1:,:]+vartoplot2
+                    if (vartoplot1.ndim == 3):
+                        vartoplot=vartoplot1[:,1:,:]+vartoplot2
+                    else:
+                        vartoplot=vartoplot1[:,1:]+vartoplot2
                     theunits="m$^{2}$/s$^{2}$"
                     thelongname="Total (Resolved + SGS) Vertical Velocity Variance"
                 elif (varname == "TOT_THL2"):
                     vartoplot1=fh.variables['THL2_RES'][:]
                     vartoplot2=fh.variables['THL_SEC'][:]
-                    vartoplot=vartoplot1+vartoplot2[:,1:,:]
+                    if (vartoplot1.ndim == 3):
+                        vartoplot=vartoplot1+vartoplot2[:,1:,:]
+                    else:
+                        vartoplot=vartoplot1+vartoplot2[:,1:]
                     theunits="K$^{2}$"
                     thelongname="Total (Resolved + SGS) Temperature Variance"
                 elif (varname == "TOT_QW2"):
                     vartoplot1=fh.variables['QW2_RES'][:]
                     vartoplot2=fh.variables['QW_SEC'][:]
-                    vartoplot=vartoplot1+vartoplot2[:,1:,:]
+                    if (vartoplot1.ndim == 3):
+                        vartoplot=vartoplot1+vartoplot2[:,1:,:]
+                    else:
+                        vartoplot=vartoplot1+vartoplot2[:,1:]
                     theunits="kg2/kg2"
                     thelongname="Total (Resolved + SGS) Moisture Variance"
                 elif (varname == "TOT_W3"):
@@ -309,18 +324,28 @@ def compute_thetal(temp,cldliq,Ps,hyam,hybm):
     theshape=np.shape(temp)
     timedim=theshape[0]
     levdim=theshape[1]
-    ptsdim=theshape[2]
+
+    if (temp.ndim == 3):
+        ptsdim=theshape[2]
+        Psavg=np.mean(Ps,axis=1)/100.
+    else:
+        ptsdim=1
+        Psavg=Ps/100.
 
     pottemp=np.zeros((timedim,levdim,ptsdim))
-    Psavg=np.mean(Ps,axis=1)/100.
 
     # Compute thetal
     for t in range(0,timedim):
         for k in range(0,levdim):
 
             levarr=P0*hyam[k]+Psavg[t]*hybm[k]
-            pottemp[t,k,:] = (temp[t,k,:]*(1000.0/levarr)**(R_over_Cp)) - \
-            ((latvap/Cp)*cldliq[t,k,:])
+
+            if (temp.ndim == 3):
+                pottemp[t,k,:] = (temp[t,k,:]*(1000.0/levarr)**(R_over_Cp)) - \
+                ((latvap/Cp)*cldliq[t,k,:])
+            else:
+                pottemp[t,k] = (temp[t,k]*(1000.0/levarr)**(R_over_Cp)) - \
+                ((latvap/Cp)*cldliq[t,k])
 
     vartoplot = pottemp
     return vartoplot

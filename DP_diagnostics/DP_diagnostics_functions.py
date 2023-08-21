@@ -17,7 +17,6 @@ def makevarlist(datadir,filelist,dimtest,varstoplot):
 #    numfiles=len(filelist)
     numfiles=1
     for f in range(0,numfiles):
-#        filename=filelist[f]
         filename=filelist
         file=datadir+filename
         
