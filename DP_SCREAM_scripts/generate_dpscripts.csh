@@ -120,6 +120,37 @@ sed -i s/CASEnhtfrq/-1/ $outfile
 sed -i s/FORCINGPROVIDER/"Yunyan Zhang"/ $outfile
 
 ################################
+# LAFE
+################################
+
+set casename = LAFE
+set outfile = run_dp_scream_$casename.csh
+cp -r run_dp_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"LAFE - Clear Convective Boundary Layer"/ $outfile
+sed -i s/CASElat/36.605/ $outfile
+sed -i s/CASElon/262.515/ $outfile
+sed -i s/CASEsrfprop/.true./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEstartdate/2017-08-08/ $outfile
+sed -i s/CASEstartinsec/41400/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/15/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
+sed -i s/CASEnex/5/ $outfile
+sed -i s/CASEney/5/ $outfile
+sed -i s/CASElex/50000/ $outfile
+sed -i s/CASEley/50000/ $outfile
+sed -i s/CASEtqnudge/.false./ $outfile
+sed -i s/CASEuvnudge/.true./ $outfile
+sed -i s/CASEdosub/.true./ $outfile
+sed -i s/CASEwalltime/00:30:00/ $outfile
+sed -i s/CASEnhtfrq/-1/ $outfile
+sed -i s/FORCINGPROVIDER/"Yunyan Zhang"/ $outfile
+
+################################
 # GABLS
 ################################
 
