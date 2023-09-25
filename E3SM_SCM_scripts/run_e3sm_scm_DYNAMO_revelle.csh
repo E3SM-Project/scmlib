@@ -106,9 +106,7 @@
     # Since v1 the naming convention has changed
     set atm_mod = eam
     set physset = default
-    # SCM compset name has changed since v2 has been tagged
-    if ($e3sm_version == v2) set compset = F_SCAM5
-    if ($e3sm_version == master) set compset = FSCM
+    set compset = FSCM
   endif
 
   if ($e3sm_version == master) then
