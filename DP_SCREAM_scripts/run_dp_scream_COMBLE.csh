@@ -111,10 +111,10 @@
   set do_iop_subsidence = .false. # compute LS vertical transport?
   set do_turnoff_swrad = .false. # Turn off SW calculation
   set do_turnoff_lwrad = .false. # Turn off LW calculation
-  set startdate = 2020-03-13 # Start date in IOP file
-  set start_in_sec = 3600 # start time in seconds in IOP file
+  set startdate = 2020-03-12 # Start date in IOP file
+  set start_in_sec = 79200 # start time in seconds in IOP file
   set stop_option = nhours
-  set stop_n = 17
+  set stop_n = 20
   set iop_file = COMBLE_iopfile_4scam.nc #IOP file name
 # End Case specific stuff here
 

@@ -70,10 +70,10 @@ sed -i s/CASElon/10.0/ $outfile
 sed -i s/CASEsrfprop/.true./ $outfile
 sed -i s/CASEswoff/.false./ $outfile
 sed -i s/CASElwoff/.false./ $outfile
-sed -i s/CASEstartdate/2020-03-13/ $outfile
-sed -i s/CASEstartinsec/3600/ $outfile
+sed -i s/CASEstartdate/2020-03-12/ $outfile
+sed -i s/CASEstartinsec/79200/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
-sed -i s/CASEstopn/17/ $outfile
+sed -i s/CASEstopn/20/ $outfile
 sed -i s/CASEdebug/true/ $outfile
 sed -i s/CASEnumprocs/384/ $outfile
 sed -i s/CASEnex/20/ $outfile
