@@ -1053,6 +1053,8 @@ sed -i s/CASEconfigappend/"'-rce -aquaplanet'"/ $outfile
 sed -i s/CASEncdata/"input_data_dir"/ $outfile
 sed -i s/CASEsstaqua/"sst_val"/ $outfile
 sed -i s/CASEsstval/300/ $outfile
+sed -i s/CASEhydrostatic/.false./ $outfile
+sed -i s/CASEtstep/9/ $outfile
 sed -i '/ELM_CONFIG_OPTS/d' $outfile
 sed -i '/ELM_NAMELIST_OPTS/d' $outfile
 sed -i '/CICE_CONFIG_OPTS/d' $outfile
@@ -1086,6 +1088,8 @@ foreach file (*.csh)
     sed -i '/CASESSTyearstart/d' $file
     sed -i '/CASESSTyearend/d' $file
     sed -i '/CASEcoriolis/d' $file
+    sed -i '/CASEhydrostatic/d' $file
+    sed -i '/CASEtstep/d' $file
   endif
 end
 
