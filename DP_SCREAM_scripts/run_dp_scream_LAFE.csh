@@ -4,7 +4,7 @@
 #######################################################################
 #######  Script to run SCREAM in doubly periodic (DP) mode
 #######  LAFE
-#######  LAFE - Clear Convective Boundary Layer
+#######  LAFE - Clear Convective Boundary Layer at SGP
 #######
 #######  Script Author: P. Bogenschutz (bogenschutz1@llnl.gov)
 #######  Forcing provided by: Yunyan Zhang
@@ -111,7 +111,7 @@
   set do_iop_subsidence = .true. # compute LS vertical transport?
   set do_turnoff_swrad = .false. # Turn off SW calculation
   set do_turnoff_lwrad = .false. # Turn off LW calculation
-  set startdate = 2017-08-08 # Start date in IOP file
+  set startdate = 2017-08-23 # Start date in IOP file
   set start_in_sec = 41400 # start time in seconds in IOP file
   set stop_option = nhours
   set stop_n = 15

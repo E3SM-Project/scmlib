@@ -127,13 +127,13 @@ set casename = LAFE
 set outfile = run_dp_scream_$casename.csh
 cp -r run_dp_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
-sed -i s/THECASEDESCRIPTION/"LAFE - Clear Convective Boundary Layer"/ $outfile
+sed -i s/THECASEDESCRIPTION/"LAFE - Clear Convective Boundary Layer at SGP"/ $outfile
 sed -i s/CASElat/36.605/ $outfile
 sed -i s/CASElon/262.515/ $outfile
 sed -i s/CASEsrfprop/.true./ $outfile
 sed -i s/CASEswoff/.false./ $outfile
 sed -i s/CASElwoff/.false./ $outfile
-sed -i s/CASEstartdate/2017-08-08/ $outfile
+sed -i s/CASEstartdate/2017-08-23/ $outfile
 sed -i s/CASEstartinsec/41400/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEstopn/15/ $outfile
