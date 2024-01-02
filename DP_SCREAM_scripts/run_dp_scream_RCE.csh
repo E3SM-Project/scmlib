@@ -174,7 +174,7 @@
   end
 
 # CAM configure options.  Set to SCREAM default settings.
-  set CAM_CONFIG_OPTS="-phys default -scam -dpcrm_mode -nlev 128 -shoc_sgs -microphys p3 -rad rrtmgp -chem spa"
+  set CAM_CONFIG_OPTS="-phys default -scam -dpcrm_mode -nlev 128 -shoc_sgs -microphys p3 -rad rrtmgp -chem spa -cppdefs '-DSCREAM'"
 
   ./xmlchange CAM_CONFIG_OPTS="$CAM_CONFIG_OPTS"
   ./xmlchange --id CAM_CONFIG_OPTS --append --val='-rce -aquaplanet'
