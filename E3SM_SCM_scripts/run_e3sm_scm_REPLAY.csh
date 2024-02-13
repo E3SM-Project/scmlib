@@ -119,7 +119,7 @@
   endif
 
   if ($dycore == SE) then
-    set grid=ne30_ne30
+    set grid=ne4_ne4
   endif
 
   set CASEID=$casename
@@ -203,9 +203,6 @@
   if ($e3sm_version != v1) then
     ./xmlchange CAM_TARGET=theta-l
   endif
-
-# REPLAY MUST use preqx dycore
-  ./xmlchange CAM_TARGET=preqx
 
 # if we want to turn off SW radiation, then set appropriate namelist settings here
   if ($do_turnoff_swrad == true) then

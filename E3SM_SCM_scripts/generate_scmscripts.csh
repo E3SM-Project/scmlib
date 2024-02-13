@@ -725,7 +725,6 @@ set outfile = run_e3sm_scm_$casename.csh
 cp -r run_e3sm_scm_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"REPLAY an E3SM column"/ $outfile
-sed -i s/ne4_ne4/ne30_ne30/ $outfile
 sed -i s/AEROTYPE/"none # keep this as none for REPLAY option"/ $outfile
 sed -i s/THECASELONGNAME_iopfile_4scam.nc/"# supply the name of your forcing file"/ $outfile
 sed -i s/CASELONGstartdate/"# set desired start date"/ $outfile
@@ -744,8 +743,6 @@ sed -i s/CASEnccons/70.0D6/ $outfile
 sed -i s/CASEnicons/0.0001D6/ $outfile
 sed -i '/REPLAY_iopfile_4scam/d' $outfile
 sed -i s/CASEcaltype/NO_LEAP/ $outfile
-sed -i s/REPLAYDYCOREMSG1/"REPLAY MUST use preqx dycore"/ $outfile
-sed -i s/REPLAYDYCORESETTING/"preqx"/ $outfile
 
 foreach file (*.csh)
   if ($file != run_e3sm_scm_TEMPLATE.csh && $file != generate_scmscripts.csh) then
@@ -766,8 +763,6 @@ foreach file (*.csh)
     sed -i '/FORCINGPROVIDER/d' $file 
     sed -i '/THECASELONGNAME/d' $file
     sed -i '/CASEcaltype/d' $file
-    sed -i '/REPLAYDYCOREMSG1/d' $file
-    sed -i '/REPLAYDYCORESETTING/d' $file
   endif
 end
 
