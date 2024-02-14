@@ -741,6 +741,7 @@ sed -i s/CASElwoff/.false./ $outfile
 sed -i s/CASEprecipoff/.false./ $outfile
 sed -i s/CASEnccons/70.0D6/ $outfile
 sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i s/FSCM/FSCM-ARM97/ $outfile
 sed -i '/REPLAY_iopfile_4scam/d' $outfile
 sed -i s/CASEcaltype/NO_LEAP/ $outfile
 

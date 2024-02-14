@@ -99,9 +99,13 @@
   # Location of IOP file
   set iop_path = atm/cam/scam/iop
 
-  # Prescribed aerosol file path and name
   set presc_aero_path = atm/cam/chem/trop_mam/aero
-  set presc_aero_file = mam4_0.9x1.2_L72_2000clim_c170323.nc
+  # Prescribed aerosol file path and name
+  if ($e3sm_version != master) then
+    set presc_aero_file = mam4_0.9x1.2_L72_2000clim_c170323.nc
+  else
+    set presc_aero_file = mam5_0.9x1.2_L80_F2010_c013024.nc
+  endif
 
   set PROJECT=$projectname
   set E3SMROOT=${code_dir}/${code_tag}
@@ -183,7 +187,12 @@
   end
 
 # CAM configure options.  By default set up with settings the same as E3SMv1
-  set CAM_CONFIG_OPTS="-phys ${physset} -scam -nlev 72 -clubb_sgs"
+  if ($e3sm_version != master) then
+    set CAM_CONFIG_OPTS="-phys ${physset} -scam -nlev 72 -clubb_sgs"
+  else
+    set CAM_CONFIG_OPTS="-phys ${physset} -scam -nlev 80 -clubb_sgs -microphys p3"
+  endif
+
   if ($dycore == Eulerian) then
     set CAM_CONFIG_OPTS="$CAM_CONFIG_OPTS -nospmd -nosmp"
   endif
@@ -194,7 +203,11 @@
 
 # This option ONLY to be used for the REPLAY mode
   if ($init_aero_type == none) then
-    set CAM_CONFIG_OPTS="$CAM_CONFIG_OPTS -chem linoz_mam4_resus_mom_soag -rain_evap_to_coarse_aero -bc_dep_to_snow_updates"
+    if ($e3sm_master != master) then
+      set CAM_CONFIG_OPTS="$CAM_CONFIG_OPTS -chem linoz_mam4_resus_mom_soag -rain_evap_to_coarse_aero -bc_dep_to_snow_updates"
+    else
+      set set CAM_CONFIG_OPTS="$CAM_CONFIG_OPTS -chem chemuci_linozv3_mam5_vbs -rain_evap_to_coarse_aero -vbs"
+    endif
   endif
 
   if ($init_aero_type == cons_droplet || $init_aero_type == prescribed || $init_aero_type == observed) then
@@ -375,13 +388,23 @@ EOF
 endif
 
 # if constant droplet was selected then modify name list to reflect this
-if ($init_aero_type == cons_droplet) then
+if ($init_aero_type == cons_droplet && $e3sm_version != master) then
 
 cat <<EOF >> user_nl_${atm_mod}
   micro_do_nccons = .true.
   micro_do_nicons = .true.
   micro_nccons = $micro_nccons_val
   micro_nicons = $micro_nicons_val
+EOF
+
+endif
+
+# if running v3 (p3) only constant droplet is supported (not ice)
+if ($init_aero_type == cons_droplet && $e3sm_version == master) then
+
+cat <<EOF >> user_nl_${atm_mod}
+  micro_aerosolactivation = .false.
+  micro_nccons = $micro_nccons_val
 EOF
 
 endif
