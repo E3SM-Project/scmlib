@@ -227,11 +227,6 @@ cat <<EOF >> user_nl_cice
   histfreq='y','x','x','x','x'
 EOF
 
-# at this time don't write out elm output
-cat <<EOR >> user_nl_elm
-  hist_empty_htapes=.true.
-EOF
-
 # Turn on UofA surface flux scheme
 cat <<EOF>> user_nl_cpl
   ocn_surface_flux_scheme = 2
