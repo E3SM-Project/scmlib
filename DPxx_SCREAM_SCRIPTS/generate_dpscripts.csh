@@ -26,8 +26,8 @@ setenv setupfor pm
 ################################
 
 set casename = MAGIC
-set outfile = run_dp_scream_$casename.csh
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Stratocumulus to Cumulus Transition"/ $outfile
 sed -i s/CASElat/28/ $outfile
@@ -61,8 +61,8 @@ sed -i s/CASESSTyearend/2014/ $outfile
 ################################
 
 set casename = COMBLE
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Cold-Air Outbreaks in the Marine Boundary Layer Experiment"/ $outfile
 sed -i s/CASElat/75/ $outfile
@@ -93,8 +93,8 @@ sed -i s/FORCINGPROVIDER/"Xue Zheng"/ $outfile
 ################################
 
 set casename = CASS
-set outfile = run_dp_scream_$casename.csh
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Continental Active Surface-forced Shallow-cumulus (CASS)"/ $outfile
 sed -i s/CASElat/36.605/ $outfile
@@ -124,8 +124,8 @@ sed -i s/FORCINGPROVIDER/"Yunyan Zhang"/ $outfile
 ################################
 
 set casename = LAFE
-set outfile = run_dp_scream_$casename.csh
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"LAFE - Clear Convective Boundary Layer at SGP"/ $outfile
 sed -i s/CASElat/36.605/ $outfile
@@ -155,8 +155,8 @@ sed -i s/FORCINGPROVIDER/"Yunyan Zhang"/ $outfile
 ################################
 
 set casename = GABLS
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Stable boundary layer"/ $outfile
 sed -i s/CASElat/73.0/ $outfile
@@ -185,8 +185,8 @@ sed -i s/CASEnhtfrq/-1/ $outfile
 ################################
 
 set casename = DYCOMSrf01
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Non-precipitating marine stratocumulus"/ $outfile
 sed -i s/CASElat/31.5/ $outfile
@@ -215,8 +215,8 @@ sed -i s/CASEnhtfrq/-1/ $outfile
 ################################
 
 set casename = DYCOMSrf02
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Drizzling marine stratocumulus"/ $outfile
 sed -i s/AEROTYPE/observed/ $outfile
@@ -246,8 +246,8 @@ sed -i s/CASEnhtfrq/-1/ $outfile
 ################################
 
 set casename = GATEIDEAL
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Idealized version of GATE"/ $outfile
 sed -i s/CASElat/9.00/ $outfile
@@ -276,8 +276,8 @@ sed -i s/CASEnhtfrq/-1/ $outfile
 ################################
 
 set casename = GATEIII
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Maritime deep convection"/ $outfile
 sed -i s/CASElat/9.00/ $outfile
@@ -306,8 +306,8 @@ sed -i s/CASEnhtfrq/-24/ $outfile
 ################################
 
 set casename = ARM95
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Deep convection over ARM SGP site"/ $outfile
 sed -i s/CASElat/36.605/ $outfile
@@ -336,8 +336,8 @@ sed -i s/CASEnhtfrq/-24/ $outfile
 ################################
 
 set casename = ARM97
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Deep convection over ARM SGP site"/ $outfile
 sed -i s/CASElat/36.605/ $outfile
@@ -366,8 +366,8 @@ sed -i s/CASEnhtfrq/-24/ $outfile
 ################################
 
 set casename = MC3E
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Mid-latitude Continental Convective Clouds Experiment"/ $outfile
 sed -i s/CASElat/36.605/ $outfile
@@ -397,8 +397,8 @@ sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
 ################################
 
 set casename = AEROSOLINDIRECT
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Study of Aerosol Indirect Effects in China"/ $outfile
 sed -i s/CASElat/32.55/ $outfile
@@ -428,8 +428,8 @@ sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
 ################################
 
 set casename = ISDAC
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Indirect and semi-direct aerosol campaign"/ $outfile
 sed -i s/CASElat/71.3/ $outfile
@@ -459,8 +459,8 @@ sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
 ################################
 
 set casename = RACORO
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Continental liquid boundary layer clouds at ARM SGP site"/ $outfile
 sed -i s/CASElat/36.6/ $outfile
@@ -490,8 +490,8 @@ sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
 ################################
 
 set casename = SPARTICUS
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Small particles in cirrus clouds"/ $outfile
 sed -i s/CASElat/36.6/ $outfile
@@ -521,8 +521,8 @@ sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
 ################################
 
 set casename = SGP_continuous
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Continuous forcing (2004-2015) over ARM SGP site"/ $outfile
 sed -i s/CASElat/36.605/ $outfile
@@ -554,8 +554,8 @@ sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
 ################################
 
 set casename = SGP
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASELONGNAME/SGP0003/ $outfile
 sed -i s/THECASEDESCRIPTION/"Forcing from ARM SGP site"/ $outfile
@@ -588,8 +588,8 @@ sed -i '/SGP_iopfile_4scam.nc/d' $outfile
 ################################
 
 set casename = DARWIN
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASELONGNAME/DARWIN_0405_p1/ $outfile
 sed -i s/THECASEDESCRIPTION/"Forcing from Darwin site"/ $outfile
@@ -622,8 +622,8 @@ sed -i '/DARWIN_iopfile_4scam.nc/d' $outfile
 ################################
 
 set casename = GOAMAZON
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"ARM's Green Ocean Amazon"/ $outfile
 sed -i s/CASElat/-3.15/ $outfile
@@ -655,8 +655,8 @@ sed -i s/LENGTHNOTE/NOTE:/ $outfile
 ################################
 
 set casename = DYNAMO_northsounding
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Dynamics of the Madden Julian Oscillation North Sounding"/ $outfile
 sed -i s/CASElat/3.0/ $outfile
@@ -686,8 +686,8 @@ sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
 ################################
 
 set casename = DYNAMO_revelle
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Dynamics of the Madden Julian Oscillation Revelle"/ $outfile
 sed -i s/CASElat/3.0/ $outfile
@@ -717,8 +717,8 @@ sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
 ################################
 
 set casename = DYNAMO_amie
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Dynamics of the Madden Julian Oscillation AMIE"/ $outfile
 sed -i s/CASElat/-0.63/ $outfile
@@ -748,8 +748,8 @@ sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
 ################################
 
 set casename = ARM_shallow
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"ARM GCSS shallow convection"/ $outfile
 sed -i s/CASElat/36.605/ $outfile
@@ -778,8 +778,8 @@ sed -i s/CASEnhtfrq/-1/ $outfile
 ################################
 
 set casename = BOMEX
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Non-precipitating trade-wind cumulus convection"/ $outfile
 sed -i s/CASElat/15.0/ $outfile
@@ -808,8 +808,8 @@ sed -i s/CASEnhtfrq/-1/ $outfile
 ################################
 
 set casename = ATEX
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Cumulus under stratocumulus"/ $outfile
 sed -i s/CASElat/15.0/ $outfile
@@ -838,8 +838,8 @@ sed -i s/CASEnhtfrq/-1/ $outfile
 ################################
 
 set casename = RICO
-set outfile = run_dp_scream_$casename.csh
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Precipitating trade-wind cumulus convection"/ $outfile
 sed -i s/CASElat/17.97/ $outfile
@@ -868,8 +868,8 @@ sed -i s/CASEnhtfrq/-1/ $outfile
 ################################
 
 set casename = LBA
-set outfile = run_dp_scream_$casename.csh
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"LBA Transition from shallow cumulus to deep convection"/ $outfile
 sed -i s/CASElat/3.0/ $outfile
@@ -898,8 +898,8 @@ sed -i s/CASEnhtfrq/-1/ $outfile
 ################################
 
 set casename = TOGAII
-set outfile = run_dp_scream_$casename.csh
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"TOGA-COARE deep convection"/ $outfile
 sed -i s/CASElat/-2.10/ $outfile
@@ -928,8 +928,8 @@ sed -i s/CASEnhtfrq/-24/ $outfile
 ################################
 
 set casename = TWP06
-set outfile = run_dp_scream_$casename.csh
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"TWP-ICE deep convection in the warm pool"/ $outfile
 sed -i s/CASElat/-12.43/ $outfile
@@ -958,8 +958,8 @@ sed -i s/CASEnhtfrq/-24/ $outfile
 ################################
 
 set casename = MPACEB
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Mixed phase Arctic clouds subset"/ $outfile
 sed -i s/CASElat/71.75/ $outfile
@@ -989,8 +989,8 @@ sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
 ################################
 
 set casename = MPACE
-set outfile = run_dp_scream_$casename.csh
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Mixed phase Arctic clouds Full IOP"/ $outfile
 sed -i s/AEROTYPE/prescribed/ $outfile
@@ -1024,8 +1024,8 @@ sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
 ################################
 
 set casename = RCE
-set outfile = run_dp_scream_$casename.csh 
-cp -r run_dp_scream_TEMPLATE.csh $outfile
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Radiative Convective Equilibrium"/ $outfile
 sed -i s/CASElat/0.0/ $outfile
@@ -1061,7 +1061,7 @@ sed -i '/CICE_CONFIG_OPTS/d' $outfile
 sed -i '/CALENDAR/d' $outfile
 
 foreach file (*.csh)
-  if ($file != run_dp_scream_TEMPLATE.csh && $file != generate_dpscripts.csh) then
+  if ($file != run_dpxx_scream_TEMPLATE.csh && $file != generate_dpscripts.csh) then
     sed -i '/OBSERVEDAERO/d' $file
     sed -i '/LENGTHNOTE/d' $file
     sed -i '/CASEstartdate/d' $file
@@ -1099,7 +1099,7 @@ end
 if ($setupfor == LC) then
 
   foreach file (*.csh)
-    if ($file != run_dp_scream_TEMPLATE.csh && $file != generate_dpscripts.csh) then
+    if ($file != run_dpxx_scream_TEMPLATE.csh && $file != generate_dpscripts.csh) then
 
       # Path to output
       sed -i s+'$CSCRATCH/SCM_runs'+/p/lustre2/bogensch/ACME_simulations+ $file
@@ -1123,7 +1123,7 @@ endif
 if ($setupfor == cori) then
 
   foreach file (*.csh)
-    if ($file != run_dp_scream_TEMPLATE.csh && $file != generate_dpscripts.csh) then
+    if ($file != run_dpxx_scream_TEMPLATE.csh && $file != generate_dpscripts.csh) then
 
       # Path to output
       sed -i s+'$CSCRATCH/SCM_runs'+/global/cscratch1/sd/bogensch/DPSCREAM_simulations+ $file
@@ -1147,7 +1147,7 @@ endif
 if ($setupfor == pm) then
 
   foreach file (*.csh)
-    if ($file != run_dp_scream_TEMPLATE.csh && $file != generate_dpscripts.csh) then
+    if ($file != run_dpxx_scream_TEMPLATE.csh && $file != generate_dpscripts.csh) then
 
       # Path to output
       sed -i s+'$CSCRATCH/SCM_runs'+/pscratch/sd/b/bogensch/dp_scream+ $file
