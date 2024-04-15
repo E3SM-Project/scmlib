@@ -104,12 +104,12 @@
 # Case specific information kept here
   set lat = 73.0 # latitude
   set lon = 180.0 # longitude
-  set do_iop_srf_prop = .true. # Use surface fluxes in IOP file?
-  set do_iop_nudge_tq = .false. # Relax T&Q to observations?
-  set do_iop_nudge_uv = .false. # Relax U&V to observations?
-  set do_iop_subsidence = .false. # compute LS vertical transport?
-  set do_turnoff_swrad = .true. # Turn off SW calculation
-  set do_turnoff_lwrad = .true. # Turn off LW calculation
+  set do_iop_srf_prop = true # Use surface fluxes in IOP file?
+  set do_iop_nudge_tq = false # Relax T&Q to observations?
+  set do_iop_nudge_uv = false # Relax U&V to observations?
+  set do_iop_subsidence = false # compute LS vertical transport?
+  set do_turnoff_swrad = true # Turn off SW calculation
+  set do_turnoff_lwrad = true # Turn off LW calculation
   set startdate = 1999-07-01 # Start date in IOP file
   set start_in_sec = 0 # start time in seconds in IOP file
   set stop_option = nhours
