@@ -191,7 +191,6 @@
   ./xmlchange CALENDAR="GREGORIAN"
 
 
-
 # Set model timesteps
 
   @ ncpl = 86400 / $model_dtime
@@ -202,6 +201,7 @@
 
 # Get local input data directory path
   set input_data_dir = `./xmlquery DIN_LOC_ROOT -value`
+
 
 # Set relevant namelist modifications  
   ./atmchange se_ne_x=$num_ne_x
@@ -214,7 +214,7 @@
   ./atmchange target_longitude=$lon
   ./atmchange iop_file=$input_data_dir/$iop_path/$iop_file
   ./atmchange nu=0.216784
-  ./atmchange nu_top=1.0e4
+  ./atmchange nu_top=$nu_top_dyn
   ./atmchange rad_frequency=3
   
  # configure output
@@ -225,6 +225,11 @@ cp /global/homes/b/bogensch/dp_scream_scripts_xx/dpxx_outputfiles/scream_hourly_
 #   appears to be currently broken for SCM
 cat <<EOF >> user_nl_cice
   histfreq='y','x','x','x','x'
+EOF
+
+# at this time don't write out elm output
+cat <<EOR >> user_nl_elm
+  hist_empty_htapes=.true.
 EOF
 
 # Turn on UofA surface flux scheme
