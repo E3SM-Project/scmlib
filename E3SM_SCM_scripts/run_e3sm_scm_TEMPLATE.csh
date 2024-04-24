@@ -16,7 +16,7 @@
   setenv casename e3sm_scm_THECASENAME
 
   # Set the case directory here
-  setenv casedirectory $CSCRATCH/SCM_runs
+  setenv casedirectory $PSCRATCH/SCM_runs
 
   # Directory where code lives
   setenv code_dir $HOME/E3SM_code
@@ -24,7 +24,7 @@
   # Code tag name
   setenv code_tag E3SM_codetag
 
-  # Name of machine you are running on (i.e. cori, anvil, etc)
+  # Name of machine you are running on (i.e. pm-cpu, anvil, chrysalis, compy, etc)
   setenv machine mach_name
 
   # Name of project to run on, if submitting to queue
@@ -53,6 +53,7 @@
   #  Select "v1" if you are running with E3SMv1 RELEASE code
   #  Select "v2" if you are running with E3SMv2 RELEASE code
   #  Select "master" if you are running with the master development branch of E3SM
+  #  As of this writing (April 24, 2024) this is what you run if you want to run v3.
   #  (If you are running with non-up-to-date master code then you may need to modify
   #    aspects of this script to get it to compile.)
 
@@ -206,7 +207,7 @@
     if ($e3sm_master != master) then
       set CAM_CONFIG_OPTS="$CAM_CONFIG_OPTS -chem linoz_mam4_resus_mom_soag -rain_evap_to_coarse_aero -bc_dep_to_snow_updates"
     else
-      set set CAM_CONFIG_OPTS="$CAM_CONFIG_OPTS -chem chemuci_linozv3_mam5_vbs -rain_evap_to_coarse_aero -vbs"
+      set CAM_CONFIG_OPTS="$CAM_CONFIG_OPTS -chem chemuci_linozv3_mam5_vbs -rain_evap_to_coarse_aero -vbs"
     endif
   endif
 
