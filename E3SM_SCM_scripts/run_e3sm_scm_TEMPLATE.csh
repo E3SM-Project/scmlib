@@ -459,6 +459,11 @@ endif
   ./xmlchange MASK_GRID="USGS"
   ./xmlchange CALENDAR="CASEcaltype"
 
+  ./xmlchange SSTICE_DATA_FILENAME="$input_data_dir/ocn/docn7/SSTDATA/CASESSTdata"
+  ./xmlchange SSTICE_YEAR_ALIGN=CASESSTyearalign
+  ./xmlchange SSTICE_YEAR_START=CASESSTyearstart
+  ./xmlchange SSTICE_YEAR_END=CASESSTyearend
+
   ./case.setup
 
 # Don't want to write restarts as this appears to be broken for

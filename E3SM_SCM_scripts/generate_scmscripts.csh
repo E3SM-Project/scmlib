@@ -17,6 +17,95 @@ setenv setupfor general
 # edison /project/projectdirs/e3sm/inputdata
 
 ################################
+# LAFE
+################################
+
+set casename = LAFE
+set outfile = run_e3sm_scm_$casename.csh
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"LAFE - Clear Convective Boundary Layer at SGP"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/36.605/ $outfile
+sed -i s/CASElon/262.515/ $outfile
+sed -i s/CASEsrfprop/.true./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEstartdate/2017-08-23/ $outfile
+sed -i s/CASEstartinsec/41400/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/15/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/FORCINGPROVIDER/"Yunyan Zhang"/ $outfile
+
+################################
+# CASS
+################################
+
+set casename = CASS
+set outfile = run_e3sm_scm_$casename.csh
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Continental Active Surface-forced Shallow-cumulus (CASS)"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/36.605/ $outfile
+sed -i s/CASElon/262.515/ $outfile
+sed -i s/CASEsrfprop/.true./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEstartdate/2000-07-24/ $outfile
+sed -i s/CASEstartinsec/43200/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/14/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/FORCINGPROVIDER/"Yunyan Zhang"/ $outfile
+
+################################
+# MAGIC
+################################
+
+set casename = MAGIC
+set outfile = run_e3sm_scm_$casename.csh
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Stratocumulus to Cumulus Transition"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/28/ $outfile
+sed -i s/CASElon/225/ $outfile
+sed -i s/CASEsrfprop/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEstartdate/2013-07-21/ $outfile
+sed -i s/CASEstartinsec/19620/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/78/ $outfile
+sed -i s/FORCINGPROVIDER/"Xue Zheng"/ $outfile
+sed -i s/CASESSTdata/"SCM_MAGIC_15A_sst_v0.3_2013-07-20-13UTC.nc"/ $outfile
+sed -i s/CASESSTyearalign/2013/ $outfile
+sed -i s/CASESSTyearstart/2013/ $outfile
+sed -i s/CASESSTyearend/2014/ $outfile
+
+################################
+# COMBLE
+################################
+
+set casename = COMBLE
+set outfile = run_e3sm_scm_$casename.csh 
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Cold-Air Outbreaks in the Marine Boundary Layer Experiment"/ $outfile
+sed -i s/CASElat/75/ $outfile
+sed -i s/CASElon/10.0/ $outfile
+sed -i s/CASEsrfprop/.true./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEstartdate/2020-03-12/ $outfile
+sed -i s/CASEstartinsec/79200/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/20/ $outfile
+sed -i s/FORCINGPROVIDER/"Xue Zheng"/ $outfile
+
+################################
 # RICO 
 ################################
 
@@ -764,6 +853,10 @@ foreach file (*.csh)
     sed -i '/FORCINGPROVIDER/d' $file 
     sed -i '/THECASELONGNAME/d' $file
     sed -i '/CASEcaltype/d' $file
+    sed -i '/CASESSTdata/d' $file
+    sed -i '/CASESSTyearalign/d' $file
+    sed -i '/CASESSTyearstart/d' $file
+    sed -i '/CASESSTyearend/d' $file    
   endif
 end
 

@@ -449,6 +449,7 @@ endif
   ./xmlchange MASK_GRID="USGS"
   ./xmlchange CALENDAR="GREGORIAN"
 
+
   ./case.setup
 
 # Don't want to write restarts as this appears to be broken for
