@@ -215,9 +215,18 @@
   ./atmchange iop_file=$input_data_dir/$iop_path/$iop_file
   ./atmchange nu=0.216784
   ./atmchange nu_top=$nu_top_dyn
+  ./atmchange se_ftype=2
   ./atmchange rad_frequency=3
   ./atmchange iop_srf_prop=$do_iop_srf_prop
   ./atmchange iop_dosubsidence=$do_iop_subsidence
+  ./atmchange iop_nudge_uv=$do_iop_nudge_uv
+  ./atmchange iop_nudge_tq=$do_iop_nudge_tq
+
+# Allow for the computation of tendencies for output purposes
+  ./atmchange physics::mac_aero_mic::shoc::compute_tendencies=T_mid,qv
+  ./atmchange physics::mac_aero_mic::p3::compute_tendencies=T_mid,qv
+  ./atmchange physics::rrtmgp::compute_tendencies=T_mid
+  ./atmchange homme::compute_tendencies=T_mid,qv
   
  # configure output
 cp /global/homes/b/bogensch/dp_scream_scripts_xx/dpxx_outputfiles/scream_hourly_avg_output.yaml .
