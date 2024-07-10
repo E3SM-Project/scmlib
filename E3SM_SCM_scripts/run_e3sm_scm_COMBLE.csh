@@ -7,7 +7,7 @@
 #######  Cold-Air Outbreaks in the Marine Boundary Layer Experiment
 #######
 #######  Script Author: P. Bogenschutz (bogenschutz1@llnl.gov)
-#######  Forcing provided by: Xue Zheng
+#######  Forcing provided by: Xue Zheng, Meng Zheng, and Lin Lin
 
 #######################################################
 #######  BEGIN USER DEFINED SETTINGS
@@ -71,11 +71,11 @@
 ###########################################################################
 
 # Case specific information kept here
-  set lat = 75 # latitude
+  set lat = 74.5 # latitude
   set lon = 10.0 # longitude
-  set do_iop_srf_prop = .true. # Use surface fluxes in IOP file?
+  set do_iop_srf_prop = .false. # Use surface fluxes in IOP file?
   set do_scm_relaxation = CASErelax # Relax case to observations?
-  set do_turnoff_swrad = .false. # Turn off SW calculation
+  set do_turnoff_swrad = .true. # Turn off SW calculation
   set do_turnoff_lwrad = .false. # Turn off LW calculation
   set do_turnoff_precip = CASEprecipoff # Turn off precipitation
   set micro_nccons_val = CASEnccons # cons_droplet value for liquid
@@ -448,6 +448,10 @@ endif
   ./xmlchange PTS_MODE="TRUE",PTS_LAT="$lat",PTS_LON="$lon"
   ./xmlchange MASK_GRID="USGS"
 
+  ./xmlchange SSTICE_DATA_FILENAME="$input_data_dir/ocn/docn7/SSTDATA/sst_HadOIBl_bc_1x1_clim_c101029_COMBLE.nc"
+  ./xmlchange SSTICE_YEAR_ALIGN=2020
+  ./xmlchange SSTICE_YEAR_START=2020
+  ./xmlchange SSTICE_YEAR_END=2021
 
   ./case.setup
 
