@@ -74,12 +74,12 @@
   set lat = 36.605 # latitude
   set lon = 262.515 # longitude
   set do_iop_srf_prop = .true. # Use surface fluxes in IOP file?
-  set do_scm_relaxation = CASErelax # Relax case to observations?
+  set do_scm_relaxation = .false. # Relax case to observations?
   set do_turnoff_swrad = .false. # Turn off SW calculation
   set do_turnoff_lwrad = .false. # Turn off LW calculation
-  set do_turnoff_precip = CASEprecipoff # Turn off precipitation
-  set micro_nccons_val = CASEnccons # cons_droplet value for liquid
-  set micro_nicons_val = CASEnicons # cons_droplet value for ice
+  set do_turnoff_precip = .false. # Turn off precipitation
+  set micro_nccons_val = 100.0D6 # cons_droplet value for liquid
+  set micro_nicons_val = 0.0001D6 # cons_droplet value for ice
   set startdate = 2017-08-23 # Start date in IOP file
   set start_in_sec = 41400 # start time in seconds in IOP file
   set stop_option = nhours
