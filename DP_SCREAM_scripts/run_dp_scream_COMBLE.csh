@@ -7,7 +7,7 @@
 #######  Cold-Air Outbreaks in the Marine Boundary Layer Experiment
 #######
 #######  Script Author: P. Bogenschutz (bogenschutz1@llnl.gov)
-#######  Forcing provided by: Xue Zheng
+#######  Forcing provided by: Xue Zheng, Meng Zheng, and Lin Lin
 
 #######################################################
 #######  BEGIN USER DEFINED SETTINGS
@@ -103,13 +103,13 @@
 ###########################################################################
 
 # Case specific information kept here
-  set lat = 75 # latitude
+  set lat = 74.5 # latitude
   set lon = 10.0 # longitude
-  set do_iop_srf_prop = .true. # Use surface fluxes in IOP file?
+  set do_iop_srf_prop = .false. # Use surface fluxes in IOP file?
   set do_iop_nudge_tq = .false. # Relax T&Q to observations?
   set do_iop_nudge_uv = .false. # Relax U&V to observations?
   set do_iop_subsidence = .false. # compute LS vertical transport?
-  set do_turnoff_swrad = .false. # Turn off SW calculation
+  set do_turnoff_swrad = .true. # Turn off SW calculation
   set do_turnoff_lwrad = .false. # Turn off LW calculation
   set startdate = 2020-03-12 # Start date in IOP file
   set start_in_sec = 79200 # start time in seconds in IOP file
@@ -280,6 +280,10 @@ set ELM_CONFIG_OPTS="-phys elm"
   ./xmlchange CALENDAR="GREGORIAN"
 
 
+  ./xmlchange SSTICE_DATA_FILENAME="$input_data_dir/ocn/docn7/SSTDATA/sst_HadOIBl_bc_1x1_clim_c101029_COMBLE.nc"
+  ./xmlchange SSTICE_YEAR_ALIGN=2020
+  ./xmlchange SSTICE_YEAR_START=2020
+  ./xmlchange SSTICE_YEAR_END=2021
 
 # Set model timesteps
 
