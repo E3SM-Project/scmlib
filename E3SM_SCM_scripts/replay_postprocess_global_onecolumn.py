@@ -15,7 +15,6 @@ This script is provided as an example and can be modified to meet
 the users individual needs.
 """
 
-from scipy.spatial import Delaunay
 import matplotlib.pyplot as plt
 import matplotlib
 from scipy import interpolate
