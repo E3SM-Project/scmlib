@@ -115,7 +115,7 @@
   set stop_option = nhours
   set stop_n = 20
   set iop_file = COMBLE_iopfile_4scam.nc #IOP file name
-  set do_turnoff_swrad = true # Turn off SW calculation
+  set do_turnoff_swrad = true # Turn off SW calculation (if false, keep false)
 # End Case specific stuff here
 
   # Location of IOP file

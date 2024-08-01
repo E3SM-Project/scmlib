@@ -1047,7 +1047,6 @@ foreach file (*.csh)
     sed -i '/CASELONGstartdate/d' $file
     sed -i '/CASELONGstopoption/d' $file
     sed -i '/CASELONGstopn/d' $file 
-    sed -i '/CASEswoff/d' $file
     sed -i '/CASElwoff/d' $file
     sed -i '/CASElat/d' $file
     sed -i '/CASElon/d' $file
@@ -1069,6 +1068,7 @@ foreach file (*.csh)
     sed -i '/CASEhydrostatic/d' $file
     sed -i '/CASEtstep/d' $file
     sed -i s/CASEangel/-1/ $file
+    sed -i s/CASEswoff/false/ $file
   endif
 end
 

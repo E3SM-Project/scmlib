@@ -115,6 +115,7 @@
   set stop_option = ndays
   set stop_n = 90
   set iop_file = DYNAMO_northsounding_iopfile_4scam.nc #IOP file name
+  set do_turnoff_swrad = false # Turn off SW calculation (if false, keep false)
 # End Case specific stuff here
 
   # Location of IOP file

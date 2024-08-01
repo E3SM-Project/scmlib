@@ -114,7 +114,7 @@
   set stop_option = nhours
   set stop_n = 6
   set iop_file = DYCOMSrf02_iopfile_4scam.nc #IOP file name
-  set do_turnoff_swrad = true # Turn off SW calculation
+  set do_turnoff_swrad = true # Turn off SW calculation (if false, keep false)
 # End Case specific stuff here
 
   # Location of IOP file

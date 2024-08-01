@@ -115,6 +115,7 @@
   set stop_option = nhours
   set stop_n = 12
   set iop_file = MPACEB_iopfile_4scam.nc #IOP file name
+  set do_turnoff_swrad = false # Turn off SW calculation (if false, keep false)
 # End Case specific stuff here
 
   # Location of IOP file

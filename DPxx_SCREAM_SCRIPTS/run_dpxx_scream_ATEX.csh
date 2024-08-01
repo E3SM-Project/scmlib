@@ -114,6 +114,7 @@
   set stop_option = nhours
   set stop_n = 8
   set iop_file = ATEX_iopfile_4scam.nc #IOP file name
+  set do_turnoff_swrad = false # Turn off SW calculation (if false, keep false)
 # End Case specific stuff here
 
   # Location of IOP file

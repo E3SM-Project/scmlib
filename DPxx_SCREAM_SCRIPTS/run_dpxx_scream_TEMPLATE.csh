@@ -125,7 +125,7 @@
   set stop_n = CASEstopn
   set iop_file = THECASENAME_iopfile_4scam.nc #IOP file name
   set sst_val = CASEsstval # set constant SST value (ONLY valid for RCE case)
-  set do_turnoff_swrad = CASEswoff # Turn off SW calculation
+  set do_turnoff_swrad = CASEswoff # Turn off SW calculation (if false, keep false)
 # End Case specific stuff here
 
   # Location of IOP file
