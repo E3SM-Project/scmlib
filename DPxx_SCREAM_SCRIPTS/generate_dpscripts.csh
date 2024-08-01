@@ -47,6 +47,7 @@ sed -i s/CASElex/50000/ $outfile
 sed -i s/CASEley/50000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/true/ $outfile
 sed -i s/CASEwalltime/00:30:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
@@ -66,9 +67,9 @@ cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Cold-Air Outbreaks in the Marine Boundary Layer Experiment"/ $outfile
 sed -i s/CASElat/75/ $outfile
-sed -i s/CASElon/10.0/ $outfile
-sed -i s/CASEsrfprop/true/ $outfile
-sed -i s/CASEswoff/false/ $outfile
+sed -i s/CASElon/9.9/ $outfile
+sed -i s/CASEsrfprop/false/ $outfile
+sed -i s/CASEswoff/true/ $outfile
 sed -i s/CASElwoff/false/ $outfile
 sed -i s/CASEstartdate/2020-03-12/ $outfile
 sed -i s/CASEstartinsec/79200/ $outfile
@@ -82,11 +83,16 @@ sed -i s/CASElex/200000/ $outfile
 sed -i s/CASEley/200000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/true/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEcoriolis/true/ $outfile
 sed -i s/CASEwalltime/00:30:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
-sed -i s/FORCINGPROVIDER/"Xue Zheng"/ $outfile
+sed -i s/FORCINGPROVIDER/"Xue Zheng and Meng Zheng"/ $outfile
+sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c101029_COMBLE.nc"/ $outfile
+sed -i s/CASESSTyearalign/2020/ $outfile
+sed -i s/CASESSTyearstart/2020/ $outfile
+sed -i s/CASESSTyearend/2021/ $outfile
 
 ################################
 # CASS
@@ -114,6 +120,7 @@ sed -i s/CASElex/50000/ $outfile
 sed -i s/CASEley/50000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/true/ $outfile
 sed -i s/CASEwalltime/00:30:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
@@ -145,6 +152,7 @@ sed -i s/CASElex/50000/ $outfile
 sed -i s/CASEley/50000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/true/ $outfile
 sed -i s/CASEwalltime/00:30:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
@@ -176,6 +184,7 @@ sed -i s/CASElex/50000/ $outfile
 sed -i s/CASEley/50000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/00:30:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
@@ -206,6 +215,7 @@ sed -i s/CASElex/50000/ $outfile
 sed -i s/CASEley/50000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/true/ $outfile
 sed -i s/CASEwalltime/00:30:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
@@ -237,6 +247,7 @@ sed -i s/CASElex/50000/ $outfile
 sed -i s/CASEley/50000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/true/ $outfile
 sed -i s/CASEwalltime/00:30:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
@@ -267,6 +278,7 @@ sed -i s/CASElex/200000/ $outfile
 sed -i s/CASEley/200000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/true/ $outfile
 sed -i s/CASEwalltime/01:00:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
@@ -297,6 +309,7 @@ sed -i s/CASElex/200000/ $outfile
 sed -i s/CASEley/200000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/true/ $outfile
 sed -i s/CASEwalltime/04:00:00/ $outfile
 sed -i s/CASEnhtfrq/-24/ $outfile
@@ -327,6 +340,7 @@ sed -i s/CASElex/200000/ $outfile
 sed -i s/CASEley/200000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-24/ $outfile
@@ -357,6 +371,7 @@ sed -i s/CASElex/200000/ $outfile
 sed -i s/CASEley/200000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-24/ $outfile
@@ -387,6 +402,7 @@ sed -i s/CASElex/200000/ $outfile
 sed -i s/CASEley/200000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-24/ $outfile
@@ -418,6 +434,7 @@ sed -i s/CASElex/100000/ $outfile
 sed -i s/CASEley/100000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-24/ $outfile
@@ -449,6 +466,7 @@ sed -i s/CASElex/100000/ $outfile
 sed -i s/CASEley/100000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-24/ $outfile
@@ -480,6 +498,7 @@ sed -i s/CASElex/100000/ $outfile
 sed -i s/CASEley/100000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-24/ $outfile
@@ -511,6 +530,7 @@ sed -i s/CASElex/100000/ $outfile
 sed -i s/CASEley/100000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-24/ $outfile
@@ -542,6 +562,7 @@ sed -i s/CASElex/200000/ $outfile
 sed -i s/CASEley/200000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-24/ $outfile
@@ -576,6 +597,7 @@ sed -i s/CASElex/200000/ $outfile
 sed -i s/CASEley/200000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-24/ $outfile
@@ -610,6 +632,7 @@ sed -i s/CASElex/200000/ $outfile
 sed -i s/CASEley/200000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-24/ $outfile
@@ -643,6 +666,7 @@ sed -i s/CASElex/200000/ $outfile
 sed -i s/CASEley/200000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-24/ $outfile
@@ -676,6 +700,7 @@ sed -i s/CASElex/200000/ $outfile
 sed -i s/CASEley/200000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-24/ $outfile
@@ -707,6 +732,7 @@ sed -i s/CASElex/200000/ $outfile
 sed -i s/CASEley/200000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-24/ $outfile
@@ -738,6 +764,7 @@ sed -i s/CASElex/200000/ $outfile
 sed -i s/CASEley/200000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-24/ $outfile
@@ -769,6 +796,7 @@ sed -i s/CASElex/50000/ $outfile
 sed -i s/CASEley/50000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/00:30:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
@@ -799,6 +827,7 @@ sed -i s/CASElex/50000/ $outfile
 sed -i s/CASEley/50000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/true/ $outfile
 sed -i s/CASEwalltime/00:30:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
@@ -829,6 +858,7 @@ sed -i s/CASElex/50000/ $outfile
 sed -i s/CASEley/50000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/true/ $outfile
 sed -i s/CASEwalltime/00:30:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
@@ -859,6 +889,7 @@ sed -i s/CASElex/50000/ $outfile
 sed -i s/CASEley/50000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/true/ $outfile
 sed -i s/CASEwalltime/00:30:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
@@ -889,6 +920,7 @@ sed -i s/CASElex/150000/ $outfile
 sed -i s/CASEley/150000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/00:30:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
@@ -919,6 +951,7 @@ sed -i s/CASElex/200000/ $outfile
 sed -i s/CASEley/200000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-24/ $outfile
@@ -949,6 +982,7 @@ sed -i s/CASElex/200000/ $outfile
 sed -i s/CASEley/200000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-24/ $outfile
@@ -979,6 +1013,7 @@ sed -i s/CASElex/50000/ $outfile
 sed -i s/CASEley/50000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/true/ $outfile
 sed -i s/CASEwalltime/00:30:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
@@ -1014,6 +1049,7 @@ sed -i s/CASElex/200000/ $outfile
 sed -i s/CASEley/200000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/true/ $outfile
 sed -i s/CASEwalltime/00:30:00/ $outfile
 sed -i s/CASEnhtfrq/-24/ $outfile
@@ -1045,6 +1081,7 @@ sed -i s/CASElex/500000/ $outfile
 sed -i s/CASEley/500000/ $outfile
 sed -i s/CASEtqnudge/false/ $outfile
 sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/16:00:00/ $outfile
 sed -i s/CASEnhtfrq/-24/ $outfile

@@ -117,6 +117,7 @@
   set do_iop_srf_prop = CASEsrfprop # Use surface fluxes in IOP file?
   set do_iop_nudge_tq = CASEtqnudge # Relax T&Q to observations?
   set do_iop_nudge_uv = CASEuvnudge # Relax U&V to observations?
+  set do_iop_nudge_coriolis = CASEcoriolis # Nudge to geostrophic winds?
   set do_iop_subsidence = CASEdosub # compute LS vertical transport?
   set do_turnoff_swrad = CASEswoff # Turn off SW calculation
   set do_turnoff_lwrad = CASElwoff # Turn off LW calculation
@@ -236,6 +237,7 @@
   ./atmchange iop_dosubsidence=$do_iop_subsidence
   ./atmchange iop_nudge_uv=$do_iop_nudge_uv
   ./atmchange iop_nudge_tq=$do_iop_nudge_tq
+  ./atmchange iop_coriolis=$do_iop_nudge_coriolis
 
 # Allow for the computation of tendencies for output purposes
   ./atmchange physics::mac_aero_mic::shoc::compute_tendencies=T_mid,qv
