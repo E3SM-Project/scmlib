@@ -218,6 +218,7 @@
   ./atmchange nu=0.216784
   ./atmchange nu_top=$nu_top_dyn
   ./atmchange se_ftype=2
+  ./atmchange se_tstep=$dyn_dtime
   ./atmchange rad_frequency=3
   ./atmchange iop_srf_prop=$do_iop_srf_prop
   ./atmchange iop_dosubsidence=$do_iop_subsidence
