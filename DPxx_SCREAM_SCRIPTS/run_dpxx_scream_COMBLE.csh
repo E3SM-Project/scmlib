@@ -249,8 +249,7 @@ cat <<EOF>> user_nl_cpl
 EOF
 
 if ($do_turnoff_swrad == 'true') then
-  set solar_angle = 180.0
-  # if the value above is -1 then you must run this case with interactive SW radiation
+  set solar_angle = 180.0 # turns off incoming solar radiation
 else
   set solar_angle = -1 # Interactive SW radiation
 endif

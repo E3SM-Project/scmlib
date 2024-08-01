@@ -114,7 +114,7 @@
   set stop_option = ndays
   set stop_n = 1
   set iop_file = GATEIDEAL_iopfile_4scam.nc #IOP file name
-  set do_turnoff_swrad = false # Turn off SW calculation (if false, keep false)
+  set do_turnoff_swrad = true # Turn off SW calculation (if false, keep false)
 # End Case specific stuff here
 
   # Location of IOP file
@@ -244,8 +244,7 @@ cat <<EOF>> user_nl_cpl
 EOF
 
 if ($do_turnoff_swrad == 'true') then
-  set solar_angle = -1
-  # if the value above is -1 then you must run this case with interactive SW radiation
+  set solar_angle = 180 # turns off incoming solar radiation
 else
   set solar_angle = -1 # Interactive SW radiation
 endif

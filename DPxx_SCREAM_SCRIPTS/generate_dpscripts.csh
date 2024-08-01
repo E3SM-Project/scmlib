@@ -254,6 +254,7 @@ sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Idealized version of GATE"/ $outfile
 sed -i s/CASElat/9.00/ $outfile
 sed -i s/CASElon/336.0/ $outfile
+sed -i s/CASEswoff/true/ $outfile
 sed -i s/CASEsrfprop/false/ $outfile
 sed -i s/CASEstartdate/1974-08-30/ $outfile
 sed -i s/CASEstartinsec/0/ $outfile
@@ -769,6 +770,7 @@ sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Non-precipitating trade-wind cumulus convection"/ $outfile
 sed -i s/CASElat/15.0/ $outfile
 sed -i s/CASElon/300.0/ $outfile
+sed -i s/CASEswoff/true/ $outfile
 sed -i s/CASEsrfprop/true/ $outfile
 sed -i s/CASEstartdate/1969-06-25/ $outfile
 sed -i s/CASEstartinsec/0/ $outfile
@@ -798,6 +800,7 @@ sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Cumulus under stratocumulus"/ $outfile
 sed -i s/CASElat/15.0/ $outfile
 sed -i s/CASElon/325.0/ $outfile
+sed -i s/CASEswoff/true/ $outfile
 sed -i s/CASEsrfprop/true/ $outfile
 sed -i s/CASEstartdate/1969-02-15/ $outfile
 sed -i s/CASEstartinsec/0/ $outfile
@@ -827,6 +830,7 @@ sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Precipitating trade-wind cumulus convection"/ $outfile
 sed -i s/CASElat/17.97/ $outfile
 sed -i s/CASElon/298.54/ $outfile
+sed -i s/CASEswoff/true/ $outfile
 sed -i s/CASEsrfprop/false/ $outfile
 sed -i s/CASEstartdate/2004-12-16/ $outfile
 sed -i s/CASEstartinsec/0/ $outfile
@@ -1067,7 +1071,7 @@ foreach file (*.csh)
     sed -i '/CASEcoriolis/d' $file
     sed -i '/CASEhydrostatic/d' $file
     sed -i '/CASEtstep/d' $file
-    sed -i s/CASEangel/-1/ $file
+    sed -i s/CASEangel/180/ $file
     sed -i s/CASEswoff/false/ $file
   endif
 end
