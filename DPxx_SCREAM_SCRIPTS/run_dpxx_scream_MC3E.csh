@@ -110,8 +110,6 @@
   set do_iop_nudge_uv = true # Relax U&V to observations?
   set do_iop_nudge_coriolis = false # Nudge to geostrophic winds?
   set do_iop_subsidence = false # compute LS vertical transport?
-  set do_turnoff_swrad = false # Turn off SW calculation
-  set do_turnoff_lwrad = false # Turn off LW calculation
   set startdate = 2011-04-22 # Start date in IOP file
   set start_in_sec = 0 # start time in seconds in IOP file
   set stop_option = ndays
@@ -243,6 +241,17 @@ EOF
 # Turn on UofA surface flux scheme
 cat <<EOF>> user_nl_cpl
   ocn_surface_flux_scheme = 2
+EOF
+
+if ($do_turnoff_swrad == 'true') then
+  set solar_angle = -1
+  # if the value above is -1 then you must run this case with interactive SW radiation
+else
+  set solar_angle = -1 # Interactive SW radiation
+endif
+
+cat <<EOF>> user_nl_cpl
+  constant_zenith_deg = $solar_angle
 EOF
 
   ./case.setup

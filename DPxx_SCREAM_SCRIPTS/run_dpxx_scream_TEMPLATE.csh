@@ -119,14 +119,13 @@
   set do_iop_nudge_uv = CASEuvnudge # Relax U&V to observations?
   set do_iop_nudge_coriolis = CASEcoriolis # Nudge to geostrophic winds?
   set do_iop_subsidence = CASEdosub # compute LS vertical transport?
-  set do_turnoff_swrad = CASEswoff # Turn off SW calculation
-  set do_turnoff_lwrad = CASElwoff # Turn off LW calculation
   set startdate = CASEstartdate # Start date in IOP file
   set start_in_sec = CASEstartinsec # start time in seconds in IOP file
   set stop_option = CASEstopoption
   set stop_n = CASEstopn
   set iop_file = THECASENAME_iopfile_4scam.nc #IOP file name
   set sst_val = CASEsstval # set constant SST value (ONLY valid for RCE case)
+  set do_turnoff_swrad = CASEswoff # Turn off SW calculation
 # End Case specific stuff here
 
   # Location of IOP file
@@ -258,6 +257,17 @@ EOF
 # Turn on UofA surface flux scheme
 cat <<EOF>> user_nl_cpl
   ocn_surface_flux_scheme = 2
+EOF
+
+if ($do_turnoff_swrad == 'true') then
+  set solar_angle = CASEangel
+  # if the value above is -1 then you must run this case with interactive SW radiation
+else
+  set solar_angle = -1 # Interactive SW radiation
+endif
+
+cat <<EOF>> user_nl_cpl
+  constant_zenith_deg = $solar_angle
 EOF
 
   ./case.setup
