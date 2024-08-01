@@ -140,7 +140,7 @@
 
   # Note that in DP-SCREAM the grid is set ONLY to initialize
   #  the model from these files
-  set grid=ne30_ne30
+  set grid=ne30pg2_ne30pg2
 
   set CASEID=$casename
 
@@ -192,7 +192,7 @@
   ./xmlchange RUN_STARTDATE="$startdate",START_TOD="$start_in_sec",STOP_OPTION="$stop_option",STOP_N="$stop_n"
 
 # Compute number of columns needed for component model initialization
-  set comp_mods_nx = `expr $num_ne_x \* $num_ne_y \* 9`
+  set comp_mods_nx = `expr $num_ne_x \* $num_ne_y \* 4`
 
 # Modify the latitude and longitude for the particular case
   ./xmlchange PTS_MULTCOLS_MODE="TRUE",PTS_MODE="TRUE",PTS_LAT="$lat",PTS_LON="$lon"
@@ -245,8 +245,8 @@
   ./atmchange homme::compute_tendencies=T_mid,qv
   
  # configure output
-cp /global/homes/b/bogensch/dp_scream_scripts_xx/dpxx_outputfiles/scream_hourly_avg_output.yaml .
-./atmchange output_yaml_files="./scream_hourly_avg_output.yaml"
+cp /global/homes/b/bogensch/dp_scream_scripts_xx/dpxx_outputfiles/scream_hourly_avg_output_pg2.yaml .
+./atmchange output_yaml_files="./scream_hourly_avg_output_pg2.yaml"
 
 # avoid the monthly cice file from writing as this
 #   appears to be currently broken for SCM
