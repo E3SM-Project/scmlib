@@ -74,7 +74,7 @@
 
   # dynamics time step [s]
   #  should divide evenly into model_dtime
-  set dyn_dtime = 8.333333333333333d0
+  set dyn_dtime = 8.3333333333333
 
   # SET SECOND ORDER VISCOSITY NEAR MODEL TOP
   #  NOTE that if you decrease resolution you will also need to reduce
