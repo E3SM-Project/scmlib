@@ -2,12 +2,23 @@
 
 #######################################################################
 #######################################################################
-#######  Script to run SCREAM in doubly periodic (DP) mode
+#######  Script to run SCREAMv1 in doubly periodic (DP) mode (DP-EAMxx)
 #######  COMBLE
 #######  Cold-Air Outbreaks in the Marine Boundary Layer Experiment
 #######
 #######  Script Author: P. Bogenschutz (bogenschutz1@llnl.gov)
 #######  Forcing provided by: Xue Zheng and Meng Zheng
+
+#######  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#######  WARNING READ FIRST BEFORE RUNNING:
+#######
+#######  DPxx is currently only in BETA testing mode.  At this time you
+#######  are NOT to run this script without the prior permission of
+#######  Peter Bogenschutz.  Please do NOT use this configuration for
+#######  scientific purposes at this time.  If you need to run DP-SCREAM
+#######  in a scientifically validated configuration please use the
+#######  SCREAMv0-DP model.  Thank you.
+#######  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #######################################################
 #######  BEGIN USER DEFINED SETTINGS
@@ -126,7 +137,7 @@
 
   cd $E3SMROOT/cime/scripts
 
-  set compset=F2010-SCREAMv1-DP-DYCOMSrf01
+  set compset=FIOP-SCREAMv1-DP
 
   # Note that in DP-SCREAM the grid is set ONLY to initialize
   #  the model from these files

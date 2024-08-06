@@ -1027,14 +1027,9 @@ sed -i s/CASEuvnudge/false/ $outfile
 sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/false/ $outfile
 sed -i s/CASEwalltime/16:00:00/ $outfile
-sed -i s/CASEnhtfrq/-24/ $outfile
-sed -i s/F2010-SCREAM-HR/FRCE/ $outfile
-sed -i s/CASEconfigappend/"'-rce -aquaplanet'"/ $outfile
-sed -i s/CASEncdata/"input_data_dir"/ $outfile
+sed -i s/FIOP-SCREAMv1-DP/FRCE-SCREAMv1-DP/ $outfile
 sed -i s/CASEsstaqua/"sst_val"/ $outfile
 sed -i s/CASEsstval/300/ $outfile
-sed -i s/CASEhydrostatic/false/ $outfile
-sed -i s/CASEtstep/9/ $outfile
 sed -i '/ELM_CONFIG_OPTS/d' $outfile
 sed -i '/ELM_NAMELIST_OPTS/d' $outfile
 sed -i '/CICE_CONFIG_OPTS/d' $outfile
