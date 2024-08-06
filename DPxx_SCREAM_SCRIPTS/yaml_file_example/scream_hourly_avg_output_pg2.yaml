@@ -1,0 +1,89 @@
+%YAML 1.1
+---
+Averaging Type: Average
+Max Snapshots Per File: 744
+filename_prefix: ${CASE}.scream.hourly.avg
+Fields:
+  Dynamics:
+    Field Names:
+    - ps_dyn
+    - dp3d_dyn
+    - omega_dyn
+    IO Grid Name: Physics GLL
+  Physics PG2:
+    Field Names:
+    - ps
+    - pseudo_density
+    - omega
+    - p_int
+    - p_mid
+    - z_mid
+    - horiz_winds
+    - cldfrac_liq
+    - eddy_diff_mom
+    - sgs_buoy_flux
+    - tke
+    - pbl_height
+    - cldfrac_ice_for_analysis
+    - cldfrac_tot_for_analysis
+    - bm
+    - nc
+    - ni
+    - nr
+    - qi
+    - qm
+    - qr
+    - eff_radius_qc
+    - eff_radius_qi
+    - eff_radius_qr
+    - precip_ice_surf_mass
+    - precip_liq_surf_mass
+    - rainfrac
+    - qc
+    - qv
+    - T_mid
+    - sfc_alb_dir_vis
+    - LW_flux_dn
+    - LW_flux_up
+    - SW_flux_dn
+    - SW_flux_up
+    - sfc_flux_lw_dn
+    - sfc_flux_sw_net
+    - cldtot
+    - cldlow
+    - cldmed
+    - cldhgh
+    - surf_evap
+    - surf_sens_flux
+    - PotentialTemperature
+    - landfrac
+    - ocnfrac
+    - VapWaterPath
+    - IceWaterPath
+    - LiqWaterPath
+    - RainWaterPath
+    - LongwaveCloudForcing
+    - ShortwaveCloudForcing
+    - SW_flux_up_at_model_top
+    - SW_flux_dn_at_model_top
+    - LW_flux_up_at_model_top
+    - SW_clrsky_flux_up_at_model_top
+    - LW_clrsky_flux_up_at_model_top
+    - SW_flux_dn_at_model_bot
+    - SW_clrsky_flux_dn_at_model_bot
+    - SW_flux_up_at_model_bot
+    - SW_clrsky_flux_up_at_model_bot
+    - LW_flux_dn_at_model_bot
+    - LW_clrsky_flux_dn_at_model_bot
+    - LW_flux_up_at_model_bot 
+    - shoc_T_mid_tend
+    - p3_T_mid_tend
+    - rrtmgp_T_mid_tend
+    - shoc_qv_tend
+    - p3_qv_tend
+    - homme_T_mid_tend
+    - homme_qv_tend
+    - surf_radiative_T
+output_control:
+  Frequency: 1
+  frequency_units: nhours

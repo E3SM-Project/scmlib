@@ -21,6 +21,11 @@
 
 #######################################################
 #######  BEGIN USER DEFINED SETTINGS
+####### NOTE: beyond this section you will likely want to configure your
+#######  ouput yaml file(s).  Please do a search for "yaml" and you will
+#######  be brought to the correct location.
+####### See the example yaml file in the DPxx_SCREAM_SCRIPTS/yaml_file_example
+#######  of the scmlib repo to get you started.
 
   # Set the name of your case here
   setenv casename scream_dpxx_ARM_shallow
@@ -240,7 +245,7 @@
   ./atmchange physics::rrtmgp::compute_tendencies=T_mid
   ./atmchange homme::compute_tendencies=T_mid,qv
   
- # configure output
+ # configure yaml output
 cp /global/homes/b/bogensch/dp_scream_scripts_xx/dpxx_outputfiles/scream_hourly_avg_output_pg2.yaml .
 ./atmchange output_yaml_files="./scream_hourly_avg_output_pg2.yaml"
 
