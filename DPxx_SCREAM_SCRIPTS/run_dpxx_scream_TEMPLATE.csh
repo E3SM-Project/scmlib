@@ -111,18 +111,7 @@
   # second order visocosity near model top [m2/s]
   set nu_top_dyn = 1e4
 
-####### END (mandatory) USER DEFINED SETTINGS, but...
-####### Likely POSSIBLE EXCEPTIONS (not limited to):
-#######  - If the user wants to add additional output, for example, the EAM
-#######	   namelist (user_nl_eam) should be modified below to accomodate for this.
-#######  - The user wants to run a subset of the selected case.
-#######
-#######  - NOTE ON DEFAULT OUTPUT
-#######    - *eam.h0* tapes contain the the default output averaged daily
-#######      (for multi-day cases) or hourly (for shorter boundary layer
-#######      cloud cases)
-#######    - *eam.h1* tapes contain instantaneous 2D fields output hourly
-#######    - ALL/any of this can be modified by the user based on needs
+####### END (mandatory) USER DEFINED SETTINGS, but see above about output
 ###########################################################################
 ###########################################################################
 ###########################################################################
