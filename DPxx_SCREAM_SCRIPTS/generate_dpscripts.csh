@@ -1037,6 +1037,7 @@ sed -i '/ELM_CONFIG_OPTS/d' $outfile
 sed -i '/ELM_NAMELIST_OPTS/d' $outfile
 sed -i '/CICE_CONFIG_OPTS/d' $outfile
 sed -i '/CALENDAR/d' $outfile
+sed -i '/constant_zenith_deg/d' $outfile
 
 foreach file (*.csh)
   if ($file != run_dpxx_scream_TEMPLATE.csh && $file != generate_dpscripts.csh) then

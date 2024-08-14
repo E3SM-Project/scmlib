@@ -274,6 +274,7 @@ else
   set solar_angle = -1 # Interactive SW radiation
 endif
 
+# Note that this call will be disabled for RCE
 cat <<EOF>> user_nl_cpl
   constant_zenith_deg = $solar_angle
 EOF
