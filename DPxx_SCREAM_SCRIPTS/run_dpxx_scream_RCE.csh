@@ -3,8 +3,11 @@
 #######################################################################
 #######################################################################
 #######  Script to run SCREAMv1 in doubly periodic (DP) mode (DP-EAMxx)
-#######  RCE
-#######  Radiative Convective Equilibrium
+#######  RCE_300K
+#######  Radiative Convective Equilibrium (RCEMIP1 configuration; Wing et al. 2018)
+#######  Can run with SSTs set to 295, 300 (default), or 305 K.
+#######  To change, modify the IOP file name and sst_val accordingly (in case specific settings).
+#######  It is possible to run with other SST values, but will take longer for simulation to equilibrate.
 #######
 #######  Script Author: P. Bogenschutz (bogenschutz1@llnl.gov)
 
@@ -28,7 +31,7 @@
 #######  of the scmlib repo to get you started.
 
   # Set the name of your case here
-  setenv casename scream_dpxx_RCE
+  setenv casename scream_dpxx_RCE_300K
 
   # Set the case directory here
   setenv casedirectory /pscratch/sd/b/bogensch/dp_screamxx
@@ -118,8 +121,8 @@
   set start_in_sec = 0 # start time in seconds in IOP file
   set stop_option = ndays
   set stop_n = 20
-  set iop_file = RCE_iopfile_4scam.nc #IOP file name
   set sst_val = 300 # set constant SST value (ONLY valid for RCE case)
+  set iop_file = RCE_300K_iopfile_4scam.nc #IOP file name
   set do_turnoff_swrad = false # Turn off SW calculation (if false, keep false)
 # End Case specific stuff here
 

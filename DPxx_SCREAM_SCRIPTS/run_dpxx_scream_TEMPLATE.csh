@@ -5,6 +5,9 @@
 #######  Script to run SCREAMv1 in doubly periodic (DP) mode (DP-EAMxx)
 #######  THECASENAME
 #######  THECASEDESCRIPTION
+#######  RCEMSG
+#######  SSTMSG
+#######  SST2MSG
 #######
 #######  Script Author: P. Bogenschutz (bogenschutz1@llnl.gov)
 #######  Forcing provided by: FORCINGPROVIDER
@@ -128,8 +131,8 @@
   set start_in_sec = CASEstartinsec # start time in seconds in IOP file
   set stop_option = CASEstopoption
   set stop_n = CASEstopn
-  set iop_file = THECASENAME_iopfile_4scam.nc #IOP file name
   set sst_val = CASEsstval # set constant SST value (ONLY valid for RCE case)
+  set iop_file = THECASENAME_iopfile_4scam.nc #IOP file name
   set do_turnoff_swrad = CASEswoff # Turn off SW calculation (if false, keep false)
 # End Case specific stuff here
 
