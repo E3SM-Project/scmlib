@@ -1030,8 +1030,11 @@ sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
 set casename = RCE
 set outfile = run_dp_scream_$casename.csh 
 cp -r run_dp_scream_TEMPLATE.csh $outfile
-sed -i s/THECASENAME/$casename/ $outfile
-sed -i s/THECASEDESCRIPTION/"Radiative Convective Equilibrium"/ $outfile
+sed -i s/THECASENAME/{$casename}"_300K"/ $outfile
+sed -i s/THECASEDESCRIPTION/"Radiative Convective Equilibrium (RCEMIP1 configuration; Wing et al. 2018)"/ $outfile
+sed -i s/RCEMSG/"Can run with SSTs set to 295, 300 (default), or 305 K."/ $outfile
+sed -i s/SSTMSG/"To change, modify the IOP file name and sst_val accordingly (in case specific settings)."/ $outfile
+sed -i s/SST2MSG/"It is possible to run with other SST values, but will take longer for simulation to equilibrate."/ $outfile
 sed -i s/CASElat/0.0/ $outfile
 sed -i s/CASElon/0.0/ $outfile
 sed -i s/CASEsrfprop/.false./ $outfile
@@ -1094,6 +1097,9 @@ foreach file (*.csh)
     sed -i '/CASEcoriolis/d' $file
     sed -i '/CASEhydrostatic/d' $file
     sed -i '/CASEtstep/d' $file
+    sed -i '/RCEMSG/d' $file
+    sed -i '/SSTMSG/d' $file
+    sed -i '/SST2MSG/d' $file    
   endif
 end
 

@@ -5,6 +5,9 @@
 #######  Script to run SCREAM in doubly periodic (DP) mode
 #######  THECASENAME
 #######  THECASEDESCRIPTION
+#######  RCEMSG
+#######  SSTMSG
+#######  SST2MSG
 #######
 #######  Script Author: P. Bogenschutz (bogenschutz1@llnl.gov)
 #######  Forcing provided by: FORCINGPROVIDER
