@@ -20,6 +20,8 @@
 #######  scientific purposes at this time.  If you need to run DP-SCREAM
 #######  in a scientifically validated configuration please use the
 #######  SCREAMv0-DP model.  Thank you.
+#######
+#######  Known issues:  PG2 lat and lon coordinates are corrupt in output.
 #######  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #######################################################
@@ -236,6 +238,7 @@
   ./atmchange homme::compute_tendencies=T_mid,qv
   
  # configure yaml output
+ # See the example yaml file in the DPxx_SCREAM_SCRIPTS/yaml_file_example
 cp /global/homes/b/bogensch/dp_scream_scripts_xx/dpxx_outputfiles/scream_hourly_avg_output_pg2.yaml .
 ./atmchange output_yaml_files="./scream_hourly_avg_output_pg2.yaml"
 
