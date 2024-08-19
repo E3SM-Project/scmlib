@@ -241,8 +241,15 @@
   
  # configure yaml output
  # See the example yaml file in the DPxx_SCREAM_SCRIPTS/yaml_file_example
+ # Note that you can have as many output streams (yaml files) as you want!
+ # Here we just have one, but see commented lines to show how to add a second and third output stream
+ #   (you would want to do this if you wanted daily or timestep averaged output, for example).
 cp /global/homes/b/bogensch/dp_scream_scripts_xx/dpxx_outputfiles/scream_hourly_avg_output_pg2.yaml .
+#cp /global/homes/b/bogensch/dp_scream_scripts_xx/dpxx_outputfiles/second_output_stream.yaml .
+#cp /global/homes/b/bogensch/dp_scream_scripts_xx/dpxx_outputfiles/third_output_stream.yaml .
 ./atmchange output_yaml_files="./scream_hourly_avg_output_pg2.yaml"
+#./atmchange output_yaml_files+="./second_output_stream.yaml"
+#./atmchange output_yaml_files+="./third_output_stream.yaml"
 
 # avoid the monthly cice file from writing as this
 #   appears to be currently broken for SCM
