@@ -22,7 +22,10 @@
 #######  in a scientifically validated configuration please use the
 #######  SCREAMv0-DP model.  Thank you.
 #######
-#######  Known issues:  PG2 lat and lon coordinates are corrupt in output.
+#######  Known issues:
+#######    -PG2 lat and lon coordinates are corrupt in output.
+#######    -Results when running with GPUs seem weird, should only run
+#######     with CPUs at this time.
 #######  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #######################################################
