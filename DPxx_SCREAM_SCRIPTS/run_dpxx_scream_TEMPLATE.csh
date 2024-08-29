@@ -24,8 +24,9 @@
 #######
 #######  Known issues:
 #######    -PG2 lat and lon coordinates are corrupt in output.
-#######    -Results when running with GPUs seem weird, should only run
-#######     with CPUs at this time.
+#######    -Results when running with pm-gpu seem weird, seems to be related
+#######     to incoming solar radiation (diurnal cycle off by about 12 hours
+#######     and not uniform across domain).  pm-cpu is fine.
 #######  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #######################################################
