@@ -625,6 +625,10 @@ sed -i s/CASEstartinsec/0/ $outfile
 sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/1/ $outfile
 sed -i s/CASEcaltype/GREGORIAN/ $outfile
+sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c101029_GATEIDEAL.nc"/ $outfile
+sed -i s/CASESSTyearalign/1974/ $outfile
+sed -i s/CASESSTyearstart/1974/ $outfile
+sed -i s/CASESSTyearend/1975/ $outfile
 
 ################################
 # LBA
