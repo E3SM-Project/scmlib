@@ -217,6 +217,10 @@
 # Get local input data directory path
   set input_data_dir = `./xmlquery DIN_LOC_ROOT -value`
 
+  ./xmlchange SSTICE_DATA_FILENAME="$input_data_dir/ocn/docn7/SSTDATA/sst_HadOIBl_bc_1x1_clim_c101029_GATEIDEAL.nc"
+  ./xmlchange SSTICE_YEAR_ALIGN=1974
+  ./xmlchange SSTICE_YEAR_START=1974
+  ./xmlchange SSTICE_YEAR_END=1975
 
 # Set relevant namelist modifications  
   ./atmchange se_ne_x=$num_ne_x

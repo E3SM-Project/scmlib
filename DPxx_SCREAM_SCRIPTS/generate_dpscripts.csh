@@ -272,6 +272,10 @@ sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/true/ $outfile
 sed -i s/CASEwalltime/01:00:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
+sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c101029_GATEIDEAL.nc"/ $outfile
+sed -i s/CASESSTyearalign/1974/ $outfile
+sed -i s/CASESSTyearstart/1974/ $outfile
+sed -i s/CASESSTyearend/1975/ $outfile
 
 ################################
 # GATE
