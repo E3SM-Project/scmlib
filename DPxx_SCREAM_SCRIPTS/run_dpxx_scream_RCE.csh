@@ -22,10 +22,11 @@
 #######  SCREAMv0-DP model.  Thank you.
 #######
 #######  Known issues:
-#######    -PG2 lat and lon coordinates are corrupt in output.
 #######    -Results when running with pm-gpu seem weird, seems to be related
 #######     to incoming solar radiation (diurnal cycle off by about 12 hours
 #######     and not uniform across domain).  pm-cpu is fine.
+#######    -Tip: to get lat/lon output coordinates in units of meters please
+#######     multiply by (pi/180.0).  Be sure you are using master after Sept 9, 2024.
 #######  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #######################################################
