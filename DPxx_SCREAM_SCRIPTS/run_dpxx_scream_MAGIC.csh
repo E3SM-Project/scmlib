@@ -286,7 +286,7 @@ EOF
   ./case.setup
 
 # Write restart files at the end of model simulation
-  ./xmlchange PIO_TYPENAME="netcdf"
+  ./xmlchange PIO_TYPENAME="pnetcdf"
 #  ./xmlchange REST_OPTION="end"
 
 # Build the case
