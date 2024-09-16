@@ -21,10 +21,14 @@
 #######  in a scientifically validated configuration please use the
 #######  SCREAMv0-DP model.  Thank you.
 #######
+#######  IMPORTANT:
+#######    - There have been MANY issues resolved very recently.  Thus, it is imperative
+#######      that you run with the most up-to-date SCREAM master.  Please make sure
+#######      your SCREAM master is dated September 16, 2024 or after.
+#######
 #######  Known issues:
-#######    -Results when running with pm-gpu seem weird, seems to be related
-#######     to incoming solar radiation (diurnal cycle off by about 12 hours
-#######     and not uniform across domain).  pm-cpu is fine.
+#######    - Issue with setting large domain sizes. Sometimes code seg faults on
+#######      on initialization.  Fix has been found and PR will be issued soon.
 #######  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #######################################################
