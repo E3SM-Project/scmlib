@@ -16,13 +16,16 @@ import glob
 import matplotlib.pyplot as plt
 
 ###### User input #####################################################
-# What variables do you want to process?
-vartodo=["LiqWaterPath","IceWaterPath"]
+# What variables do you want to process?  You have two options, you
+#   can either list selected variables or simply put "all" to regrid
+#   every 2D variable in your output stream. Example below of selected vars.
+#vartodo=["LiqWaterPath","IceWaterPath"]
+vartodo=["all"]
 
 # Supply the run directory, casename, and prefix of the output stream to process
 rundir='/pscratch/sd/b/bogensch/dp_screamxx/'
-casename='scream_dpxx_GATEIDEAL.400m.003a'
-outfilepre='scream_dpxx_GATEIDEAL.400m.003a.scream.5minute.2d.instant.INSTANT.nmins_x5'
+casename='scream_dpxx_GATEIDEAL.3.2km.003a'
+outfilepre='scream_dpxx_GATEIDEAL.3.2km.003a.scream.5minute.2d.instant.INSTANT.nmins_x5'
 
 #######################################################################
 
@@ -74,6 +77,27 @@ def SCREAM_get_cords(initfile):
 
    return time, crm_grid_x, crm_grid_y
 
+def find_2dvars_variables(filename):
+    # Open the NetCDF file
+    dataset = nc4.Dataset(filename)
+
+    # Initialize a list to store variable names that match the criteria
+    matching_vars = []
+
+    # Iterate over all the variables in the NetCDF file
+    for var_name in dataset.variables:
+        var = dataset.variables[var_name]
+
+        # Check if the dimensions are ('time', 'ncol')
+        if var.dimensions == ('time', 'ncol'):
+            matching_vars.append(var_name)
+
+    # Close the dataset
+    dataset.close()
+
+    return matching_vars
+
+
 ##############################################################################
 # Begin main function
 
@@ -124,13 +148,17 @@ if (numfiles > 1):
    time_in, crm_grid_x, crm_grid_y = SCREAM_get_cords(filelist[len(filelist)-1])
    ntimes=ntimes+len(time_in)
 
+# Are we doing all variables or selected variables?
+if (vartodo[0] == "all"):
+   vartodo=find_2dvars_variables(filelist[0])
+
 numvars=len(vartodo)
 
 #############################################################
 # Process each variable one at a time
 for v in range(0,numvars):
 
-   print('Doing variable: ',vartodo[v])
+   print('PROCESSING VARIABLE: ',vartodo[v])
    outputfile=postpath_h2+casename+'_2D_'+vartodo[v]+'.nc'   
    
    ishere=os.path.isfile(outputfile)

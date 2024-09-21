@@ -5,6 +5,8 @@ Data will be placed in a folder called post_processed_output/3D
 in your case directory.
 
 Currently only works with data on the lev grid (as opposed to ilev).
+This is because ilev currently doesn't appear to be written to to
+output files for some reason.
 
 This comes with no warranty and is provided as a convenience. 
 """
@@ -18,13 +20,16 @@ import glob
 import matplotlib.pyplot as plt
 
 ###### User input #####################################################
-# What variables do you want to process?
-vartodo=["qc","U","V"]
+# What variables do you want to process?  You have two options, you
+#   can either list selected variables or simply put "all" to regrid
+#   every 3D variable in your output stream. Example below of selected vars.
+#vartodo=["U","V"]
+vartodo=["all"]
 
 # Supply the run directory, casename, and prefix of the output stream to process
 rundir='/pscratch/sd/b/bogensch/dp_screamxx/'
-casename='scream_dpxx_GATEIDEAL.400m.003a'
-outfilepre='scream_dpxx_GATEIDEAL.400m.003a.scream.15minute.3d.instant.INSTANT.nmins_x15'
+casename='scream_dpxx_GATEIDEAL.3.2km.003a'
+outfilepre='scream_dpxx_GATEIDEAL.3.2km.003a.scream.15minute.3d.instant.INSTANT.nmins_x15'
 
 #######################################################################
 
@@ -78,6 +83,26 @@ def SCREAM_get_cords(initfile):
    f.close()
 
    return time, lev, crm_grid_x, crm_grid_y
+   
+def find_3dvars_variables(filename):
+    # Open the NetCDF file
+    dataset = nc4.Dataset(filename)
+
+    # Initialize a list to store variable names that match the criteria
+    matching_vars = []
+
+    # Iterate over all the variables in the NetCDF file
+    for var_name in dataset.variables:
+        var = dataset.variables[var_name]
+ 
+        # Check if the dimensions are ('time', 'ncol')
+        if var.dimensions == ('time', 'ncol','lev'):
+            matching_vars.append(var_name)
+
+    # Close the dataset
+    dataset.close()
+
+    return matching_vars
 
 ##############################################################################
 # Begin main function
@@ -128,6 +153,10 @@ ntimes=numtimes*(numfiles-1.)
 if (numfiles > 1):
    time_in, lev_in, crm_grid_x, crm_grid_y = SCREAM_get_cords(filelist[len(filelist)-1])
    ntimes=ntimes+len(time_in)
+
+# Are we doing all variables or selected variables?
+if (vartodo[0] == "all"):
+   vartodo=find_3dvars_variables(filelist[0])
 
 numvars=len(vartodo)
 
