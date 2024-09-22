@@ -29,12 +29,12 @@ vartodo=["all"]
 # Supply the run directory, casename, and prefix of the output stream to process
 casedir='/pscratch/sd/b/bogensch/dp_screamxx/'
 casename='scream_dpxx_GATEIDEAL.3.2km.003a'
-outstream='scream_dpxx_GATEIDEAL.3.2km.003a.scream.15minute.3d.instant.dyn.INSTANT.nmins_x15'
+outstream='scream_dpxx_GATEIDEAL.3.2km.003a.scream.hourly.avg.AVERAGE.nhours_x1'
 
 ###### End user input
 #######################################################################
 
-def arrange_array(data, x_coords, y_coords):
+def regrid_array(data, x_coords, y_coords):
     # Create dictionaries to map the coordinates to their indices
     unique_x = sorted(set(x_coords))
     unique_y = sorted(set(y_coords))
@@ -263,7 +263,7 @@ for v in range(0,numvars):
       time_in=fi.variables['time'][:]
       var=fi.variables[vartodo[v]][:]
 
-      var_arranged,dummyx,dummyy=arrange_array(var, crm_grid_x, crm_grid_y)
+      var_arranged,dummyx,dummyy=regrid_array(var, crm_grid_x, crm_grid_y)
    
       te=ts+len(time_in)
       time[ts:te]=time_in
