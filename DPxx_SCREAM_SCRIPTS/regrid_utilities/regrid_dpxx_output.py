@@ -27,7 +27,7 @@ import matplotlib.pyplot as plt
 vartodo=["all"]
 
 # Supply the run directory, casename, and prefix of the output stream to process
-rundir='/pscratch/sd/b/bogensch/dp_screamxx/'
+casedir='/pscratch/sd/b/bogensch/dp_screamxx/'
 casename='scream_dpxx_GATEIDEAL.3.2km.003a'
 outstream='scream_dpxx_GATEIDEAL.3.2km.003a.scream.15minute.3d.instant.dyn.INSTANT.nmins_x15'
 
@@ -146,7 +146,7 @@ def find_variables(filename,varlist_in):
 def check_path(dim):
    
    # Check to see if post process directory exists for 2d output; if not create it
-   postpath_dim=rundir+casename+'/post_processed_output/'+dim+'/'
+   postpath_dim=casedir+casename+'/post_processed_output/'+dim+'/'
    ishere=os.path.isdir(postpath_dim)
 
    # Make directory for post processing
@@ -161,7 +161,7 @@ def check_path(dim):
 # Begin main function
 
 # Check to see if post process directory exists; if not create it
-postpath=rundir+casename+'/post_processed_output/'
+postpath=casedir+casename+'/post_processed_output/'
 ishere=os.path.isdir(postpath)
 
 # Make directory for post processing
@@ -172,7 +172,7 @@ if not ishere:
 #
 
 # Make a list of files to process
-filedir=rundir+casename+'/run/'+outstream
+filedir=casedir+casename+'/run/'+outstream
 filelist=sorted(glob.glob(filedir+'*.nc'))
 print(filedir)
 # Get coordinates and timing information
