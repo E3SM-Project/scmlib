@@ -70,7 +70,9 @@
   setenv debug_queue false
 
   # Set number of processors to use, should be less than or equal
-  #   to the total number of elements in your domain.
+  #   to the total number of elements in your domain.  Note that if you are running
+  #   on pm-gpu you will want to set this to either "4" or "8" if running the standard
+  #   domain size and resolution (RCE excluded)
   set num_procs = 512
 
   # set walltime
