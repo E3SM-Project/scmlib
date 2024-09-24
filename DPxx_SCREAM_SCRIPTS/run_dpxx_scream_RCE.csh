@@ -24,11 +24,11 @@
 #######  IMPORTANT:
 #######    - There have been MANY issues resolved very recently.  Thus, it is imperative
 #######      that you run with the most up-to-date SCREAM master.  Please make sure
-#######      your SCREAM master is dated September 16, 2024 or after.
+#######      your SCREAM master is dated September 25, 2024 or after.
 #######
 #######  Known issues:
-#######    - Issue with setting large domain sizes. Sometimes code seg faults on
-#######      on initialization.  Fix has been found and PR will be issued soon.
+#######    - None at the moment (yay!).  But please read above to make sure
+#######      you are not running with buggy code.
 #######  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #######################################################
