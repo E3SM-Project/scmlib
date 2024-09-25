@@ -232,7 +232,7 @@
   ./atmchange se_ne_y=$num_ne_y
   ./atmchange se_lx=$domain_size_x
   ./atmchange se_ly=$domain_size_y
-  ./atmchange dt_remap_factor=1
+  ./atmchange dt_remap_factor=2
   ./atmchange cubed_sphere_map=2
   ./atmchange target_latitude=$lat
   ./atmchange target_longitude=$lon
