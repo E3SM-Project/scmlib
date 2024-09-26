@@ -106,13 +106,14 @@
   #  -NOTE that if you change the model resolution,
   #  it is likely the model and physics time steps will need to be adjusted.
   #  As a rule, a factor of 2 increase in resolution should equate to a factor of 2
-  #  decrease of the model time steps.
+  #  decrease of the model/physics step.
 
-  # model and physics time step [s]
+  # model/physics time step [s]
   set model_dtime = 100
 
   # dynamics time step [s]
-  #  should divide evenly into model_dtime
+  #  should divide evenly into model_dtime.  As a general rule of thumb, divide
+  #   model_dtime by 12 to get your dynamics time step.
   set dyn_dtime = 8.3333333333333
 
   # SET SECOND ORDER VISCOSITY NEAR MODEL TOP
