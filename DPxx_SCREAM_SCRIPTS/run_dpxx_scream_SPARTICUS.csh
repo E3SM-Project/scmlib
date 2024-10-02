@@ -22,7 +22,7 @@
 #######  IMPORTANT:
 #######    - There have been MANY issues resolved very recently.  Thus, it is imperative
 #######      that you run with the most up-to-date SCREAM master.  Please make sure
-#######      your SCREAM master is dated September 25, 2024 or after.
+#######      your SCREAM master is dated September 30, 2024 or after.
 #######
 #######  Known issues:
 #######    - None at the moment (yay!).  But please read above to make sure
