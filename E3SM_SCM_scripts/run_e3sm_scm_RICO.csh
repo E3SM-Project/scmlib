@@ -449,6 +449,10 @@ endif
   ./xmlchange MASK_GRID="USGS"
   ./xmlchange CALENDAR="GREGORIAN"
 
+  ./xmlchange SSTICE_DATA_FILENAME="$input_data_dir/ocn/docn7/SSTDATA/sst_HadOIBl_bc_1x1_clim_c101029_RICO.nc"
+  ./xmlchange SSTICE_YEAR_ALIGN=2004
+  ./xmlchange SSTICE_YEAR_START=2004
+  ./xmlchange SSTICE_YEAR_END=2005
 
   ./case.setup
 

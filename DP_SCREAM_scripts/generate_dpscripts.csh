@@ -870,6 +870,10 @@ sed -i s/CASEuvnudge/.false./ $outfile
 sed -i s/CASEdosub/.true./ $outfile
 sed -i s/CASEwalltime/00:30:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
+sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c101029_RICO.nc"/ $outfile
+sed -i s/CASESSTyearalign/2004/ $outfile
+sed -i s/CASESSTyearstart/2004/ $outfile
+sed -i s/CASESSTyearend/2005/ $outfile
 
 ################################
 # LBA

@@ -155,6 +155,10 @@ sed -i s/CASEstopoption/ndays/ $outfile
 sed -i s/CASEstopn/1/ $outfile
 sed -i s/OBSERVEDAERO/observed/ $outfile
 sed -i s/CASEcaltype/GREGORIAN/ $outfile
+sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c101029_RICO.nc"/ $outfile
+sed -i s/CASESSTyearalign/2004/ $outfile
+sed -i s/CASESSTyearstart/2004/ $outfile
+sed -i s/CASESSTyearend/2005/ $outfile
 
 ################################
 # ARM95 
