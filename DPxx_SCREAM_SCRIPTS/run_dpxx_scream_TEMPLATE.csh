@@ -15,17 +15,19 @@
 #######  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #######  WARNING READ FIRST BEFORE RUNNING:
 #######
-#######  DPxx is currently only in BETA testing mode.  At this time you
-#######  are NOT to run this script without the prior permission of
-#######  Peter Bogenschutz.  Please do NOT use this configuration for
-#######  scientific purposes at this time.  If you need to run DP-SCREAM
-#######  in a scientifically validated configuration please use the
-#######  SCREAMv0-DP model.  Thank you.
+#######  October 22, 2024 Update:
+#######  Beta testing for the C++/Kokkos version of DP-SCREAM (commonly referred
+#######  to as DPxx) has been going well and the code base has been stable for a
+#######	 while now (i.e. no new issues found in over a month from a large user base).
+#######	 Please feel free to use DPxx if you wish. Please send Peter Bogenschutz
+#######	 (bogenschutz1@llnl.gov) an email if you do so that I can add you to the
+#######	 DPxx beta testing mailing list in case there are any important updates to
+#######	 the code or scripts. We anticipate that DPxx will become the official and
+#######	 validated version of DP-SCREAM in a few months. At this time DP-SCREAMv0
+#######	 (Fortran version) will no longer be supported. Thus, the time to transition is upon us.
 #######
 #######  IMPORTANT:
-#######    - There have been MANY issues resolved very recently.  Thus, it is imperative
-#######      that you run with the most up-to-date SCREAM master.  Please make sure
-#######      your SCREAM master is dated September 30, 2024 or after.
+#######    - PLEASE make sure your SCREAM master is dated September 30, 2024 or after.
 #######
 #######  Known issues:
 #######    - None at the moment (yay!).  But please read above to make sure
