@@ -23,8 +23,8 @@ import numpy as np
 import os
 from datetime import datetime
 
-###### Start user input ################################################
-######
+#######################################################################
+###### Start user input
 
 # These geometry parameters should match what you plan to use in your simulation
 num_ne_x=20
@@ -32,6 +32,7 @@ num_ne_y=20
 domain_size_x=200000
 domain_size_y=200000
 
+# Supply path where mapping file will be placed
 outputpath="/global/homes/b/bogensch/dp_scream_scripts_xx/remap_files/"
 
 ###### End user input
