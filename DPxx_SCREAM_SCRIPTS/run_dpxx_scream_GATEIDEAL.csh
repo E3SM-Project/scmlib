@@ -48,7 +48,7 @@
   setenv code_dir /pscratch/sd/b/bogensch/dp_scream/codes
 
   # Code tag name
-  setenv code_tag SCREAM_DP_xx
+  setenv code_tag SCREAM_master
 
   # Name of machine you are running on (i.e. pm-cpu, anvil, etc)
   setenv machine pm-cpu
