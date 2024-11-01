@@ -14,6 +14,9 @@ User only needs to supply basic geometry data for their DPxx simulation.  This
 needs to be exactly the same as you've specified in your run script for
 num_ne_x, num_ne_y, domain_size_x, domain_size_y.
 
+Once you have generated your mapping file simply point to it in your YAML file like so:
+horiz_remap_file: /path/to/your/file/mapping_dpxx_x200000m_y200000m_nex20_ney20_to_1x1.20241024.nc
+
 Script authors: Peter Bogenschutz (bogenschutz1@llnl.gov)
                 Jishi Zhang (zhang73@llnl.gov)
 """
@@ -84,3 +87,5 @@ col[:]=col_in
 row[:]=row_in
 
 f.close()
+
+print("Generated file: ",fullfile)
