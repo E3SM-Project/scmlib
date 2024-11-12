@@ -29,9 +29,11 @@
 #######  IMPORTANT:
 #######    - PLEASE make sure your SCREAM master is dated September 30, 2024 or after.
 #######
-#######  Known issues:
-#######    - None at the moment (yay!).  But please read above to make sure
-#######      you are not running with buggy code.
+#######  Known issues (Nov 12, 2024):
+#######    - RCE case is currently broken.  Do not use at this time for science purposes.
+#######    - Some cases in the southern hemisphere (lat < 0) seem to be aborting on initialization
+#######      when checking for latitude consistency.  A quick hack exists for this until and official
+#######      fix gets committed.
 #######  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #######################################################
