@@ -26,13 +26,18 @@
 #######	 (Fortran version) will no longer be supported. Thus, the time to transition is upon us.
 #######
 #######  IMPORTANT:
-#######    - PLEASE make sure your SCREAM master is dated September 30, 2024 or after.
+#######    - PLEASE make sure your SCREAM master is dated September 30, 2024 or after for most cases.
+#######    - If running RCE case you MUST use master dated November 21, 2024 or after as there was a
+#######      major bug fix related to that compset prior to that date.
 #######
-#######  Known issues (Nov 12, 2024):
-#######    - RCE case is currently broken.  Do not use at this time for science purposes.
-#######    - Some cases in the southern hemisphere (lat < 0) seem to be aborting on initialization
-#######      when checking for latitude consistency.  A quick hack exists for this until and official
-#######      fix gets committed.
+#######  Exciting news:
+#######    - It is now possible to get horizontally averaged output in DPxx.  Very useful to reduce
+#######      the amount of data written and post-processing times.  For guidance on how to produce this
+#######      please see the script in the scmlib repo directory (your master should be current):
+#######      DPxx_SCREAM_SCRIPTS/regrid_utilities/generate_dpxx_horiz_avg_weights.py
+#######
+#######  Known issues (Nov 21, 2024):
+#######    - None at the moment
 #######  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #######################################################
