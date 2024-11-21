@@ -1,0 +1,208 @@
+import os
+import numpy as np
+import xarray as xr
+import matplotlib.pyplot as plt
+import tarfile
+from jinja2 import Template
+
+##########################################################
+##########################################################
+# Define constants and inputs
+
+# Where do you want output diagnostics to be placed?
+output_dir = "dpxx_quickdiags"
+
+# Where are simulations stored?
+base_dir = "/pscratch/sd/b/bogensch/dp_screamxx"
+
+# User-specified general ID for this diagnostic set
+general_id = "example_diagnostic_set"  # Change as needed
+
+# User-specified list of casenames and corresponding short IDs
+casenames = ["scream_dpxx_COMBLE.prefactor.001a", "scream_dpxx_COMBLE.refactor.001a"]  # Example casenames
+caseappend = ".scream.5minute.horiz_avg.AVERAGE.nmins_x5.2020-03-12-79200.nc"
+short_ids = ["prefactor", "refactor"]  # Example short IDs for legend
+
+# Define start and end times for averaging as numerical values in days
+time_s = 0.0   # Starting time for averaging
+time_e = 0.83  # Ending time for averaging
+
+# Optional: Maximum y-axis height for profile plots (in meters)
+max_height = 7000  # Set to desired height in meters, or None for automatic scaling
+##########################################################
+##########################################################
+
+# Make output directory for plots
+output_subdir = os.path.join(output_dir, general_id, "plots")
+os.makedirs(output_subdir, exist_ok=True)
+
+# Make output directory for diagnostics
+os.makedirs(output_dir, exist_ok=True)
+
+# Verify the lengths of casenames and short_ids are the same
+if len(casenames) != len(short_ids):
+    raise ValueError("The number of casenames must match the number of short_ids.")
+
+# Collect datasets and simulation labels
+file_paths = [os.path.join(base_dir, case, "run", f"{case}{caseappend}") for case in casenames]
+datasets = [xr.open_dataset(fp) for fp in file_paths]
+
+# Prepare lists to keep track of plot filenames for HTML pages
+profile_plots = []
+timeseries_plots = []
+
+# Plot profile variables with (time, ncol, lev) dimensions
+for var_name, var_data in datasets[0].data_vars.items():
+    if var_data.dims == ('time', 'ncol', 'lev'):
+        plt.figure(figsize=(8, 6))
+
+        # Loop over each dataset, using short_ids for the legend
+        for ds, short_id in zip(datasets, short_ids):
+            # Convert `time` to a numeric array in days since the start, to avoid datetime conflicts
+            time_in_days = (ds['time'] - ds['time'][0]) / np.timedelta64(1, 'D')
+            
+            # Determine indices for the specified range
+            time_indices = np.where((time_in_days >= time_s) & (time_in_days <= time_e))[0]
+
+            # Select data within the filtered time range and take the mean over time
+            time_filtered_data = ds[var_name].isel(time=time_indices).mean(dim="time")
+            z_mid_avg = ds['z_mid'].isel(time=time_indices).mean(dim="time")
+
+            # Plot profile with increased line width
+            plt.plot(time_filtered_data[0, :], z_mid_avg[0, :], label=short_id, linewidth=2)
+
+        # Set y-axis limit if specified
+        if max_height is not None:
+            plt.ylim([0, max_height])
+
+        # Labeling and saving the plot with larger font sizes
+        plt.xlabel(var_data.units, fontsize=14)
+        plt.ylabel('Height (m)', fontsize=14)
+        title = f"{var_data.long_name} Profile" if 'long_name' in var_data.attrs else f"{var_name} Profile"
+        plt.title(title, fontsize=16)
+        plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
+        plt.grid(True)
+
+        # Save plot in the general_id subdirectory
+        plot_filename = os.path.join(output_subdir, f"{var_name}_profile.jpg")
+        plt.savefig(plot_filename, format='jpg')
+        plt.close()
+        print(f"Saved profile plot for {var_name} as {plot_filename}")
+
+        # Add to profile plots list for HTML generation
+        profile_plots.append(plot_filename)
+
+# Plot time series for variables with (time, ncol) dimensions
+for var_name, var_data in datasets[0].data_vars.items():
+    if var_data.dims == ('time', 'ncol'):
+        plt.figure(figsize=(10, 5))
+
+        # Loop over each dataset, using short_ids for the legend
+        for ds, short_id in zip(datasets, short_ids):
+            # Convert `time` to a numeric array in days since the start
+            time_in_days = (ds['time'] - ds['time'][0]) / np.timedelta64(1, 'D')
+            variable_data = ds[var_name][:, 0]  # Select the single column (ncol = 1)
+
+            # Plot time series with increased line width
+            plt.plot(time_in_days, variable_data, label=short_id, linewidth=2)
+
+        # Labeling and saving the plot with larger font sizes
+        plt.xlabel("Time (days)", fontsize=14)
+        plt.ylabel(var_data.units, fontsize=14)
+        title = f"{var_data.long_name} Time Series" if 'long_name' in var_data.attrs else f"{var_name} Time Series"
+        plt.title(title, fontsize=16)
+        plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
+        plt.grid(True)
+
+        # Save plot in the general_id subdirectory
+        plot_filename = os.path.join(output_subdir, f"{var_name}_timeseries.jpg")
+        plt.savefig(plot_filename, format='jpg')
+        plt.close()
+        print(f"Saved time series plot for {var_name} as {plot_filename}")
+
+        # Add to timeseries plots list for HTML generation
+        timeseries_plots.append(plot_filename)
+
+# Close datasets
+for ds in datasets:
+    ds.close()
+
+# HTML Templates for profile and timeseries pages with grid layout
+html_template = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 10px;
+        }
+        .grid-item {
+            text-align: center;
+        }
+        img {
+            width: 90%;  /* Increased width */
+            max-width: 600px;  /* Increased max width */
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    <div class="grid-container">
+    {% for img in images %}
+        <div class="grid-item">
+            <h3>{{ img }}</h3>
+            <img src="plots/{{ img }}" alt="{{ img }}">
+        </div>
+    {% endfor %}
+    </div>
+</body>
+</html>
+"""
+
+# Generate profile and timeseries HTML files
+profile_html_content = Template(html_template).render(title="Profile Plots", images=[os.path.basename(p) for p in profile_plots])
+timeseries_html_content = Template(html_template).render(title="Time Series Plots", images=[os.path.basename(t) for t in timeseries_plots])
+
+# Write profile and timeseries HTML files to disk
+with open(os.path.join(output_dir, general_id, "profile_plots.html"), "w") as f:
+    f.write(profile_html_content)
+with open(os.path.join(output_dir, general_id, "timeseries_plots.html"), "w") as f:
+    f.write(timeseries_html_content)
+
+# Main HTML page with links to profile and timeseries pages
+main_html_content = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ general_id }} Diagnostics</title>
+</head>
+<body>
+    <h1>{{ general_id }} Diagnostics</h1>
+    <ul>
+        <li><a href="profile_plots.html">Profile Plots</a></li>
+        <li><a href="timeseries_plots.html">Time Series Plots</a></li>
+    </ul>
+</body>
+</html>
+"""
+
+main_html = Template(main_html_content).render(general_id=general_id)
+with open(os.path.join(output_dir, general_id, "index.html"), "w") as f:
+    f.write(main_html)
+
+# Tar all the plots and HTML files
+tar_filename = os.path.join(output_dir, f"{general_id}_diagnostics.tar")
+with tarfile.open(tar_filename, "w") as tar:
+    tar.add(os.path.join(output_dir, general_id, "index.html"), arcname="index.html")
+    tar.add(os.path.join(output_dir, general_id, "profile_plots.html"), arcname="profile_plots.html")
+    tar.add(os.path.join(output_dir, general_id, "timeseries_plots.html"), arcname="timeseries_plots.html")
+    tar.add(output_subdir, arcname="plots")
+
+print(f"Created archive {tar_filename} containing all plots and HTML files.")
