@@ -19,9 +19,9 @@ base_dir = "/pscratch/sd/b/bogensch/dp_screamxx"
 general_id = "example_diagnostic_set"  # Change as needed
 
 # User-specified list of casenames and corresponding short IDs
-casenames = ["scream_dpxx_COMBLE.prefactor.001a", "scream_dpxx_COMBLE.refactor.001a"]  # Example casenames
-caseappend = ".scream.5minute.horiz_avg.AVERAGE.nmins_x5.2020-03-12-79200.nc"
-short_ids = ["prefactor", "refactor"]  # Example short IDs for legend
+casenames = ["scream_dpxx_RCE_305K.rot.001d"]  # Example casenames
+caseappend = ".scream.hourly.horiz_avg.AVERAGE.nhours_x1.2000-01-01-00000.nc"
+short_ids = ["control"]  # Example short IDs for legend
 
 # Define start and end times for averaging as numerical values in days
 time_s = 0.0   # Starting time for averaging
@@ -45,15 +45,25 @@ if len(casenames) != len(short_ids):
 
 # Collect datasets and simulation labels
 file_paths = [os.path.join(base_dir, case, "run", f"{case}{caseappend}") for case in casenames]
-datasets = [xr.open_dataset(fp) for fp in file_paths]
+datasets = []
+
+# Check if ncol is 1 for all files
+for fp, short_id in zip(file_paths, short_ids):
+    ds = xr.open_dataset(fp)
+    if "ncol" in ds.dims and ds.dims["ncol"] != 1:
+        print(f"Warning: File {fp} has ncol={ds.dims['ncol']}, which is not equal to 1. Skipping this file.")
+        continue
+    datasets.append(ds)
 
 # Prepare lists to keep track of plot filenames for HTML pages
 profile_plots = []
 timeseries_plots = []
 
-# Plot profile variables with (time, ncol, lev) dimensions
+# Plot profile variables with three dimensions (e.g., time, ncol, lev)
 for var_name, var_data in datasets[0].data_vars.items():
-    if var_data.dims == ('time', 'ncol', 'lev'):
+    if var_data.ndim == 3 and any(dim in ['lev'] for dim in var_data.dims) \
+      and any(dim in ['time'] for dim in var_data.dims) and any(dim in ['ncol'] for dim in var_data.dims):
+
         plt.figure(figsize=(8, 6))
 
         # Loop over each dataset, using short_ids for the legend
@@ -92,9 +102,11 @@ for var_name, var_data in datasets[0].data_vars.items():
         # Add to profile plots list for HTML generation
         profile_plots.append(plot_filename)
 
-# Plot time series for variables with (time, ncol) dimensions
+# Plot time series for variables with two dimensions (e.g., time, ncol)
 for var_name, var_data in datasets[0].data_vars.items():
-    if var_data.dims == ('time', 'ncol'):
+    if var_data.ndim == 2 and any(dim in ['time'] for dim in var_data.dims) \
+       and any(dim in ['ncol'] for dim in var_data.dims):  # Generalized to check for 2D variables
+
         plt.figure(figsize=(10, 5))
 
         # Loop over each dataset, using short_ids for the legend
@@ -103,12 +115,13 @@ for var_name, var_data in datasets[0].data_vars.items():
             time_in_days = (ds['time'] - ds['time'][0]) / np.timedelta64(1, 'D')
             variable_data = ds[var_name][:, 0]  # Select the single column (ncol = 1)
 
+            print(f"Doing variable {var_name}")
             # Plot time series with increased line width
             plt.plot(time_in_days, variable_data, label=short_id, linewidth=2)
 
         # Labeling and saving the plot with larger font sizes
         plt.xlabel("Time (days)", fontsize=14)
-        plt.ylabel(var_data.units, fontsize=14)
+        plt.ylabel(var_data.attrs.get('units', 'Value'), fontsize=14)
         title = f"{var_data.long_name} Time Series" if 'long_name' in var_data.attrs else f"{var_name} Time Series"
         plt.title(title, fontsize=16)
         plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
