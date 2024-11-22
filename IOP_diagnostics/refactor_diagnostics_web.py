@@ -34,10 +34,10 @@ time_e = 0.83  # Ending time for averaging
 # Begin: User defined options - Set to defaults
 
 # Can be height or pressure
-height_cord = "z" # p = pressure; z = height
+height_cord = "p" # p = pressure; z = height
 
 # Optional: Maximum y-axis height for profile plots (in meters or mb)
-max_height = None  # Set to desired height in meters or mb, or None for automatic scaling
+max_height = 400  # Set to desired height in meters or mb, or None for automatic scaling
 
 # linewidth for curves
 linewidth = 2
@@ -45,6 +45,8 @@ linewidth = 2
 # End: User defined options
 ##########################################################
 ##########################################################
+
+# START CODE
 
 # Make output directory for plots
 output_subdir = os.path.join(output_dir, general_id, "plots")
@@ -90,18 +92,37 @@ for var_name, var_data in datasets[0].data_vars.items():
 
             # Select data within the filtered time range and take the mean over time
             time_filtered_data = ds[var_name].isel(time=time_indices).mean(dim="time")
-            z_mid_avg = ds['z_mid'].isel(time=time_indices).mean(dim="time")
+
+            # Choose the y-coordinate based on height_cord
+            if height_cord == "z":
+                if "z_mid" not in ds.data_vars:
+                    raise ValueError("The variable 'z_mid' is required for height_cord='z', but it is not present in the dataset.")
+                y_coord = ds['z_mid'].isel(time=time_indices).mean(dim="time").squeeze()
+            elif height_cord == "p":
+                if "lev" not in ds.dims:
+                    raise ValueError("The dimension 'lev' is required for height_cord='p', but it is not present in the dataset.")
+                y_coord = ds['lev']  # lev is constant in time
+            else:
+                raise ValueError(f"Invalid height_cord: {height_cord}. Must be 'z' or 'p'.")
 
             # Plot profile with increased line width
-            plt.plot(time_filtered_data[0, :], z_mid_avg[0, :], label=short_id, linewidth=linewidth)
+            plt.plot(time_filtered_data[0, :], y_coord, label=short_id, linewidth=linewidth)
 
         # Set y-axis limit if specified
         if max_height is not None:
-            plt.ylim([0, max_height])
+            if height_cord == "z":
+                plt.ylim([0, max_height])
+            elif height_cord == "p":
+                plt.ylim([max_height, ds['lev'].max()])  # Adjust for pressure
+
+        # Reverse the y-axis if plotting against pressure
+        if height_cord == "p":
+            plt.gca().invert_yaxis()
 
         # Labeling and saving the plot with larger font sizes
-        plt.xlabel(var_data.units, fontsize=14)
-        plt.ylabel('Height (m)', fontsize=14)
+        plt.xlabel(var_data.attrs.get('units', 'Value'), fontsize=14)
+        ylabel = 'Height (m)' if height_cord == "z" else 'Pressure (hPa)'
+        plt.ylabel(ylabel, fontsize=14)
         title = f"{var_data.long_name} Profile" if 'long_name' in var_data.attrs else f"{var_name} Profile"
         plt.title(title, fontsize=16)
         plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
