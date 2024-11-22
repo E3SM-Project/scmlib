@@ -7,7 +7,7 @@ from jinja2 import Template
 
 ##########################################################
 ##########################################################
-# Define constants and inputs
+# BEGIN: MANDATORY USER DEFINED SETTINGS
 
 # Where do you want output diagnostics to be placed?
 output_dir = "dpxx_quickdiags"
@@ -20,15 +20,29 @@ general_id = "example_diagnostic_set"  # Change as needed
 
 # User-specified list of casenames and corresponding short IDs
 casenames = ["scream_dpxx_RCE_305K.rot.001d"]  # Example casenames
-caseappend = ".scream.hourly.horiz_avg.AVERAGE.nhours_x1.2000-01-01-00000.nc"
 short_ids = ["control"]  # Example short IDs for legend
+
+caseappend = ".scream.hourly.horiz_avg.AVERAGE.nhours_x1.2000-01-01-00000.nc"
 
 # Define start and end times for averaging as numerical values in days
 time_s = 0.0   # Starting time for averaging
 time_e = 0.83  # Ending time for averaging
 
-# Optional: Maximum y-axis height for profile plots (in meters)
-max_height = 7000  # Set to desired height in meters, or None for automatic scaling
+# END: MANDATORY USER DEFINED SETTINGS
+##########################################################
+##########################################################
+# Begin: User defined options - Set to defaults
+
+# Can be height or pressure
+height_cord = "z" # p = pressure; z = height
+
+# Optional: Maximum y-axis height for profile plots (in meters or mb)
+max_height = None  # Set to desired height in meters or mb, or None for automatic scaling
+
+# linewidth for curves
+linewidth = 2
+
+# End: User defined options
 ##########################################################
 ##########################################################
 
@@ -79,7 +93,7 @@ for var_name, var_data in datasets[0].data_vars.items():
             z_mid_avg = ds['z_mid'].isel(time=time_indices).mean(dim="time")
 
             # Plot profile with increased line width
-            plt.plot(time_filtered_data[0, :], z_mid_avg[0, :], label=short_id, linewidth=2)
+            plt.plot(time_filtered_data[0, :], z_mid_avg[0, :], label=short_id, linewidth=linewidth)
 
         # Set y-axis limit if specified
         if max_height is not None:
@@ -115,9 +129,8 @@ for var_name, var_data in datasets[0].data_vars.items():
             time_in_days = (ds['time'] - ds['time'][0]) / np.timedelta64(1, 'D')
             variable_data = ds[var_name][:, 0]  # Select the single column (ncol = 1)
 
-            print(f"Doing variable {var_name}")
             # Plot time series with increased line width
-            plt.plot(time_in_days, variable_data, label=short_id, linewidth=2)
+            plt.plot(time_in_days, variable_data, label=short_id, linewidth=linewidth)
 
         # Labeling and saving the plot with larger font sizes
         plt.xlabel("Time (days)", fontsize=14)
