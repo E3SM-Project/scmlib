@@ -22,10 +22,9 @@
 #######	 validated version of DP-SCREAM in a few months. At this time DP-SCREAMv0
 #######	 (Fortran version) will no longer be supported. Thus, the time to transition is upon us.
 #######
-#######  IMPORTANT:
-#######    - PLEASE make sure your SCREAM master is dated September 30, 2024 or after for most cases.
-#######    - If running RCE case you MUST use master dated November 21, 2024 or after as there was a
-#######      major bug fix related to that compset prior to that date.
+#######  IMPORTANT (Nov 25, 2024):
+#######    - You should now be using E3SM master.  The SCREAM and E3SM repos have merged and here-on-out
+#######      all SCREAM development will take place on the E3SM master.
 #######
 #######  Exciting news:
 #######    - It is now possible to get horizontally averaged output in DPxx.  Very useful to reduce
@@ -55,7 +54,7 @@
   setenv code_dir /pscratch/sd/b/bogensch/dp_scream/codes
 
   # Code tag name
-  setenv code_tag SCREAM_master
+  setenv code_tag E3SM_master
 
   # Name of machine you are running on (i.e. pm-cpu, anvil, etc)
   setenv machine pm-cpu
