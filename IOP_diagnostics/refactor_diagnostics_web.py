@@ -13,20 +13,20 @@ from jinja2 import Template
 output_dir = "dpxx_quickdiags"
 
 # Where are simulations stored?
-base_dir = "/pscratch/sd/b/bogensch/dp_screamxx"
+base_dir = "/pscratch/sd/b/bogensch/dp_scream3"
 
 # User-specified general ID for this diagnostic set
 general_id = "example_diagnostic_set"  # Change as needed
 
 # User-specified list of casenames and corresponding short IDs
-casenames = ["scream_dpxx_RCE_305K.rot.001d"]  # Example casenames
+casenames = ["e3sm_scm_MAGIC.v2.001a"]  # Example casenames
 short_ids = ["control"]  # Example short IDs for legend
 
-caseappend = ".scream.hourly.horiz_avg.AVERAGE.nhours_x1.2000-01-01-00000.nc"
+caseappend = ".eam.h0.2013-07-21-19620.nc"
 
 # Define start and end times for averaging as numerical values in days
-time_s = 0.0   # Starting time for averaging
-time_e = 0.83  # Ending time for averaging
+time_s = 2.0   # Starting time for averaging
+time_e = 3.0  # Ending time for averaging
 
 # END: MANDATORY USER DEFINED SETTINGS
 ##########################################################
@@ -37,10 +37,10 @@ time_e = 0.83  # Ending time for averaging
 height_cord = "p" # p = pressure; z = height
 
 # Optional: Maximum y-axis height for profile plots (in meters or mb)
-max_height = 400  # Set to desired height in meters or mb, or None for automatic scaling
+max_height = 700  # Set to desired height in meters or mb, or None for automatic scaling
 
 # linewidth for curves
-linewidth = 2
+linewidth = 4
 
 # End: User defined options
 ##########################################################
@@ -106,7 +106,7 @@ for var_name, var_data in datasets[0].data_vars.items():
                 raise ValueError(f"Invalid height_cord: {height_cord}. Must be 'z' or 'p'.")
 
             # Plot profile with increased line width
-            plt.plot(time_filtered_data[0, :], y_coord, label=short_id, linewidth=linewidth)
+            plt.plot(np.squeeze(time_filtered_data), y_coord, label=short_id, linewidth=linewidth)
 
         # Set y-axis limit if specified
         if max_height is not None:
