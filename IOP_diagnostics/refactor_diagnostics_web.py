@@ -34,10 +34,10 @@ time_e = 3.0  # Ending time for averaging
 # Begin: User defined options - Set to defaults
 
 # Can be height or pressure
-height_cord = "z" # p = pressure; z = height
+height_cord = "p" # p = pressure; z = height
 
 # Optional: Maximum y-axis height for profile plots (in meters or mb)
-max_height = 5000  # Set to desired height in meters or mb, or None for automatic scaling
+max_height = 400  # Set to desired height in meters or mb, or None for automatic scaling
 
 # linewidth for curves
 linewidth = 4
@@ -100,17 +100,30 @@ for var_name, var_data in datasets[0].data_vars.items():
                 elif "Z3" in ds.data_vars:
                     # Adjust Z3 by subtracting surface elevation
                     lev0 = ds['Z3'].isel(lev=-1).mean(dim="time")  # Get Z3 at highest ilev index
-                    surface_elevation=lev0-10. # Assume bottom layer of 10 meters
+                    surface_elevation = lev0 - 10.0  # Assume bottom layer of 10 meters
                     y_coord = ds['Z3'].isel(time=time_indices).mean(dim="time").squeeze() - surface_elevation
                 else:
                     raise ValueError("Neither 'z_mid' nor 'Z3' is found for height_cord='z'.")
             elif height_cord == "p":
-                if "lev" not in ds.dims:
-                    raise ValueError("The dimension 'lev' is required for height_cord='p', but it is not present in the dataset.")
-                y_coord = ds['lev']  # lev is constant in time
+                # Check for surface pressure variable
+                ps_var = None
+                if 'PS' in ds.data_vars:
+                    ps_var = 'PS'
+                elif 'ps' in ds.data_vars:
+                    ps_var = 'ps'
+
+                if ps_var and all(var in ds for var in ['hyam', 'hybm']):
+                    # Compute the pressure-based y-coordinate
+                    hyam = ds['hyam']
+                    hybm = ds['hybm']
+                    ps_avg = ds[ps_var].isel(time=time_indices).mean(dim="time") / 100.0  # Convert to hPa
+                    y_coord = 1000.0 * hyam + hybm * ps_avg
+                else:
+                    # Warn the user and fall back to hybrid pressure coordinates
+                    print(f"Warning: 'PS' or 'ps' and/or 'hyam', 'hybm' are missing. Plotting against hybrid pressure coordinates ('lev').")
+                    y_coord = ds['lev']  # Use hybrid pressure coordinate
             else:
                 raise ValueError(f"Invalid height_cord: {height_cord}. Must be 'z' or 'p'.")
-
 
             # Plot profile with increased line width
             plt.plot(np.squeeze(time_filtered_data), y_coord, label=short_id, linewidth=linewidth)
@@ -120,7 +133,7 @@ for var_name, var_data in datasets[0].data_vars.items():
             if height_cord == "z":
                 plt.ylim([0, max_height])
             elif height_cord == "p":
-                plt.ylim([max_height, ds['lev'].max()])  # Adjust for pressure
+                plt.ylim([max_height, y_coord.max()])  # Adjust for pressure
 
         # Reverse the y-axis if plotting against pressure
         if height_cord == "p":
