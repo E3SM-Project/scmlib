@@ -34,10 +34,10 @@ time_e = 3.0  # Ending time for averaging
 # Begin: User defined options - Set to defaults
 
 # Can be height or pressure
-height_cord = "p" # p = pressure; z = height
+height_cord = "z" # p = pressure; z = height
 
 # Optional: Maximum y-axis height for profile plots (in meters or mb)
-max_height = 700  # Set to desired height in meters or mb, or None for automatic scaling
+max_height = 5000  # Set to desired height in meters or mb, or None for automatic scaling
 
 # linewidth for curves
 linewidth = 4
@@ -86,7 +86,7 @@ for var_name, var_data in datasets[0].data_vars.items():
         for ds, short_id in zip(datasets, short_ids):
             # Convert `time` to a numeric array in days since the start, to avoid datetime conflicts
             time_in_days = (ds['time'] - ds['time'][0]) / np.timedelta64(1, 'D')
-            
+
             # Determine indices for the specified range
             time_indices = np.where((time_in_days >= time_s) & (time_in_days <= time_e))[0]
 
@@ -95,15 +95,22 @@ for var_name, var_data in datasets[0].data_vars.items():
 
             # Choose the y-coordinate based on height_cord
             if height_cord == "z":
-                if "z_mid" not in ds.data_vars:
-                    raise ValueError("The variable 'z_mid' is required for height_cord='z', but it is not present in the dataset.")
-                y_coord = ds['z_mid'].isel(time=time_indices).mean(dim="time").squeeze()
+                if "z_mid" in ds.data_vars:
+                    y_coord = ds['z_mid'].isel(time=time_indices).mean(dim="time").squeeze()
+                elif "Z3" in ds.data_vars:
+                    # Adjust Z3 by subtracting surface elevation
+                    lev0 = ds['Z3'].isel(lev=-1).mean(dim="time")  # Get Z3 at highest ilev index
+                    surface_elevation=lev0-10. # Assume bottom layer of 10 meters
+                    y_coord = ds['Z3'].isel(time=time_indices).mean(dim="time").squeeze() - surface_elevation
+                else:
+                    raise ValueError("Neither 'z_mid' nor 'Z3' is found for height_cord='z'.")
             elif height_cord == "p":
                 if "lev" not in ds.dims:
                     raise ValueError("The dimension 'lev' is required for height_cord='p', but it is not present in the dataset.")
                 y_coord = ds['lev']  # lev is constant in time
             else:
                 raise ValueError(f"Invalid height_cord: {height_cord}. Must be 'z' or 'p'.")
+
 
             # Plot profile with increased line width
             plt.plot(np.squeeze(time_filtered_data), y_coord, label=short_id, linewidth=linewidth)
