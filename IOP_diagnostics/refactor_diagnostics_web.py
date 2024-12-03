@@ -10,13 +10,15 @@ from scipy.interpolate import interp1d
 # Quick diagnostics package for E3SM Single Column Model (SCM)
 #  or doubly-periodic EAMxx (DP-EAMxx).
 
-# Work in progress
+# Will produce .tar file with plots and html viewer.
+
+# Work in progress.
 
 ##########################################################
 ##########################################################
 # BEGIN: MANDATORY USER DEFINED SETTINGS
 
-# Where do you want output diagnostics to be placed?  Provide path
+# Where do you want output diagnostics to be placed?  Provide path.
 output_dir = "dpxx_quickdiags"
 
 # Where are simulation case directories stored?
