@@ -19,8 +19,8 @@ base_dir = "/pscratch/sd/b/bogensch/dp_scream3"
 general_id = "example_diagnostic_set"  # Change as needed
 
 # User-specified list of casenames and corresponding short IDs
-casenames = ["e3sm_scm_MAGIC.v2.001a","e3sm_scm_MAGIC.v2.5m.001a"]  # Example casenames
-short_ids = ["control","5 m"]  # Example short IDs for legend
+casenames = ["e3sm_scm_MAGIC.v2.001a", "e3sm_scm_MAGIC.v2.5m.001a"]  # Example casenames
+short_ids = ["control", "5 m"]  # Example short IDs for legend
 
 caseappend = ".eam.h0.2013-07-21-19620.nc"
 
@@ -34,10 +34,10 @@ time_e = 3.0  # Ending time for averaging
 # Begin: User defined options - Set to defaults
 
 # Can be height or pressure
-height_cord = "z" # p = pressure; z = height
+height_cord = "p"  # p = pressure; z = height
 
 # Optional: Maximum y-axis height for profile plots (in meters or mb)
-max_height = 4000  # Set to desired height in meters or mb, or None for automatic scaling
+max_height = 700  # Set to desired height in meters or mb, or None for automatic scaling
 
 # linewidth for curves
 linewidth = 4
@@ -75,9 +75,9 @@ for fp, short_id in zip(file_paths, short_ids):
 profile_plots = []
 timeseries_plots = []
 
-# Plot profile variables with three dimensions (e.g., time, ncol, lev)
+# Plot profile variables with three dimensions (e.g., time, ncol, lev or ilev)
 for var_name, var_data in datasets[0].data_vars.items():
-    if var_data.ndim == 3 and any(dim in ['lev'] for dim in var_data.dims) \
+    if var_data.ndim == 3 and any(dim in ['lev', 'ilev'] for dim in var_data.dims) \
       and any(dim in ['time'] for dim in var_data.dims) and any(dim in ['ncol'] for dim in var_data.dims):
 
         plt.figure(figsize=(8, 6))
@@ -112,16 +112,25 @@ for var_name, var_data in datasets[0].data_vars.items():
                 elif 'ps' in ds.data_vars:
                     ps_var = 'ps'
 
-                if ps_var and all(var in ds for var in ['hyam', 'hybm']):
-                    # Compute the pressure-based y-coordinate
-                    hyam = ds['hyam']
-                    hybm = ds['hybm']
+                if ps_var:
                     ps_avg = ds[ps_var].isel(time=time_indices).mean(dim="time") / 100.0  # Convert to hPa
-                    y_coord = 1000.0 * hyam + hybm * ps_avg
+
+                    # Use hyam/hybm for lev and hyai/hybi for ilev
+                    if "lev" in var_data.dims and all(var in ds for var in ['hyam', 'hybm']):
+                        hyam = ds['hyam']
+                        hybm = ds['hybm']
+                        y_coord = 1000.0 * hyam + hybm * ps_avg
+                    elif "ilev" in var_data.dims and all(var in ds for var in ['hyai', 'hybi']):
+                        hyai = ds['hyai']
+                        hybi = ds['hybi']
+                        y_coord = 1000.0 * hyai + hybi * ps_avg
+                    else:
+                        # Warn the user and fall back to hybrid pressure coordinates
+                        print(f"Warning: Hybrid coefficients or surface pressure data are missing. Plotting against hybrid pressure coordinates ('lev' or 'ilev').")
+                        y_coord = ds['lev'] if "lev" in var_data.dims else ds['ilev']
                 else:
-                    # Warn the user and fall back to hybrid pressure coordinates
-                    print(f"Warning: 'PS' or 'ps' and/or 'hyam', 'hybm' are missing. Plotting against hybrid pressure coordinates ('lev').")
-                    y_coord = ds['lev']  # Use hybrid pressure coordinate
+                    print(f"Warning: 'PS' or 'ps' is missing. Plotting against hybrid pressure coordinates ('lev' or 'ilev').")
+                    y_coord = ds['lev'] if "lev" in var_data.dims else ds['ilev']
             else:
                 raise ValueError(f"Invalid height_cord: {height_cord}. Must be 'z' or 'p'.")
 
