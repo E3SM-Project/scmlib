@@ -37,7 +37,7 @@ short_ids = ["control", "5 m"]
 caseappend = ".eam.h0.2013-07-21-19620.nc"
 
 # Define start and end times for averaging as numerical values in days
-time_s = 2.0   # Starting time for averaging
+time_s = 2.0  # Starting time for averaging
 time_e = 3.0  # Ending time for averaging
 
 # END: MANDATORY USER DEFINED SETTINGS
