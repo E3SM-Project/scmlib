@@ -7,6 +7,12 @@ from jinja2 import Template
 from scipy.interpolate import interp1d
 
 ##########################################################
+# Quick diagnostics package for E3SM Single Column Model (SCM)
+#  or doubly-periodic EAMxx (DP-EAMxx).
+
+# Work in progress
+
+##########################################################
 ##########################################################
 # BEGIN: MANDATORY USER DEFINED SETTINGS
 
