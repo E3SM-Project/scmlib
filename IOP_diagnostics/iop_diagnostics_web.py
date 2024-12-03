@@ -21,12 +21,12 @@ from scipy.interpolate import interp1d
 # Where do you want output diagnostics to be placed?  Provide path.
 output_dir = "dpxx_quickdiags"
 
+# User-specified general ID for this diagnostic set
+general_id = "example_diagnostic_set"  # Change as needed
+
 # Where are simulation case directories stored?
 #   This program assumes that all output is in the run directory for each case.
 base_dir = "/pscratch/sd/b/bogensch/dp_scream3"
-
-# User-specified general ID for this diagnostic set
-general_id = "example_diagnostic_set"  # Change as needed
 
 # User-specified list of casenames and corresponding short IDs
 casenames = ["e3sm_scm_MAGIC.v2.001a", "e3sm_scm_MAGIC.v2.5m.001a"]  # Example casenames
