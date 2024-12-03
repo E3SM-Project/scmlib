@@ -19,8 +19,8 @@ base_dir = "/pscratch/sd/b/bogensch/dp_scream3"
 general_id = "example_diagnostic_set"  # Change as needed
 
 # User-specified list of casenames and corresponding short IDs
-casenames = ["e3sm_scm_MAGIC.v2.001a"]  # Example casenames
-short_ids = ["control"]  # Example short IDs for legend
+casenames = ["e3sm_scm_MAGIC.v2.001a","e3sm_scm_MAGIC.v2.5m.001a"]  # Example casenames
+short_ids = ["control","5 m"]  # Example short IDs for legend
 
 caseappend = ".eam.h0.2013-07-21-19620.nc"
 
@@ -34,10 +34,10 @@ time_e = 3.0  # Ending time for averaging
 # Begin: User defined options - Set to defaults
 
 # Can be height or pressure
-height_cord = "p" # p = pressure; z = height
+height_cord = "z" # p = pressure; z = height
 
 # Optional: Maximum y-axis height for profile plots (in meters or mb)
-max_height = 400  # Set to desired height in meters or mb, or None for automatic scaling
+max_height = 4000  # Set to desired height in meters or mb, or None for automatic scaling
 
 # linewidth for curves
 linewidth = 4
