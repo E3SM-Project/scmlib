@@ -4,15 +4,17 @@ import xarray as xr
 import matplotlib.pyplot as plt
 import tarfile
 from jinja2 import Template
+from scipy.interpolate import interp1d
 
 ##########################################################
 ##########################################################
 # BEGIN: MANDATORY USER DEFINED SETTINGS
 
-# Where do you want output diagnostics to be placed?
+# Where do you want output diagnostics to be placed?  Provide path
 output_dir = "dpxx_quickdiags"
 
-# Where are simulations stored?
+# Where are simulation case directories stored?
+#   This program assumes that all output is in the run directory for each case.
 base_dir = "/pscratch/sd/b/bogensch/dp_scream3"
 
 # User-specified general ID for this diagnostic set
@@ -20,8 +22,10 @@ general_id = "example_diagnostic_set"  # Change as needed
 
 # User-specified list of casenames and corresponding short IDs
 casenames = ["e3sm_scm_MAGIC.v2.001a", "e3sm_scm_MAGIC.v2.5m.001a"]  # Example casenames
-short_ids = ["control", "5 m"]  # Example short IDs for legend
+# short IDs used in legend
+short_ids = ["control", "5 m"]
 
+# All cases should end with this appendix
 caseappend = ".eam.h0.2013-07-21-19620.nc"
 
 # Define start and end times for averaging as numerical values in days
@@ -31,18 +35,21 @@ time_e = 3.0  # Ending time for averaging
 # END: MANDATORY USER DEFINED SETTINGS
 ##########################################################
 ##########################################################
-# Begin: User defined options - Set to defaults
+# BEGIN: OPTIONAL user defined settings
 
-# Can be height or pressure
-height_cord = "p"  # p = pressure; z = height
+# Choose vertical plotting coordinate; can be pressure or height.
+#  -If height then the variable Z3 (E3SM) or z_mid (EAMxx) needs to be in your output file.
+#  -If pressure then PS (E3SM) or ps (EAMxx) should be in your output file.  If it is not then
+#    the package will use hybrid levels to plot, which may not be accurate compared to observations.
+height_cord = "z"  # p = pressure; z = height
 
-# Optional: Maximum y-axis height for profile plots (in meters or mb)
-max_height = 700  # Set to desired height in meters or mb, or None for automatic scaling
+# Optional: Maximum y-axis height for profile plots (in meters or mb; depending on vertical coordinate)
+max_height = None  # Set to desired height in meters or mb, or None for automatic scaling
 
 # linewidth for curves
 linewidth = 4
 
-# End: User defined options
+# END: OPTIONAL user defined settings
 ##########################################################
 ##########################################################
 
@@ -103,7 +110,17 @@ for var_name, var_data in datasets[0].data_vars.items():
                     surface_elevation = lev0 - 10.0  # Assume bottom layer of 10 meters
                     y_coord = ds['Z3'].isel(time=time_indices).mean(dim="time").squeeze() - surface_elevation
                 else:
-                    raise ValueError("Neither 'z_mid' nor 'Z3' is found for height_cord='z'.")
+                    raise ValueError("Cannot determine height coordinates ('z_mid', or 'Z3').")
+
+                # if variable has dimensions of ilev then we need to interpolate the height coordinate to the ilev grid               
+                if "ilev" in var_data.dims:
+                    # Interpolate from lev to ilev
+                    lev = ds['lev']
+                    ilev = ds['ilev']
+                    interp_func = interp1d(lev, np.squeeze(y_coord), fill_value="extrapolate")
+                    y_coord = interp_func(ilev)
+                    y_coord[-1] = 0.0  # Set surface boundary condition to 0
+
             elif height_cord == "p":
                 # Check for surface pressure variable
                 ps_var = None
@@ -138,11 +155,15 @@ for var_name, var_data in datasets[0].data_vars.items():
             plt.plot(np.squeeze(time_filtered_data), y_coord, label=short_id, linewidth=linewidth)
 
         # Set y-axis limit if specified
-        if max_height is not None:
-            if height_cord == "z":
+        if height_cord == "z":
+            if max_height is not None:
                 plt.ylim([0, max_height])
-            elif height_cord == "p":
+        elif height_cord == "p":
+            if max_height is not None:
                 plt.ylim([max_height, y_coord.max()])  # Adjust for pressure
+		
+        if max_height is None:
+            plt.ylim([0, y_coord.max()])
 
         # Reverse the y-axis if plotting against pressure
         if height_cord == "p":
