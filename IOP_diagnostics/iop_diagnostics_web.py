@@ -29,9 +29,11 @@ general_id = "example_diagnostic_set"  # Change as needed
 base_dir = "/pscratch/sd/b/bogensch/dp_scream3"
 
 # User-specified list of casenames and corresponding short IDs
-casenames = ["e3sm_scm_MAGIC.v2.001a", "e3sm_scm_MAGIC.v2.5m.001a"]  # Example casenames
+casenames = ["e3sm_scm_MAGIC.v2.001a_test", "e3sm_scm_MAGIC.v2.5m.001a"]  # Example casenames
+#casenames = ["e3sm_scm_MAGIC.v2.001a_test"]
 # short IDs used in legend
 short_ids = ["control", "5 m"]
+#short_ids = ["control"]
 
 # All cases should end with this appendix
 caseappend = ".eam.h0.2013-07-21-19620.nc"
@@ -90,15 +92,23 @@ for fp, short_id in zip(file_paths, short_ids):
 profile_plots = []
 timeseries_plots = []
 
+#############################################################################################################
 # Plot profile variables with three dimensions (e.g., time, ncol, lev or ilev)
 for var_name, var_data in datasets[0].data_vars.items():
     if var_data.ndim == 3 and any(dim in ['lev', 'ilev'] for dim in var_data.dims) \
       and any(dim in ['time'] for dim in var_data.dims) and any(dim in ['ncol'] for dim in var_data.dims):
 
         plt.figure(figsize=(8, 6))
+        valid_plot = False  # Track if any data was valid for this variable
 
         # Loop over each dataset, using short_ids for the legend
         for ds, short_id in zip(datasets, short_ids):
+            if var_name not in ds.data_vars:
+                print(f"Warning: Variable '{var_name}' not found in case '{short_id}'. Skipping for this case.")
+                continue  # Skip this case if variable is missing
+
+            valid_plot = True  # At least one dataset has the variable
+
             # Convert `time` to a numeric array in days since the start, to avoid datetime conflicts
             time_in_days = (ds['time'] - ds['time'][0]) / np.timedelta64(1, 'D')
 
@@ -150,11 +160,10 @@ for var_name, var_data in datasets[0].data_vars.items():
                         hybi = ds['hybi']
                         y_coord = 1000.0 * hyai + hybi * ps_avg
                     else:
-                        # Warn the user and fall back to hybrid pressure coordinates
-                        print(f"Warning: Hybrid coefficients or surface pressure data are missing. Plotting against hybrid pressure coordinates ('lev' or 'ilev').")
+                        print(f"Warning: Hybrid coefficients or surface pressure data are missing for case '{short_id}'. Using hybrid pressure coordinates ('lev' or 'ilev').")
                         y_coord = ds['lev'] if "lev" in var_data.dims else ds['ilev']
                 else:
-                    print(f"Warning: 'PS' or 'ps' is missing. Plotting against hybrid pressure coordinates ('lev' or 'ilev').")
+                    print(f"Warning: 'PS' or 'ps' is missing for case '{short_id}'. Using hybrid pressure coordinates ('lev' or 'ilev').")
                     y_coord = ds['lev'] if "lev" in var_data.dims else ds['ilev']
             else:
                 raise ValueError(f"Invalid height_cord: {height_cord}. Must be 'z' or 'p'.")
@@ -162,71 +171,86 @@ for var_name, var_data in datasets[0].data_vars.items():
             # Plot profile with increased line width
             plt.plot(np.squeeze(time_filtered_data), y_coord, label=short_id, linewidth=linewidth)
 
-        # Set y-axis limit if specified
-        if height_cord == "z":
-            if max_height is not None:
-                plt.ylim([0, max_height])
-        elif height_cord == "p":
-            if max_height is not None:
-                plt.ylim([max_height, y_coord.max()])  # Adjust for pressure
-		
-        if max_height is None:
-            plt.ylim([0, y_coord.max()])
+        if valid_plot:
+            # Set y-axis limit if specified
+            if height_cord == "z":
+                if max_height is not None:
+                    plt.ylim([0, max_height])
+            elif height_cord == "p":
+                if max_height is not None:
+                    plt.ylim([max_height, y_coord.max()])  # Adjust for pressure
+                else:
+                    plt.ylim([0, y_coord.max()])
 
-        # Reverse the y-axis if plotting against pressure
-        if height_cord == "p":
-            plt.gca().invert_yaxis()
+            # Reverse the y-axis if plotting against pressure
+            if height_cord == "p":
+                plt.gca().invert_yaxis()
 
-        # Labeling and saving the plot with larger font sizes
-        plt.xlabel(var_data.attrs.get('units', 'Value'), fontsize=14)
-        ylabel = 'Height (m)' if height_cord == "z" else 'Pressure (hPa)'
-        plt.ylabel(ylabel, fontsize=14)
-        title = f"{var_data.long_name} Profile" if 'long_name' in var_data.attrs else f"{var_name} Profile"
-        plt.title(title, fontsize=16)
-        plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
-        plt.grid(True)
+            # Labeling and saving the plot with larger font sizes
+            plt.xlabel(var_data.attrs.get('units', 'Value'), fontsize=14)
+            ylabel = 'Height (m)' if height_cord == "z" else 'Pressure (hPa)'
+            plt.ylabel(ylabel, fontsize=14)
+            title = f"{var_data.long_name} Profile" if 'long_name' in var_data.attrs else f"{var_name} Profile"
+            plt.title(title, fontsize=16)
+            plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
+            plt.grid(True)
 
-        # Save plot in the general_id subdirectory
-        plot_filename = os.path.join(output_subdir, f"{var_name}_profile.jpg")
-        plt.savefig(plot_filename, format='jpg')
-        plt.close()
-        print(f"Saved profile plot for {var_name} as {plot_filename}")
+            # Save plot in the general_id subdirectory
+            plot_filename = os.path.join(output_subdir, f"{var_name}_profile.jpg")
+            plt.savefig(plot_filename, format='jpg')
+            plt.close()
+            print(f"Saved profile plot for {var_name} as {plot_filename}")
 
-        # Add to profile plots list for HTML generation
-        profile_plots.append(plot_filename)
+            # Add to profile plots list for HTML generation
+            profile_plots.append(plot_filename)
 
+        else:
+            print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
+
+#############################################################################################################
 # Plot time series for variables with two dimensions (e.g., time, ncol)
 for var_name, var_data in datasets[0].data_vars.items():
     if var_data.ndim == 2 and any(dim in ['time'] for dim in var_data.dims) \
        and any(dim in ['ncol'] for dim in var_data.dims):  # Generalized to check for 2D variables
 
         plt.figure(figsize=(10, 5))
+        valid_plot = False  # Track if any data was valid for this variable
 
         # Loop over each dataset, using short_ids for the legend
         for ds, short_id in zip(datasets, short_ids):
-            # Convert `time` to a numeric array in days since the start
+            if var_name not in ds.data_vars:
+                print(f"Warning: Variable '{var_name}' not found in case '{short_id}'. Skipping for this case.")
+                continue  # Skip this case if variable is missing
+
+            valid_plot = True  # At least one dataset has the variable
+
+            # Convert `time` to a numeric array in days since the start, to avoid datetime conflicts
             time_in_days = (ds['time'] - ds['time'][0]) / np.timedelta64(1, 'D')
             variable_data = ds[var_name][:, 0]  # Select the single column (ncol = 1)
 
             # Plot time series with increased line width
             plt.plot(time_in_days, variable_data, label=short_id, linewidth=linewidth)
 
-        # Labeling and saving the plot with larger font sizes
-        plt.xlabel("Time (days)", fontsize=14)
-        plt.ylabel(var_data.attrs.get('units', 'Value'), fontsize=14)
-        title = f"{var_data.long_name} Time Series" if 'long_name' in var_data.attrs else f"{var_name} Time Series"
-        plt.title(title, fontsize=16)
-        plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
-        plt.grid(True)
+        if valid_plot:
+            # Labeling and saving the plot with larger font sizes
+            plt.xlabel("Time (days)", fontsize=14)
+            plt.ylabel(var_data.attrs.get('units', 'Value'), fontsize=14)
+            title = f"{var_data.long_name} Time Series" if 'long_name' in var_data.attrs else f"{var_name} Time Series"
+            plt.title(title, fontsize=16)
+            plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
+            plt.grid(True)
 
-        # Save plot in the general_id subdirectory
-        plot_filename = os.path.join(output_subdir, f"{var_name}_timeseries.jpg")
-        plt.savefig(plot_filename, format='jpg')
-        plt.close()
-        print(f"Saved time series plot for {var_name} as {plot_filename}")
+            # Save plot in the general_id subdirectory
+            plot_filename = os.path.join(output_subdir, f"{var_name}_timeseries.jpg")
+            plt.savefig(plot_filename, format='jpg')
+            plt.close()
+            print(f"Saved time series plot for {var_name} as {plot_filename}")
 
-        # Add to timeseries plots list for HTML generation
-        timeseries_plots.append(plot_filename)
+            # Add to timeseries plots list for HTML generation
+            timeseries_plots.append(plot_filename)
+        else:
+            print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
+
 
 # Close datasets
 for ds in datasets:
