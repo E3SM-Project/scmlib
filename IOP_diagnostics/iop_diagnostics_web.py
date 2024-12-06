@@ -29,13 +29,11 @@ general_id = "example_diagnostic_set"  # Change as needed
 base_dir = "/pscratch/sd/b/bogensch/dp_scream3"
 
 # User-specified list of casenames and corresponding short IDs
-casenames = ["e3sm_scm_MAGIC.v2.001a_test", "e3sm_scm_MAGIC.v2.5m.001a"]  # Example casenames
-#casenames = ["e3sm_scm_MAGIC.v2.001a_test"]
+casenames = ["e3sm_scm_MAGIC.v2.001a_test","e3sm_scm_MAGIC.v2.5m.001a"]  # Example casenames
 # short IDs used in legend
-short_ids = ["control", "5 m"]
-#short_ids = ["control"]
+short_ids = ["control","5 m"]
 
-# All cases should end with this appendix
+# All cases should end with this appendix for the output stream to be considered
 caseappend = ".eam.h0.2013-07-21-19620.nc"
 
 # Define start and end times for averaging as numerical values in days
@@ -54,7 +52,7 @@ time_e = 3.0  # Ending time for averaging
 height_cord = "z"  # p = pressure; z = height
 
 # Optional: Maximum y-axis height for profile plots (in meters or mb; depending on vertical coordinate)
-max_height = None  # Set to desired height in meters or mb, or None for automatic scaling
+max_height = 4000  # Set to desired height in meters or mb, or None for automatic scaling
 
 # linewidth for curves
 linewidth = 4
@@ -92,11 +90,19 @@ for fp, short_id in zip(file_paths, short_ids):
 profile_plots = []
 timeseries_plots = []
 
+# Collect all unique variables across datasets
+all_vars = set()
+for ds in datasets:
+    all_vars.update(ds.data_vars.keys())
+
 #############################################################################################################
 # Plot profile variables with three dimensions (e.g., time, ncol, lev or ilev)
-for var_name, var_data in datasets[0].data_vars.items():
-    if var_data.ndim == 3 and any(dim in ['lev', 'ilev'] for dim in var_data.dims) \
-      and any(dim in ['time'] for dim in var_data.dims) and any(dim in ['ncol'] for dim in var_data.dims):
+for var_name in all_vars:
+    # Determine if the variable qualifies as a profile variable
+    if any(var_name in ds.data_vars and ds[var_name].ndim == 3 and
+           any(dim in ['lev', 'ilev'] for dim in ds[var_name].dims) and
+           any(dim in ['time'] for dim in ds[var_name].dims) and
+           any(dim in ['ncol'] for dim in ds[var_name].dims) for ds in datasets):
 
         plt.figure(figsize=(8, 6))
         valid_plot = False  # Track if any data was valid for this variable
@@ -130,8 +136,8 @@ for var_name, var_data in datasets[0].data_vars.items():
                 else:
                     raise ValueError("Cannot determine height coordinates ('z_mid', or 'Z3').")
 
-                # if variable has dimensions of ilev then we need to interpolate the height coordinate to the ilev grid               
-                if "ilev" in var_data.dims:
+                # If variable has dimensions of ilev then we need to interpolate the height coordinate to the ilev grid
+                if "ilev" in ds[var_name].dims:
                     # Interpolate from lev to ilev
                     lev = ds['lev']
                     ilev = ds['ilev']
@@ -151,20 +157,20 @@ for var_name, var_data in datasets[0].data_vars.items():
                     ps_avg = ds[ps_var].isel(time=time_indices).mean(dim="time") / 100.0  # Convert to hPa
 
                     # Use hyam/hybm for lev and hyai/hybi for ilev
-                    if "lev" in var_data.dims and all(var in ds for var in ['hyam', 'hybm']):
+                    if "lev" in ds[var_name].dims and all(var in ds for var in ['hyam', 'hybm']):
                         hyam = ds['hyam']
                         hybm = ds['hybm']
                         y_coord = 1000.0 * hyam + hybm * ps_avg
-                    elif "ilev" in var_data.dims and all(var in ds for var in ['hyai', 'hybi']):
+                    elif "ilev" in ds[var_name].dims and all(var in ds for var in ['hyai', 'hybi']):
                         hyai = ds['hyai']
                         hybi = ds['hybi']
                         y_coord = 1000.0 * hyai + hybi * ps_avg
                     else:
                         print(f"Warning: Hybrid coefficients or surface pressure data are missing for case '{short_id}'. Using hybrid pressure coordinates ('lev' or 'ilev').")
-                        y_coord = ds['lev'] if "lev" in var_data.dims else ds['ilev']
+                        y_coord = ds['lev'] if "lev" in ds[var_name].dims else ds['ilev']
                 else:
                     print(f"Warning: 'PS' or 'ps' is missing for case '{short_id}'. Using hybrid pressure coordinates ('lev' or 'ilev').")
-                    y_coord = ds['lev'] if "lev" in var_data.dims else ds['ilev']
+                    y_coord = ds['lev'] if "lev" in ds[var_name].dims else ds['ilev']
             else:
                 raise ValueError(f"Invalid height_cord: {height_cord}. Must be 'z' or 'p'.")
 
@@ -187,10 +193,16 @@ for var_name, var_data in datasets[0].data_vars.items():
                 plt.gca().invert_yaxis()
 
             # Labeling and saving the plot with larger font sizes
-            plt.xlabel(var_data.attrs.get('units', 'Value'), fontsize=14)
+            # Get attributes for the variable from the first dataset that contains it
+            var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
+            var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)
+
+            # Labeling and saving the plot
+            plt.xlabel(var_units, fontsize=14)
+            title = f"{var_long_name} Profile"
+
             ylabel = 'Height (m)' if height_cord == "z" else 'Pressure (hPa)'
             plt.ylabel(ylabel, fontsize=14)
-            title = f"{var_data.long_name} Profile" if 'long_name' in var_data.attrs else f"{var_name} Profile"
             plt.title(title, fontsize=16)
             plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
             plt.grid(True)
@@ -209,9 +221,11 @@ for var_name, var_data in datasets[0].data_vars.items():
 
 #############################################################################################################
 # Plot time series for variables with two dimensions (e.g., time, ncol)
-for var_name, var_data in datasets[0].data_vars.items():
-    if var_data.ndim == 2 and any(dim in ['time'] for dim in var_data.dims) \
-       and any(dim in ['ncol'] for dim in var_data.dims):  # Generalized to check for 2D variables
+for var_name in all_vars:
+    # Determine if the variable qualifies as a time series variable
+    if any(var_name in ds.data_vars and ds[var_name].ndim == 2 and
+           any(dim in ['time'] for dim in ds[var_name].dims) and
+           any(dim in ['ncol'] for dim in ds[var_name].dims) for ds in datasets):
 
         plt.figure(figsize=(10, 5))
         valid_plot = False  # Track if any data was valid for this variable
@@ -224,7 +238,7 @@ for var_name, var_data in datasets[0].data_vars.items():
 
             valid_plot = True  # At least one dataset has the variable
 
-            # Convert `time` to a numeric array in days since the start, to avoid datetime conflicts
+            # Convert `time` to a numeric array in days since the start
             time_in_days = (ds['time'] - ds['time'][0]) / np.timedelta64(1, 'D')
             variable_data = ds[var_name][:, 0]  # Select the single column (ncol = 1)
 
@@ -234,8 +248,14 @@ for var_name, var_data in datasets[0].data_vars.items():
         if valid_plot:
             # Labeling and saving the plot with larger font sizes
             plt.xlabel("Time (days)", fontsize=14)
-            plt.ylabel(var_data.attrs.get('units', 'Value'), fontsize=14)
-            title = f"{var_data.long_name} Time Series" if 'long_name' in var_data.attrs else f"{var_name} Time Series"
+
+            # Get attributes for the variable from the first dataset that contains it
+            var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
+            var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)
+
+            # Labeling and setting the plot title
+            plt.ylabel(var_units, fontsize=14)
+            title = f"{var_long_name} Time Series"  
             plt.title(title, fontsize=16)
             plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
             plt.grid(True)
