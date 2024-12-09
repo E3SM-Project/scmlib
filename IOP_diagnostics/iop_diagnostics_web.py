@@ -37,8 +37,8 @@ short_ids = ["CNTL","5 m"]
 caseappend = ".eam.h0.2013-07-21-19620.nc"
 
 # Define start and end times for averaging for profiles as numerical values in days
-profile_time_s = 0.0  # Starting time for averaging
-profile_time_e = 3.0  # Ending time for averaging
+profile_time_s = 2.0  # Starting time for averaging
+profile_time_e = "end"  # Ending time for averaging (put "end" to average to end of simulation)
 
 # END: MANDATORY USER DEFINED SETTINGS
 ##########################################################
@@ -129,9 +129,15 @@ for var_name in all_vars:
 
             # Convert `time` to a numeric array in days since the start, to avoid datetime conflicts
             time_in_days = (ds['time'] - ds['time'][0]) / np.timedelta64(1, 'D')
+	    
+            # Determine indices for the specified range
+            if profile_time_e == "end":
+                end_time = time_in_days[-1]
+            else:
+                end_time = profile_time_e
 
             # Determine indices for the specified range
-            time_indices = np.where((time_in_days >= profile_time_s) & (time_in_days <= profile_time_e))[0]
+            time_indices = np.where((time_in_days >= profile_time_s) & (time_in_days <= end_time))[0]
 
             # Select data within the filtered time range and take the mean over time
             time_filtered_data = ds[var_name].isel(time=time_indices).mean(dim="time")
