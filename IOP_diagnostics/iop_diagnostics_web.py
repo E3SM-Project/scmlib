@@ -22,7 +22,7 @@ from scipy.interpolate import interp1d
 output_dir = "dpxx_quickdiags"
 
 # User-specified general ID for this diagnostic set
-general_id = "magic_e3sm2"  # Change as needed
+general_id = "magic_e3sm3"  # Change as needed
 
 # Where are simulation case directories stored?
 #   This program assumes that all output is in the run directory for each case.
@@ -46,7 +46,7 @@ profile_time_e = "end"  # Ending time for averaging (put "end" to average to end
 # BEGIN: OPTIONAL user defined settings
 
 # Do time-height plots? These can take a bit longer to make
-do_timeheight=False
+do_timeheight=True
 
 # Choose vertical plotting coordinate; can be pressure or height.
 #  -If height then the variable Z3 (E3SM) or z_mid (EAMxx) needs to be in your output file.
@@ -74,6 +74,62 @@ time_height_time_e = None  # Ending time for time-height plots, None for default
 # END: OPTIONAL user defined settings
 ##########################################################
 ##########################################################
+
+def compute_y_coord(ds, time_indices, height_cord, var_name):
+    """
+    Compute the vertical coordinate (y_coord) for a dataset.
+    
+    Parameters:
+        ds (xarray.Dataset): Dataset containing the variables.
+        time_indices (numpy.ndarray): Indices of the time range to average over.
+        height_cord (str): Vertical coordinate type ('z' or 'p').
+        var_name (str): Variable name for which the vertical coordinate is required.
+
+    Returns:
+        numpy.ndarray: The computed y-coordinate.
+    """
+    if height_cord == "z":
+        if "z_mid" in ds.data_vars:
+            y_coord = ds['z_mid'].isel(time=time_indices).mean(dim="time").squeeze()
+        elif "Z3" in ds.data_vars:
+            # Adjust Z3 by subtracting surface elevation
+            lev0 = ds['Z3'].isel(lev=-1).mean(dim="time")  # Get Z3 at highest ilev index
+            surface_elevation = lev0 - 10.0  # Assume bottom layer of 10 meters
+            y_coord = ds['Z3'].isel(time=time_indices).mean(dim="time").squeeze() - surface_elevation
+        else:
+            raise ValueError("Cannot determine height coordinates ('z_mid', or 'Z3').")
+
+        # If variable has dimensions of ilev then we need to interpolate the height coordinate to the ilev grid
+        if "ilev" in ds[var_name].dims:
+            lev = ds['lev']
+            ilev = ds['ilev']
+            interp_func = interp1d(lev, np.squeeze(y_coord), fill_value="extrapolate")
+            y_coord = interp_func(ilev)
+            y_coord[-1] = 0.0  # Set surface boundary condition to 0
+
+    elif height_cord == "p":
+        ps_var = 'PS' if 'PS' in ds.data_vars else 'ps' if 'ps' in ds.data_vars else None
+        if ps_var:
+            ps_avg = ds[ps_var].isel(time=time_indices).mean(dim="time") / 100.0  # Convert to hPa
+            if "lev" in ds[var_name].dims and all(var in ds for var in ['hyam', 'hybm']):
+                hyam = ds['hyam']
+                hybm = ds['hybm']
+                y_coord = 1000.0 * hyam + hybm * ps_avg
+            elif "ilev" in ds[var_name].dims and all(var in ds for var in ['hyai', 'hybi']):
+                hyai = ds['hyai']
+                hybi = ds['hybi']
+                y_coord = 1000.0 * hyai + hybi * ps_avg
+            else:
+                print(f"Warning: Hybrid coefficients or surface pressure data are missing. Using hybrid pressure coordinates.")
+                y_coord = ds['lev'] if "lev" in ds[var_name].dims else ds['ilev']
+        else:
+            print(f"Warning: 'PS' or 'ps' is missing. Using hybrid pressure coordinates.")
+            y_coord = ds['lev'] if "lev" in ds[var_name].dims else ds['ilev']
+    else:
+        raise ValueError(f"Invalid height_cord: {height_cord}. Must be 'z' or 'p'.")
+
+    return y_coord
+
 
 # START CODE
 
@@ -145,55 +201,8 @@ for var_name in all_vars:
             # Select data within the filtered time range and take the mean over time
             time_filtered_data = ds[var_name].isel(time=time_indices).mean(dim="time")
 
-            # Choose the y-coordinate based on height_cord
-            if height_cord == "z":
-                if "z_mid" in ds.data_vars:
-                    y_coord = ds['z_mid'].isel(time=time_indices).mean(dim="time").squeeze()
-                elif "Z3" in ds.data_vars:
-                    # Adjust Z3 by subtracting surface elevation
-                    lev0 = ds['Z3'].isel(lev=-1).mean(dim="time")  # Get Z3 at highest ilev index
-                    surface_elevation = lev0 - 10.0  # Assume bottom layer of 10 meters
-                    y_coord = ds['Z3'].isel(time=time_indices).mean(dim="time").squeeze() - surface_elevation
-                else:
-                    raise ValueError("Cannot determine height coordinates ('z_mid', or 'Z3').")
-
-                # If variable has dimensions of ilev then we need to interpolate the height coordinate to the ilev grid
-                if "ilev" in ds[var_name].dims:
-                    # Interpolate from lev to ilev
-                    lev = ds['lev']
-                    ilev = ds['ilev']
-                    interp_func = interp1d(lev, np.squeeze(y_coord), fill_value="extrapolate")
-                    y_coord = interp_func(ilev)
-                    y_coord[-1] = 0.0  # Set surface boundary condition to 0
-
-            elif height_cord == "p":
-                # Check for surface pressure variable
-                ps_var = None
-                if 'PS' in ds.data_vars:
-                    ps_var = 'PS'
-                elif 'ps' in ds.data_vars:
-                    ps_var = 'ps'
-
-                if ps_var:
-                    ps_avg = ds[ps_var].isel(time=time_indices).mean(dim="time") / 100.0  # Convert to hPa
-
-                    # Use hyam/hybm for lev and hyai/hybi for ilev
-                    if "lev" in ds[var_name].dims and all(var in ds for var in ['hyam', 'hybm']):
-                        hyam = ds['hyam']
-                        hybm = ds['hybm']
-                        y_coord = 1000.0 * hyam + hybm * ps_avg
-                    elif "ilev" in ds[var_name].dims and all(var in ds for var in ['hyai', 'hybi']):
-                        hyai = ds['hyai']
-                        hybi = ds['hybi']
-                        y_coord = 1000.0 * hyai + hybi * ps_avg
-                    else:
-                        print(f"Warning: Hybrid coefficients or surface pressure data are missing for case '{short_id}'. Using hybrid pressure coordinates ('lev' or 'ilev').")
-                        y_coord = ds['lev'] if "lev" in ds[var_name].dims else ds['ilev']
-                else:
-                    print(f"Warning: 'PS' or 'ps' is missing for case '{short_id}'. Using hybrid pressure coordinates ('lev' or 'ilev').")
-                    y_coord = ds['lev'] if "lev" in ds[var_name].dims else ds['ilev']
-            else:
-                raise ValueError(f"Invalid height_cord: {height_cord}. Must be 'z' or 'p'.")
+            # Compute vertical coordinate
+            y_coord = compute_y_coord(ds, time_indices, height_cord, var_name)
 
             # Plot profile with increased line width
             plt.plot(np.squeeze(time_filtered_data), y_coord, label=short_id, linewidth=linewidth)
@@ -335,43 +344,7 @@ for var_name in all_vars:
             data = ds[var_name].isel(time=time_indices).mean(dim="ncol")
             time_values = time_in_days[time_indices]
 
-            # Choose the y-coordinate based on height_cord
-            if height_cord == "z":
-                if "z_mid" in ds.data_vars:
-                    y_coord = ds['z_mid'].isel(time=time_indices).mean(dim="time").squeeze()
-                elif "Z3" in ds.data_vars:
-                    lev0 = ds['Z3'].isel(lev=-1).mean(dim="time")  # Highest ilev
-                    surface_elevation = lev0 - 10.0
-                    y_coord = ds['Z3'].isel(time=time_indices).mean(dim="time").squeeze() - surface_elevation
-                else:
-                    raise ValueError("Cannot determine height coordinates ('z_mid' or 'Z3').")
-
-                if "ilev" in ds[var_name].dims:
-                    lev = ds['lev']
-                    ilev = ds['ilev']
-                    interp_func = interp1d(lev, y_coord, axis=0, fill_value="extrapolate")
-                    y_coord = interp_func(ilev)
-                    y_coord[-1] = 0.0  # Surface boundary condition
-
-            elif height_cord == "p":
-                ps_var = 'PS' if 'PS' in ds.data_vars else 'ps' if 'ps' in ds.data_vars else None
-                if ps_var:
-                    ps_avg = ds[ps_var].isel(time=time_indices).mean(dim="time") / 100.0
-
-                    if "lev" in ds[var_name].dims:
-                        hyam = ds['hyam']
-                        hybm = ds['hybm']
-                        y_coord = 1000.0 * hyam + hybm * ps_avg
-                    elif "ilev" in ds[var_name].dims:
-                        hyai = ds['hyai']
-                        hybi = ds['hybi']
-                        y_coord = 1000.0 * hyai + hybi * ps_avg
-                    else:
-                        y_coord = ds['lev'] if "lev" in ds[var_name].dims else ds['ilev']
-                else:
-                    y_coord = ds['lev'] if "lev" in ds[var_name].dims else ds['ilev']
-            else:
-                raise ValueError(f"Invalid height_cord: {height_cord}. Must be 'z' or 'p'.")
+            y_coord = compute_y_coord(ds, time_indices, height_cord, var_name)
 
             # Plot the contourf plot
             contour = ax.contourf(time_values, np.squeeze(y_coord), data.T, levels=20, cmap="viridis")
