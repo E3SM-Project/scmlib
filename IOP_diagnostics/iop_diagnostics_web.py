@@ -22,23 +22,23 @@ from scipy.interpolate import interp1d
 output_dir = "dpxx_quickdiags"
 
 # User-specified general ID for this diagnostic set
-general_id = "rce_comp"  # Change as needed
+general_id = "magic_e3sm"  # Change as needed
 
 # Where are simulation case directories stored?
 #   This program assumes that all output is in the run directory for each case.
-base_dir = "/pscratch/sd/b/bogensch/dp_screamxx"
+base_dir = "/pscratch/sd/b/bogensch/dp_scream3"
 
 # User-specified list of casenames and corresponding short IDs
-casenames = ["scream_dpxx_RCEMIP_300K.001a","scream_dpxx_RCE_200m.300K.001a"]  # Example casenames
+casenames = ["e3sm_scm_MAGIC.v2.001a","e3sm_scm_MAGIC.v2.5m.001a"]  # Example casenames
 # short IDs used in legend
-short_ids = ["3 km","200 m"]
+short_ids = ["CNTL","5 m"]
 
 # All cases should end with this appendix for the output stream to be considered
-caseappend = ".scream.hourly.horiz_avg.AVERAGE.nhours_x1.2000-01-01-00000.nc"
+caseappend = ".eam.h0.2013-07-21-19620.nc"
 
 # Define start and end times for averaging for profiles as numerical values in days
-time_s = 3.0  # Starting time for averaging
-time_e = 5.0  # Ending time for averaging
+profile_time_s = 0.0  # Starting time for averaging
+profile_time_e = 3.0  # Ending time for averaging
 
 # END: MANDATORY USER DEFINED SETTINGS
 ##########################################################
@@ -52,7 +52,10 @@ time_e = 5.0  # Ending time for averaging
 height_cord = "p"  # p = pressure; z = height
 
 # Optional: Maximum y-axis height for profile plots (in meters or mb; depending on vertical coordinate)
-max_height = 400  # Set to desired height in meters or mb, or None for automatic scaling
+max_height_profile = 700  # Set to desired height in meters or mb, or None for automatic scaling
+
+# Optional: Maximum y-axis height for time-height (in meters or mb; depending on vertical coordinate)
+max_height_timeheight = max_height_profile  # Set to desired height in meters or mb, or None for automatic scaling
 
 # linewidth for curves
 linewidth = 4
@@ -60,6 +63,10 @@ linewidth = 4
 # Optional: Time range for time series plots in days
 time_series_time_s = None  # Starting time for time series, None for default (entire range)
 time_series_time_e = None  # Ending time for time series, None for default (entire range)
+
+# Optional: Time range for time-height plots in days
+time_height_time_s = None  # Starting time for time-height plots, None for default (entire range)
+time_height_time_e = None  # Ending time for time-height plots, None for default (entire range)
 
 # END: OPTIONAL user defined settings
 ##########################################################
@@ -93,6 +100,7 @@ for fp, short_id in zip(file_paths, short_ids):
 # Prepare lists to keep track of plot filenames for HTML pages
 profile_plots = []
 timeseries_plots = []
+time_height_plots = []
 
 # Collect all unique variables across datasets
 all_vars = set()
@@ -123,7 +131,7 @@ for var_name in all_vars:
             time_in_days = (ds['time'] - ds['time'][0]) / np.timedelta64(1, 'D')
 
             # Determine indices for the specified range
-            time_indices = np.where((time_in_days >= time_s) & (time_in_days <= time_e))[0]
+            time_indices = np.where((time_in_days >= profile_time_s) & (time_in_days <= profile_time_e))[0]
 
             # Select data within the filtered time range and take the mean over time
             time_filtered_data = ds[var_name].isel(time=time_indices).mean(dim="time")
@@ -184,11 +192,11 @@ for var_name in all_vars:
         if valid_plot:
             # Set y-axis limit if specified
             if height_cord == "z":
-                if max_height is not None:
-                    plt.ylim([0, max_height])
+                if max_height_profile is not None:
+                    plt.ylim([0, max_height_profile])
             elif height_cord == "p":
-                if max_height is not None:
-                    plt.ylim([max_height, y_coord.max()])  # Adjust for pressure
+                if max_height_profile is not None:
+                    plt.ylim([max_height_profile, y_coord.max()])  # Adjust for pressure
                 else:
                     plt.ylim([0, y_coord.max()])
 
@@ -282,6 +290,118 @@ for var_name in all_vars:
         else:
             print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
 
+#############################################################################################################
+# Plot time-height variables (three dimensions: time, ncol, lev or ilev)
+for var_name in all_vars:
+    # Determine if the variable qualifies for a time-height plot
+    if any(var_name in ds.data_vars and ds[var_name].ndim == 3 and
+           any(dim in ['lev', 'ilev'] for dim in ds[var_name].dims) and
+           any(dim in ['time'] for dim in ds[var_name].dims) and
+           any(dim in ['ncol'] for dim in ds[var_name].dims) for ds in datasets):
+
+        # Loop over each dataset, creating a multi-panel plot for each case
+        fig, axes = plt.subplots(1, len(datasets), figsize=(15, 6), sharey=True, constrained_layout=True)
+        if len(datasets) == 1:
+            axes = [axes]  # Ensure axes is always a list
+
+        valid_plot = False  # Track if any data was valid for this variable
+
+        for ax, (ds, short_id) in zip(axes, zip(datasets, short_ids)):
+            if var_name not in ds.data_vars:
+                print(f"Warning: Variable '{var_name}' not found in case '{short_id}'. Skipping for this case.")
+                ax.set_visible(False)
+                continue  # Skip this case if variable is missing
+
+            valid_plot = True  # At least one dataset has the variable
+
+            # Convert `time` to a numeric array in days since the start
+            time_in_days = (ds['time'] - ds['time'][0]) / np.timedelta64(1, 'D')
+
+            # Determine indices for the specified range
+            start_time = time_height_time_s if time_height_time_s is not None else time_in_days[0]
+            end_time = time_height_time_e if time_height_time_e is not None else time_in_days[-1]
+            time_indices = np.where((time_in_days >= start_time) & (time_in_days <= end_time))[0]
+
+            # Extract data within the filtered time range
+            data = ds[var_name].isel(time=time_indices).mean(dim="ncol")
+            time_values = time_in_days[time_indices]
+
+            # Choose the y-coordinate based on height_cord
+            if height_cord == "z":
+                if "z_mid" in ds.data_vars:
+                    y_coord = ds['z_mid'].isel(time=time_indices).mean(dim="time").squeeze()
+                elif "Z3" in ds.data_vars:
+                    lev0 = ds['Z3'].isel(lev=-1).mean(dim="time")  # Highest ilev
+                    surface_elevation = lev0 - 10.0
+                    y_coord = ds['Z3'].isel(time=time_indices).mean(dim="time").squeeze() - surface_elevation
+                else:
+                    raise ValueError("Cannot determine height coordinates ('z_mid' or 'Z3').")
+
+                if "ilev" in ds[var_name].dims:
+                    lev = ds['lev']
+                    ilev = ds['ilev']
+                    interp_func = interp1d(lev, y_coord, axis=0, fill_value="extrapolate")
+                    y_coord = interp_func(ilev)
+                    y_coord[-1] = 0.0  # Surface boundary condition
+
+            elif height_cord == "p":
+                ps_var = 'PS' if 'PS' in ds.data_vars else 'ps' if 'ps' in ds.data_vars else None
+                if ps_var:
+                    ps_avg = ds[ps_var].isel(time=time_indices).mean(dim="time") / 100.0
+
+                    if "lev" in ds[var_name].dims:
+                        hyam = ds['hyam']
+                        hybm = ds['hybm']
+                        y_coord = 1000.0 * hyam + hybm * ps_avg
+                    elif "ilev" in ds[var_name].dims:
+                        hyai = ds['hyai']
+                        hybi = ds['hybi']
+                        y_coord = 1000.0 * hyai + hybi * ps_avg
+                    else:
+                        y_coord = ds['lev'] if "lev" in ds[var_name].dims else ds['ilev']
+                else:
+                    y_coord = ds['lev'] if "lev" in ds[var_name].dims else ds['ilev']
+            else:
+                raise ValueError(f"Invalid height_cord: {height_cord}. Must be 'z' or 'p'.")
+
+            # Plot the contourf plot
+            contour = ax.contourf(time_values, np.squeeze(y_coord), data.T, levels=20, cmap="viridis")
+            fig.colorbar(contour, ax=ax, label=ds[var_name].attrs.get('units', 'Value'))
+
+            ax.set_title(short_id, fontsize=14)
+            ax.set_xlabel("Time (days)", fontsize=12)
+            if ax is axes[0]:
+                ylabel = 'Height (m)' if height_cord == "z" else 'Pressure (hPa)'
+                ax.set_ylabel(ylabel, fontsize=12)
+		
+            # Set y-axis limit if specified
+            if height_cord == "z":
+                if max_height_profile is not None:
+                    ax.set_ylim([0, max_height_profile])
+            elif height_cord == "p":
+                if max_height_profile is not None:
+                    ax.set_ylim([max_height_profile, y_coord.max()])  # Adjust for pressure
+                else:
+                    ax.set_ylim([0, y_coord.max()])
+
+            # Reverse the y-axis if plotting against pressure
+            if height_cord == "p":
+                ax.invert_yaxis()
+		
+            ax.tick_params(axis='x', labelsize=14)
+            ax.tick_params(axis='y', labelsize=14)
+
+        if valid_plot:	
+            # Save the plot
+            plot_filename = os.path.join(output_subdir, f"{var_name}_time_height.jpg")
+            plt.savefig(plot_filename, format='jpg')
+            plt.close()
+            print(f"Saved time-height plot for {var_name} as {plot_filename}")
+
+            # Add to time-height plots list for HTML generation
+            time_height_plots.append(plot_filename)
+        else:
+            print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
 
 # Close datasets
 for ds in datasets:
@@ -328,12 +448,15 @@ html_template = """
 # Generate profile and timeseries HTML files
 profile_html_content = Template(html_template).render(title="Profile Plots", images=[os.path.basename(p) for p in profile_plots])
 timeseries_html_content = Template(html_template).render(title="Time Series Plots", images=[os.path.basename(t) for t in timeseries_plots])
+time_height_html_content = Template(html_template).render(title="Time-Height Plots",images=[os.path.basename(p) for p in time_height_plots])
 
 # Write profile and timeseries HTML files to disk
 with open(os.path.join(output_dir, general_id, "profile_plots.html"), "w") as f:
     f.write(profile_html_content)
 with open(os.path.join(output_dir, general_id, "timeseries_plots.html"), "w") as f:
     f.write(timeseries_html_content)
+with open(os.path.join(output_dir, general_id, "time_height_plots.html"), "w") as f:
+    f.write(time_height_html_content)
 
 # Main HTML page with links to profile and timeseries pages
 main_html_content = """
@@ -348,6 +471,7 @@ main_html_content = """
     <ul>
         <li><a href="profile_plots.html">Profile Plots</a></li>
         <li><a href="timeseries_plots.html">Time Series Plots</a></li>
+	<li><a href="time_height_plots.html">Time-Height Plots</a></li>
     </ul>
 </body>
 </html>
@@ -363,6 +487,7 @@ with tarfile.open(tar_filename, "w") as tar:
     tar.add(os.path.join(output_dir, general_id, "index.html"), arcname="index.html")
     tar.add(os.path.join(output_dir, general_id, "profile_plots.html"), arcname="profile_plots.html")
     tar.add(os.path.join(output_dir, general_id, "timeseries_plots.html"), arcname="timeseries_plots.html")
+    tar.add(os.path.join(output_dir, general_id, "time_height_plots.html"), arcname="time_height_plots.html")
     tar.add(output_subdir, arcname="plots")
 
 print(f"Created archive {tar_filename} containing all plots and HTML files.")
