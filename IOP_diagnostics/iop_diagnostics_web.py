@@ -10,7 +10,9 @@ from scipy.interpolate import interp1d
 # Quick diagnostics package for E3SM Single Column Model (SCM)
 #  or doubly-periodic EAMxx (DP-EAMxx).
 
-# Will produce .tar file with plots and html viewer.
+# Will produce time averaged profile plots, time series plots,
+#  and time height plots.
+# Finally, will produce .tar file with plots and html viewer.
 
 # Work in progress.
 
