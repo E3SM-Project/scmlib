@@ -22,7 +22,7 @@ from scipy.interpolate import interp1d
 output_dir = "dpxx_quickdiags"
 
 # User-specified general ID for this diagnostic set
-general_id = "magic_e3sm"  # Change as needed
+general_id = "magic_e3sm2"  # Change as needed
 
 # Where are simulation case directories stored?
 #   This program assumes that all output is in the run directory for each case.
@@ -44,6 +44,9 @@ profile_time_e = "end"  # Ending time for averaging (put "end" to average to end
 ##########################################################
 ##########################################################
 # BEGIN: OPTIONAL user defined settings
+
+# Do time-height plots? These can take a bit longer to make
+do_timeheight=False
 
 # Choose vertical plotting coordinate; can be pressure or height.
 #  -If height then the variable Z3 (E3SM) or z_mid (EAMxx) needs to be in your output file.
@@ -300,10 +303,10 @@ for var_name in all_vars:
 # Plot time-height variables (three dimensions: time, ncol, lev or ilev)
 for var_name in all_vars:
     # Determine if the variable qualifies for a time-height plot
-    if any(var_name in ds.data_vars and ds[var_name].ndim == 3 and
+    if do_timeheight and (any(var_name in ds.data_vars and ds[var_name].ndim == 3 and
            any(dim in ['lev', 'ilev'] for dim in ds[var_name].dims) and
            any(dim in ['time'] for dim in ds[var_name].dims) and
-           any(dim in ['ncol'] for dim in ds[var_name].dims) for ds in datasets):
+           any(dim in ['ncol'] for dim in ds[var_name].dims) for ds in datasets)):
 
         # Loop over each dataset, creating a multi-panel plot for each case
         fig, axes = plt.subplots(1, len(datasets), figsize=(15, 6), sharey=True, constrained_layout=True)
