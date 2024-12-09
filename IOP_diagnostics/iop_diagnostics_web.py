@@ -22,7 +22,7 @@ from scipy.interpolate import interp1d
 output_dir = "dpxx_quickdiags"
 
 # User-specified general ID for this diagnostic set
-general_id = "magic_e3sm3"  # Change as needed
+general_id = "magic_e3sm4"  # Change as needed
 
 # Where are simulation case directories stored?
 #   This program assumes that all output is in the run directory for each case.
@@ -46,16 +46,16 @@ profile_time_e = "end"  # Ending time for averaging (put "end" to average to end
 # BEGIN: OPTIONAL user defined settings
 
 # Do time-height plots? These can take a bit longer to make
-do_timeheight=True
+do_timeheight=False
 
 # Choose vertical plotting coordinate; can be pressure or height.
 #  -If height then the variable Z3 (E3SM) or z_mid (EAMxx) needs to be in your output file.
 #  -If pressure then PS (E3SM) or ps (EAMxx) should be in your output file.  If it is not then
 #    the package will use hybrid levels to plot, which may not be accurate compared to observations.
-height_cord = "p"  # p = pressure; z = height
+height_cord = "z"  # p = pressure; z = height
 
 # Optional: Maximum y-axis height for profile plots (in meters or mb; depending on vertical coordinate)
-max_height_profile = 700  # Set to desired height in meters or mb, or None for automatic scaling
+max_height_profile = 4000  # Set to desired height in meters or mb, or None for automatic scaling
 
 # Optional: Maximum y-axis height for time-height (in meters or mb; depending on vertical coordinate)
 max_height_timeheight = max_height_profile  # Set to desired height in meters or mb, or None for automatic scaling
@@ -186,16 +186,15 @@ for var_name in all_vars:
 
             valid_plot = True  # At least one dataset has the variable
 
-            # Convert `time` to a numeric array in days since the start, to avoid datetime conflicts
+            # Convert `time` to a numeric array in days since the start
             time_in_days = (ds['time'] - ds['time'][0]) / np.timedelta64(1, 'D')
-	    
+
             # Determine indices for the specified range
             if profile_time_e == "end":
                 end_time = time_in_days[-1]
             else:
                 end_time = profile_time_e
 
-            # Determine indices for the specified range
             time_indices = np.where((time_in_days >= profile_time_s) & (time_in_days <= end_time))[0]
 
             # Select data within the filtered time range and take the mean over time
@@ -204,40 +203,40 @@ for var_name in all_vars:
             # Compute vertical coordinate
             y_coord = compute_y_coord(ds, time_indices, height_cord, var_name)
 
-            # Plot profile with increased line width
-            plt.plot(np.squeeze(time_filtered_data), y_coord, label=short_id, linewidth=linewidth)
+            # Apply y-axis limits
+            if height_cord == "z":
+                y_min, y_max = (0, max_height_profile) if max_height_profile is not None else (y_coord.min(), y_coord.max())
+            elif height_cord == "p":
+                y_min, y_max = (max_height_profile, y_coord.max()) if max_height_profile is not None else (y_coord.min(), y_coord.max())
+
+            # Filter data to include only levels within the y-axis limits
+            valid_indices = np.where((y_coord >= y_min) & (y_coord <= y_max))[0]
+            filtered_y_coord = y_coord[valid_indices]
+            filtered_data = time_filtered_data.isel(lev=valid_indices) if "lev" in time_filtered_data.dims else time_filtered_data.isel(ilev=valid_indices)
+
+            # Plot profile
+            plt.plot(np.squeeze(filtered_data), filtered_y_coord, label=short_id, linewidth=linewidth)
 
         if valid_plot:
-            # Set y-axis limit if specified
-            if height_cord == "z":
-                if max_height_profile is not None:
-                    plt.ylim([0, max_height_profile])
-            elif height_cord == "p":
-                if max_height_profile is not None:
-                    plt.ylim([max_height_profile, y_coord.max()])  # Adjust for pressure
-                else:
-                    plt.ylim([0, y_coord.max()])
+            # Set y-axis limits
+            plt.ylim([y_min, y_max])
 
             # Reverse the y-axis if plotting against pressure
             if height_cord == "p":
                 plt.gca().invert_yaxis()
 
-            # Labeling and saving the plot with larger font sizes
-            # Get attributes for the variable from the first dataset that contains it
+            # Labeling and saving the plot
             var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
             var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)
 
-            # Labeling and saving the plot
             plt.xlabel(var_units, fontsize=14)
-            title = f"{var_long_name} Profile"
-
             ylabel = 'Height (m)' if height_cord == "z" else 'Pressure (hPa)'
             plt.ylabel(ylabel, fontsize=14)
-            plt.title(title, fontsize=16)
+            plt.title(f"{var_long_name} Profile", fontsize=16)
             plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
             plt.grid(True)
 
-            # Save plot in the general_id subdirectory
+            # Save plot
             plot_filename = os.path.join(output_subdir, f"{var_name}_profile.jpg")
             plt.savefig(plot_filename, format='jpg')
             plt.close()
@@ -245,9 +244,9 @@ for var_name in all_vars:
 
             # Add to profile plots list for HTML generation
             profile_plots.append(plot_filename)
-
         else:
             print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
+
 
 #############################################################################################################
 # Plot time series for variables with two dimensions (e.g., time, ncol)
