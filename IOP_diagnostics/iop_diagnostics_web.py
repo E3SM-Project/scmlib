@@ -9,12 +9,16 @@ from scipy.interpolate import interp1d
 ##########################################################
 # Quick diagnostics package for E3SM Single Column Model (SCM)
 #  or doubly-periodic EAMxx (DP-EAMxx).
+# NOTE that for DP-EAMxx this program only works on output
+#  streams that contain horizontally averaged output.
 
 # Will produce time averaged profile plots, time series plots,
 #  and time height plots.
 # Finally, will produce .tar file with plots and html viewer.
 
-# Work in progress.
+# This is a work in progress that will be routinely updated.
+# Upcoming features: ability to plot against ARM observations
+#  and LES!
 
 ##########################################################
 ##########################################################
@@ -236,7 +240,8 @@ for var_name in all_vars:
             plt.ylabel(ylabel, fontsize=14)
             plt.title(f"{var_long_name} Profile", fontsize=16)
             plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
-            plt.grid(True)
+            plt.grid(color='#95a5a6',linestyle='--',linewidth=2,alpha=0.5)
+            plt.grid('True')
 
             # Save plot
             plot_filename = os.path.join(output_subdir, f"{var_name}_profile.jpg")
@@ -296,7 +301,8 @@ for var_name in all_vars:
             title = f"{var_long_name} Time Series"  
             plt.title(title, fontsize=16)
             plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
-            plt.grid(True)
+            plt.grid(color='#95a5a6',linestyle='--',linewidth=2,alpha=0.5)
+            plt.grid('True')
 
             # Save plot in the general_id subdirectory
             plot_filename = os.path.join(output_subdir, f"{var_name}_timeseries.jpg")
