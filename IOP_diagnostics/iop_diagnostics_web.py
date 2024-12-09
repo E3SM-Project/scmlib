@@ -22,23 +22,23 @@ from scipy.interpolate import interp1d
 output_dir = "dpxx_quickdiags"
 
 # User-specified general ID for this diagnostic set
-general_id = "example_diagnostic_set"  # Change as needed
+general_id = "rce_comp"  # Change as needed
 
 # Where are simulation case directories stored?
 #   This program assumes that all output is in the run directory for each case.
-base_dir = "/pscratch/sd/b/bogensch/dp_scream3"
+base_dir = "/pscratch/sd/b/bogensch/dp_screamxx"
 
 # User-specified list of casenames and corresponding short IDs
-casenames = ["e3sm_scm_MAGIC.v2.001a_test","e3sm_scm_MAGIC.v2.5m.001a"]  # Example casenames
+casenames = ["scream_dpxx_RCEMIP_300K.001a","scream_dpxx_RCE_200m.300K.001a"]  # Example casenames
 # short IDs used in legend
-short_ids = ["control","5 m"]
+short_ids = ["3 km","200 m"]
 
 # All cases should end with this appendix for the output stream to be considered
-caseappend = ".eam.h0.2013-07-21-19620.nc"
+caseappend = ".scream.hourly.horiz_avg.AVERAGE.nhours_x1.2000-01-01-00000.nc"
 
-# Define start and end times for averaging as numerical values in days
-time_s = 2.0  # Starting time for averaging
-time_e = 3.0  # Ending time for averaging
+# Define start and end times for averaging for profiles as numerical values in days
+time_s = 3.0  # Starting time for averaging
+time_e = 5.0  # Ending time for averaging
 
 # END: MANDATORY USER DEFINED SETTINGS
 ##########################################################
@@ -49,13 +49,17 @@ time_e = 3.0  # Ending time for averaging
 #  -If height then the variable Z3 (E3SM) or z_mid (EAMxx) needs to be in your output file.
 #  -If pressure then PS (E3SM) or ps (EAMxx) should be in your output file.  If it is not then
 #    the package will use hybrid levels to plot, which may not be accurate compared to observations.
-height_cord = "z"  # p = pressure; z = height
+height_cord = "p"  # p = pressure; z = height
 
 # Optional: Maximum y-axis height for profile plots (in meters or mb; depending on vertical coordinate)
-max_height = 4000  # Set to desired height in meters or mb, or None for automatic scaling
+max_height = 400  # Set to desired height in meters or mb, or None for automatic scaling
 
 # linewidth for curves
 linewidth = 4
+
+# Optional: Time range for time series plots in days
+time_series_time_s = None  # Starting time for time series, None for default (entire range)
+time_series_time_e = None  # Ending time for time series, None for default (entire range)
 
 # END: OPTIONAL user defined settings
 ##########################################################
@@ -240,10 +244,17 @@ for var_name in all_vars:
 
             # Convert `time` to a numeric array in days since the start
             time_in_days = (ds['time'] - ds['time'][0]) / np.timedelta64(1, 'D')
-            variable_data = ds[var_name][:, 0]  # Select the single column (ncol = 1)
+
+            # Determine indices for the specified range
+            start_time = time_series_time_s if time_series_time_s is not None else time_in_days[0]
+            end_time = time_series_time_e if time_series_time_e is not None else time_in_days[-1]
+            time_indices = np.where((time_in_days >= start_time) & (time_in_days <= end_time))[0]
+
+            # Select data within the filtered time range
+            variable_data = ds[var_name].isel(time=time_indices)[:, 0]  # Select the single column (ncol = 1)
 
             # Plot time series with increased line width
-            plt.plot(time_in_days, variable_data, label=short_id, linewidth=linewidth)
+            plt.plot(time_in_days[time_indices], variable_data, label=short_id, linewidth=linewidth)
 
         if valid_plot:
             # Labeling and saving the plot with larger font sizes
