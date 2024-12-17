@@ -2,7 +2,7 @@
 ---
 Averaging Type: Average
 Max Snapshots Per File: 100000
-filename_prefix: ${CASE}.scream.hourly
+filename_prefix: ${CASE}
 Fields:
   Physics PG2:
     Field Names:
@@ -102,7 +102,17 @@ Fields:
     - PotentialTemperature_at_1000hPa
     - omega_at_500hPa
     - RelativeHumidity_at_700hPa
-    - SeaLevelPressure    
+    - SeaLevelPressure
+    # ADD SHOC DIAGS (must set ./atmchange extra_shoc_diags=true)
+#    - shoc_mix_horiz_avg
+#    - wthl_sec_horiz_avg
+#    - wqw_sec_horiz_avg
+#    - qw_sec_horiz_avg
+#    - thl_sec_horiz_avg
+#    - uw_sec_horiz_avg
+#    - vw_sec_horiz_avg
+#    - w3_horiz_avg
+#    - w_variance_horiz_avg    
 output_control:
   Frequency: 1
   frequency_units: nhours

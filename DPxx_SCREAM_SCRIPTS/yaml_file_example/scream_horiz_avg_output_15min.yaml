@@ -1,0 +1,118 @@
+%YAML 1.1
+---
+Averaging Type: Average
+Max Snapshots Per File: 100000
+filename_prefix: ${CASE}.horiz_avg
+Fields:
+  Physics PG2:
+    Field Names:
+    - z_mid_horiz_avg
+    - p_mid_horiz_avg
+    # HOMME
+    - ps_horiz_avg
+    - omega_horiz_avg
+    # SHOC
+    - cldfrac_liq_horiz_avg
+    - eddy_diff_mom_horiz_avg
+    - sgs_buoy_flux_horiz_avg
+    - tke_horiz_avg
+    - inv_qc_relvar_horiz_avg
+    - pbl_height_horiz_avg
+    # CLD
+    - cldfrac_ice_horiz_avg
+    - cldfrac_tot_horiz_avg
+    - cldfrac_tot_for_analysis_horiz_avg
+    # P3
+    - bm_horiz_avg
+    - nc_horiz_avg
+    - ni_horiz_avg
+    - nr_horiz_avg
+    - qi_horiz_avg
+    - qm_horiz_avg
+    - qr_horiz_avg
+    - T_prev_micro_step_horiz_avg
+    - qv_prev_micro_step_horiz_avg
+    - eff_radius_qc_horiz_avg
+    - eff_radius_qi_horiz_avg
+    - eff_radius_qr_horiz_avg
+    - micro_liq_ice_exchange_horiz_avg
+    - micro_vap_ice_exchange_horiz_avg
+    - micro_vap_liq_exchange_horiz_avg
+    - precip_liq_surf_mass_flux_horiz_avg
+    - precip_ice_surf_mass_flux_horiz_avg
+    - precip_total_surf_mass_flux_horiz_avg
+    # SHOC + HOMME
+    - U_horiz_avg
+    - V_horiz_avg
+    # SHOC + P3
+    - qc_horiz_avg
+    - qv_horiz_avg
+    # SHOC + P3 + RRTMGP + HOMME
+    - T_mid_horiz_avg
+    # RRTMGP
+    - rad_heating_pdel_horiz_avg
+    - sfc_flux_lw_dn_horiz_avg
+    - sfc_flux_sw_net_horiz_avg
+    - ShortwaveCloudForcing_horiz_avg
+    - LongwaveCloudForcing_horiz_avg
+    - LiqWaterPath_horiz_avg
+    - IceWaterPath_horiz_avg
+    - RainWaterPath_horiz_avg
+    - RimeWaterPath_horiz_avg
+    - VapWaterPath_horiz_avg
+    - ZonalVapFlux_horiz_avg
+    - MeridionalVapFlux_horiz_avg
+    - SW_flux_up_at_model_top_horiz_avg
+    - SW_flux_dn_at_model_top_horiz_avg
+    - LW_flux_up_at_model_top_horiz_avg
+    - SW_flux_dn_at_model_bot_horiz_avg
+    - SW_flux_up_at_model_bot_horiz_avg
+    - LW_flux_dn_at_model_bot_horiz_avg
+    - LW_flux_up_at_model_bot_horiz_avg
+    - SW_clrsky_flux_up_at_model_top_horiz_avg
+    - LW_clrsky_flux_up_at_model_top_horiz_avg
+    - SW_clrsky_flux_dn_at_model_bot_horiz_avg
+    - SW_clrsky_flux_up_at_model_bot_horiz_avg
+    - LW_clrsky_flux_dn_at_model_bot_horiz_avg
+    - LW_clrsky_flux_up_at_model_bot_horiz_avg
+    # diag
+    - PotentialTemperature_horiz_avg
+    - LiqPotentialTemperature_horiz_avg
+    - DryStaticEnergy_horiz_avg
+    - RelativeHumidity_horiz_avg
+    - surface_upward_latent_heat_flux_horiz_avg
+    # coupler
+    - surf_radiative_T_horiz_avg
+    - T_2m_horiz_avg
+    - qv_2m_horiz_avg
+    - wind_speed_10m_horiz_avg
+    - surf_mom_flux_horiz_avg
+    - surf_sens_flux_horiz_avg
+    - surf_evap_horiz_avg
+    # Process rates
+    - shoc_T_mid_tend_horiz_avg
+    - p3_T_mid_tend_horiz_avg
+    - rrtmgp_T_mid_tend_horiz_avg
+    - shoc_qv_tend_horiz_avg
+    - p3_qv_tend_horiz_avg
+    - homme_T_mid_tend_horiz_avg
+    - homme_qv_tend_horiz_avg
+    # Select level output
+    - PotentialTemperature_at_700hPa_horiz_avg
+    - PotentialTemperature_at_1000hPa_horiz_avg
+    - omega_at_500hPa_horiz_avg
+    - RelativeHumidity_at_700hPa_horiz_avg
+    - SeaLevelPressure_horiz_avg
+    # ADD SHOC DIAGS (must set ./atmchange extra_shoc_diags=true)
+#    - shoc_mix_horiz_avg
+#    - wthl_sec_horiz_avg
+#    - wqw_sec_horiz_avg
+#    - qw_sec_horiz_avg
+#    - thl_sec_horiz_avg
+#    - uw_sec_horiz_avg
+#    - vw_sec_horiz_avg
+#    - w3_horiz_avg
+#    - w_variance_horiz_avg    
+output_control:
+  Frequency: 15
+  frequency_units: nmins
