@@ -2,7 +2,7 @@
 ---
 Averaging Type: Average
 Max Snapshots Per File: 100000
-filename_prefix: ${CASE}
+filename_prefix: ${CASE}.fullfield
 Fields:
   Physics PG2:
     Field Names:

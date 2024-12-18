@@ -11,28 +11,30 @@
 #######  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #######  WARNING READ FIRST BEFORE RUNNING:
 #######
-#######  October 22, 2024 Update:
-#######  Beta testing for the C++/Kokkos version of DP-SCREAM (commonly referred
-#######  to as DPxx) has been going well and the code base has been stable for a
-#######	 while now (i.e. no new issues found in over a month from a large user base).
-#######	 Please feel free to use DPxx if you wish. Please send Peter Bogenschutz
-#######	 (bogenschutz1@llnl.gov) an email if you do so that I can add you to the
-#######	 DPxx beta testing mailing list in case there are any important updates to
-#######	 the code or scripts. We anticipate that DPxx will become the official and
-#######	 validated version of DP-SCREAM in a few months. At this time DP-SCREAMv0
-#######	 (Fortran version) will no longer be supported. Thus, the time to transition is upon us.
+#######  December 18, 2024 Update:
+#######  We are nearing the end of beta testing.  At this time we are encouraging all users
+#######  to now use DPxx instead of DPv0.  There is one final under-the-hood refactor that needs to go in
+#######  before I feel comfortable taking away official "beta" testing status.
 #######
-#######  IMPORTANT (Nov 25, 2024):
+#######  IMPORTANT:
 #######    - You should now be using E3SM master.  The SCREAM and E3SM repos have merged and here-on-out
 #######      all SCREAM development will take place on the E3SM master.
 #######
 #######  Exciting news:
 #######    - It is now possible to get horizontally averaged output in DPxx.  Very useful to reduce
-#######      the amount of data written and post-processing times.  For guidance on how to produce this
-#######      please see the script in the scmlib repo directory (your master should be current):
-#######      DPxx_SCREAM_SCRIPTS/regrid_utilities/generate_dpxx_horiz_avg_weights.py
+#######      the amount of data written and post-processing times.  You have two options for this
+#######      (master should be current):
+#######      1) Use the SCREAM utility to map output onto a different grid.  Choosing this method, you need
+#######         to generate a remap file specific for your DP geometry.  For guidance on how to produce this
+#######         please see the script in the scmlib repo directory:
+#######         DPxx_SCREAM_SCRIPTS/regrid_utilities/generate_dpxx_horiz_avg_weights.py
+#######      2) The more straight forward method for most users: SCREAM recently added the ability to
+#######         support horizontally averaged output.  In this case, simply append any variable you
+#######         want horizontally averaged with "_horiz_avg".An example output stream that
+#######         horizontally averages most basic output can be found in this repo at:
+#######         DPxx_SCREAM_SCRIPTS/yaml_file_example/scream_horiz_avg_output_15min.yaml
 #######
-#######  Known issues (Nov 21, 2024):
+#######  Known issues (Dec 18, 2024):
 #######    - None at the moment
 #######  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -261,16 +263,12 @@
   ./atmchange homme::compute_tendencies=T_mid,qv
   
  # configure yaml output
- # See the example yaml file in the DPxx_SCREAM_SCRIPTS/yaml_file_example
+ # See the example yaml files in the DPxx_SCREAM_SCRIPTS/yaml_file_example
  # Note that you can have as many output streams (yaml files) as you want!
- # Here we just have one, but see commented lines to show how to add a second and third output stream
- #   (you would want to do this if you also wanted daily or timestep output for example).
-cp /global/homes/b/bogensch/dp_scream_scripts_xx/dpxx_outputfiles/scream_hourly_avg_output.yaml .
-#cp /global/homes/b/bogensch/dp_scream_scripts_xx/dpxx_outputfiles/second_output_stream.yaml .
-#cp /global/homes/b/bogensch/dp_scream_scripts_xx/dpxx_outputfiles/third_output_stream.yaml .
-./atmchange output_yaml_files="./scream_hourly_avg_output.yaml"
-#./atmchange output_yaml_files+="./second_output_stream.yaml"
-#./atmchange output_yaml_files+="./third_output_stream.yaml"
+cp /global/homes/b/bogensch/dp_scream_scripts_xx/dpxx_outputfiles/scream_output_avg_1hour.yaml.yaml .
+cp /global/homes/b/bogensch/dp_scream_scripts_xx/dpxx_outputfiles/scream_horiz_avg_output_15min.yaml .
+./atmchange output_yaml_files="./scream_output_avg_1hour.yaml.yaml"
+./atmchange output_yaml_files+="./scream_horiz_avg_output_15min.yaml"
 
 # avoid the monthly cice file from writing as this
 #   appears to be currently broken for SCM
