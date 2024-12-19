@@ -324,7 +324,7 @@ for var_name in all_vars:
             print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
 
 #############################################################################################################
-# Plot time-height variables (three dimensions: time, ncol, lev or ilev)
+# Plot time-height variables (two or three dimensions: time, ncol, lev or ilev)
 for var_name in all_vars:
     # Determine if the variable qualifies for a time-height plot
     if do_timeheight and any(var_name in ds.data_vars and
@@ -332,12 +332,32 @@ for var_name in all_vars:
         any(dim in ['lev', 'ilev'] for dim in ds[var_name].dims) and
         'time' in ds[var_name].dims for ds in datasets):
 
+        # Find global min and max values for consistent color scale across cases
+        global_min, global_max = float('inf'), float('-inf')
+        for ds in datasets:
+            if var_name in ds.data_vars:
+                if 'ncol' in ds[var_name].dims:
+                    data = ds[var_name].mean(dim="ncol")
+                else:
+                    data = ds[var_name]
+                global_min = min(global_min, data.min().values)
+                global_max = max(global_max, data.max().values)
+
+        # Handle case where global_min == global_max
+        if global_min == global_max:
+            print(f"Warning: Variable '{var_name}' has constant value {global_min}. Adjusting color scale.")
+            global_min -= 0.01 * abs(global_min) if global_min != 0 else -0.01
+            global_max += 0.01 * abs(global_max) if global_max != 0 else 0.01
+
+        levels = np.linspace(global_min, global_max, 20)  # Define consistent levels
+
         # Loop over each dataset, creating a multi-panel plot for each case
         fig, axes = plt.subplots(1, len(datasets), figsize=(15, 6), sharey=True, constrained_layout=True)
         if len(datasets) == 1:
             axes = [axes]  # Ensure axes is always a list
 
         valid_plot = False  # Track if any data was valid for this variable
+        contours = []  # Store contour objects for shared colorbar
 
         for ax, (ds, short_id) in zip(axes, zip(datasets, short_ids)):
             if var_name not in ds.data_vars:
@@ -357,26 +377,25 @@ for var_name in all_vars:
 
             # Extract data within the filtered time range
             if 'ncol' in ds[var_name].dims:
-                # Handle data with ncol dimension
                 data = ds[var_name].isel(time=time_indices).mean(dim="ncol")
             else:
-                # Handle data without ncol dimension
                 data = ds[var_name].isel(time=time_indices)
 
             time_values = time_in_days[time_indices]
 
+            # Compute vertical coordinate
             y_coord = compute_y_coord(ds, time_indices, height_cord, var_name)
 
             # Plot the contourf plot
-            contour = ax.contourf(time_values, np.squeeze(y_coord), data.T, levels=20, cmap="viridis")
-            fig.colorbar(contour, ax=ax, label=ds[var_name].attrs.get('units', 'Value'))
+            contour = ax.contourf(time_values, np.squeeze(y_coord), data.T, levels=levels, cmap="viridis")
+            contours.append(contour)
 
             ax.set_title(short_id, fontsize=14)
             ax.set_xlabel("Time (days)", fontsize=12)
             if ax is axes[0]:
                 ylabel = 'Height (m)' if height_cord == "z" else 'Pressure (hPa)'
                 ax.set_ylabel(ylabel, fontsize=12)
-		
+
             # Set y-axis limit if specified
             if height_cord == "z":
                 if max_height_profile is not None:
@@ -390,11 +409,16 @@ for var_name in all_vars:
             # Reverse the y-axis if plotting against pressure
             if height_cord == "p":
                 ax.invert_yaxis()
-		
+
             ax.tick_params(axis='x', labelsize=14)
             ax.tick_params(axis='y', labelsize=14)
 
-        if valid_plot:	
+        if valid_plot:
+            # Add a single colorbar for the entire figure
+            cbar = fig.colorbar(contours[0], ax=axes, orientation='vertical', aspect=30, shrink=0.8, pad=0.02)
+            cbar.set_label(ds[var_name].attrs.get('units', 'Value'), fontsize=14)
+            cbar.ax.tick_params(labelsize=12)  # Increase tick label size for colorbar
+
             # Save the plot
             plot_filename = os.path.join(output_subdir, f"{var_name}_time_height.jpg")
             plt.savefig(plot_filename, format='jpg')
@@ -405,6 +429,8 @@ for var_name in all_vars:
             time_height_plots.append(plot_filename)
         else:
             print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
+
+
 
 # Close datasets
 for ds in datasets:
