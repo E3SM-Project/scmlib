@@ -28,23 +28,23 @@ from scipy.interpolate import interp1d
 output_dir = "dpxx_quickdiags"
 
 # User-specified general ID for this diagnostic set
-general_id = "magic_e3sm4"  # Change as needed
+general_id = "gateideal_conv"  # Change as needed
 
 # Where are simulation case directories stored?
 #   This program assumes that all output is in the run directory for each case.
-base_dir = "/pscratch/sd/b/bogensch/dp_scream3"
+base_dir = "/pscratch/sd/b/bogensch/dp_screamxx_conv"
 
 # User-specified list of casenames and corresponding short IDs
-casenames = ["e3sm_scm_MAGIC.v2.001a","e3sm_scm_MAGIC.v2.5m.001a"]  # Example casenames
+casenames = ["scream_dpxx_GATEIDEAL.cntl.001a","scream_dpxx_GATEIDEAL.conv.001a"]  # Example casenames
 # short IDs used in legend
-short_ids = ["CNTL","5 m"]
+short_ids = ["CNTL","EXPR"]
 
 # All cases should end with this appendix for the output stream to be considered
-caseappend = ".eam.h0.2013-07-21-19620.nc"
+caseappend = ".horiz_avg.AVERAGE.nmins_x5.1974-08-30-00000.nc"
 
 # Define start and end times for averaging for profiles as numerical values in days
-profile_time_s = 2.0  # Starting time for averaging
-profile_time_e = "end"  # Ending time for averaging (put "end" to average to end of simulation)
+profile_time_s = 0.5  # Starting time for averaging
+profile_time_e = 1.0  # Ending time for averaging (put "end" to average to end of simulation)
 
 # END: MANDATORY USER DEFINED SETTINGS
 ##########################################################
@@ -52,7 +52,7 @@ profile_time_e = "end"  # Ending time for averaging (put "end" to average to end
 # BEGIN: OPTIONAL user defined settings
 
 # Do time-height plots? These can take a bit longer to make
-do_timeheight=False
+do_timeheight=True
 
 # Choose vertical plotting coordinate; can be pressure or height.
 #  -If height then the variable Z3 (E3SM) or z_mid (EAMxx) needs to be in your output file.
@@ -61,7 +61,7 @@ do_timeheight=False
 height_cord = "z"  # p = pressure; z = height
 
 # Optional: Maximum y-axis height for profile plots (in meters or mb; depending on vertical coordinate)
-max_height_profile = 4000  # Set to desired height in meters or mb, or None for automatic scaling
+max_height_profile = 20000  # Set to desired height in meters or mb, or None for automatic scaling
 
 # Optional: Maximum y-axis height for time-height (in meters or mb; depending on vertical coordinate)
 max_height_timeheight = max_height_profile  # Set to desired height in meters or mb, or None for automatic scaling
@@ -97,6 +97,8 @@ def compute_y_coord(ds, time_indices, height_cord, var_name):
     if height_cord == "z":
         if "z_mid" in ds.data_vars:
             y_coord = ds['z_mid'].isel(time=time_indices).mean(dim="time").squeeze()
+        elif "z_mid_horiz_avg" in ds.data_vars:
+            y_coord = ds['z_mid_horiz_avg'].isel(time=time_indices).mean(dim="time").squeeze()
         elif "Z3" in ds.data_vars:
             # Adjust Z3 by subtracting surface elevation
             lev0 = ds['Z3'].isel(lev=-1).mean(dim="time")  # Get Z3 at highest ilev index
@@ -114,7 +116,7 @@ def compute_y_coord(ds, time_indices, height_cord, var_name):
             y_coord[-1] = 0.0  # Set surface boundary condition to 0
 
     elif height_cord == "p":
-        ps_var = 'PS' if 'PS' in ds.data_vars else 'ps' if 'ps' in ds.data_vars else None
+        ps_var = 'PS' if 'PS' in ds.data_vars else 'ps' if 'ps' in ds.data_vars else 'ps_horiz_avg' if 'ps_horiz_avg' in ds.data_vars else None
         if ps_var:
             ps_avg = ds[ps_var].isel(time=time_indices).mean(dim="time") / 100.0  # Convert to hPa
             if "lev" in ds[var_name].dims and all(var in ds for var in ['hyam', 'hybm']):
@@ -154,12 +156,11 @@ if len(casenames) != len(short_ids):
 file_paths = [os.path.join(base_dir, case, "run", f"{case}{caseappend}") for case in casenames]
 datasets = []
 
-# Check if ncol is 1 for all files
 for fp, short_id in zip(file_paths, short_ids):
     ds = xr.open_dataset(fp)
-    if "ncol" in ds.dims and ds.dims["ncol"] != 1:
-        print(f"Warning: File {fp} has ncol={ds.dims['ncol']}, which is not equal to 1. Skipping this file.")
-        continue
+#    if "ncol" in ds.dims and ds.dims["ncol"] != 1:
+#        print(f"Warning: File {fp} has ncol={ds.dims['ncol']}, which is not equal to 1. Skipping this file.")
+#        continue
     datasets.append(ds)
 
 # Prepare lists to keep track of plot filenames for HTML pages
@@ -176,10 +177,10 @@ for ds in datasets:
 # Plot profile variables with three dimensions (e.g., time, ncol, lev or ilev)
 for var_name in all_vars:
     # Determine if the variable qualifies as a profile variable
-    if any(var_name in ds.data_vars and ds[var_name].ndim == 3 and
-           any(dim in ['lev', 'ilev'] for dim in ds[var_name].dims) and
-           any(dim in ['time'] for dim in ds[var_name].dims) and
-           any(dim in ['ncol'] for dim in ds[var_name].dims) for ds in datasets):
+    if any(var_name in ds.data_vars and
+        ds[var_name].ndim in [2, 3] and
+        any(dim in ['lev', 'ilev'] for dim in ds[var_name].dims) and
+        'time' in ds[var_name].dims for ds in datasets):
 
         plt.figure(figsize=(8, 6))
         valid_plot = False  # Track if any data was valid for this variable
@@ -259,9 +260,10 @@ for var_name in all_vars:
 # Plot time series for variables with two dimensions (e.g., time, ncol)
 for var_name in all_vars:
     # Determine if the variable qualifies as a time series variable
-    if any(var_name in ds.data_vars and ds[var_name].ndim == 2 and
-           any(dim in ['time'] for dim in ds[var_name].dims) and
-           any(dim in ['ncol'] for dim in ds[var_name].dims) for ds in datasets):
+    if any(var_name in ds.data_vars and
+        ds[var_name].ndim in [1, 2] and
+        'time' in ds[var_name].dims and
+        not any(dim in ['lev', 'ilev'] for dim in ds[var_name].dims) for ds in datasets):
 
         plt.figure(figsize=(10, 5))
         valid_plot = False  # Track if any data was valid for this variable
@@ -283,7 +285,13 @@ for var_name in all_vars:
             time_indices = np.where((time_in_days >= start_time) & (time_in_days <= end_time))[0]
 
             # Select data within the filtered time range
-            variable_data = ds[var_name].isel(time=time_indices)[:, 0]  # Select the single column (ncol = 1)
+            if ds[var_name].ndim == 2 and 'ncol' in ds[var_name].dims:
+                variable_data = ds[var_name].isel(time=time_indices)[:, 0]  # Select the single column (ncol = 1)
+            elif ds[var_name].ndim == 1 and 'time' in ds[var_name].dims:
+                variable_data = ds[var_name].isel(time=time_indices)
+            else:
+                print(f"Warning: Variable '{var_name}' has unexpected dimensions. Skipping for this case.")
+                continue
 
             # Plot time series with increased line width
             plt.plot(time_in_days[time_indices], variable_data, label=short_id, linewidth=linewidth)
@@ -319,10 +327,10 @@ for var_name in all_vars:
 # Plot time-height variables (three dimensions: time, ncol, lev or ilev)
 for var_name in all_vars:
     # Determine if the variable qualifies for a time-height plot
-    if do_timeheight and (any(var_name in ds.data_vars and ds[var_name].ndim == 3 and
-           any(dim in ['lev', 'ilev'] for dim in ds[var_name].dims) and
-           any(dim in ['time'] for dim in ds[var_name].dims) and
-           any(dim in ['ncol'] for dim in ds[var_name].dims) for ds in datasets)):
+    if do_timeheight and any(var_name in ds.data_vars and
+        ds[var_name].ndim in [2, 3] and
+        any(dim in ['lev', 'ilev'] for dim in ds[var_name].dims) and
+        'time' in ds[var_name].dims for ds in datasets):
 
         # Loop over each dataset, creating a multi-panel plot for each case
         fig, axes = plt.subplots(1, len(datasets), figsize=(15, 6), sharey=True, constrained_layout=True)
@@ -348,7 +356,13 @@ for var_name in all_vars:
             time_indices = np.where((time_in_days >= start_time) & (time_in_days <= end_time))[0]
 
             # Extract data within the filtered time range
-            data = ds[var_name].isel(time=time_indices).mean(dim="ncol")
+            if 'ncol' in ds[var_name].dims:
+                # Handle data with ncol dimension
+                data = ds[var_name].isel(time=time_indices).mean(dim="ncol")
+            else:
+                # Handle data without ncol dimension
+                data = ds[var_name].isel(time=time_indices)
+
             time_values = time_in_days[time_indices]
 
             y_coord = compute_y_coord(ds, time_indices, height_cord, var_name)
