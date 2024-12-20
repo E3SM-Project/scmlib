@@ -256,6 +256,7 @@
   ./atmchange iop_nudge_uv=$do_iop_nudge_uv
   ./atmchange iop_nudge_tq=$do_iop_nudge_tq
   ./atmchange iop_coriolis=$do_iop_nudge_coriolis
+  ./atmchange extra_shoc_diags=true
 
 # Allow for the computation of tendencies for output purposes
   ./atmchange physics::mac_aero_mic::shoc::compute_tendencies=T_mid,qv
