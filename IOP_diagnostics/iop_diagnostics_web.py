@@ -45,8 +45,8 @@ short_ids = ["CNTL","MICRO","MICRO+SHOC"]
 caseappend = ".horiz_avg.AVERAGE.nmins_x5.2013-07-21-19620.nc"
 
 # Define start and end times for averaging for profiles as numerical values in days
-profile_time_s = 0.2  # Starting time for averaging
-profile_time_e = 1.0  # Ending time for averaging (put "end" to average to end of simulation)
+profile_time_s = [0.2, 1.0, 2.0]  # Starting times for averaging
+profile_time_e = [1.0, 2.0, 3.0]  # Ending times for averaging (put "end" to average to end of simulation)
 
 # END: MANDATORY USER DEFINED SETTINGS
 ##########################################################
@@ -54,7 +54,7 @@ profile_time_e = 1.0  # Ending time for averaging (put "end" to average to end o
 # BEGIN: OPTIONAL user defined settings
 
 # Do time-height plots? These can take a bit longer to make
-do_timeheight=True
+do_timeheight=False
 
 # Choose vertical plotting coordinate; can be pressure or height.
 #  -If height then the variable Z3 (E3SM) or z_mid (EAMxx) needs to be in your output file.
@@ -184,79 +184,76 @@ for var_name in all_vars:
         any(dim in ['lev', 'ilev'] for dim in ds[var_name].dims) and
         'time' in ds[var_name].dims for ds in datasets):
 
-        plt.figure(figsize=(8, 6))
-        valid_plot = False  # Track if any data was valid for this variable
+        # Loop over multiple averaging windows
+        for window_idx, (start_time, end_time) in enumerate(zip(profile_time_s, profile_time_e)):
+            plt.figure(figsize=(8, 6))
+            valid_plot = False  # Track if any data was valid for this variable
 
-        # Loop over each dataset, using short_ids for the legend
-        for ds, short_id in zip(datasets, short_ids):
-            if var_name not in ds.data_vars:
-                print(f"Warning: Variable '{var_name}' not found in case '{short_id}'. Skipping for this case.")
-                continue  # Skip this case if variable is missing
+            # Loop over each dataset, using short_ids for the legend
+            for ds, short_id in zip(datasets, short_ids):
+                if var_name not in ds.data_vars:
+                    print(f"Warning: Variable '{var_name}' not found in case '{short_id}'. Skipping for this case.")
+                    continue  # Skip this case if variable is missing
 
-            valid_plot = True  # At least one dataset has the variable
+                valid_plot = True  # At least one dataset has the variable
 
-            # Convert `time` to a numeric array in days since the start
-            time_in_days = (ds['time'] - ds['time'][0]) / np.timedelta64(1, 'D')
+                # Convert `time` to a numeric array in days since the start
+                time_in_days = (ds['time'] - ds['time'][0]) / np.timedelta64(1, 'D')
 
-            # Determine indices for the specified range
-            if profile_time_e == "end":
-                end_time = time_in_days[-1]
+                # Determine indices for the specified range
+                start_time = start_time if start_time != "end" else time_in_days[0]
+                end_time = end_time if end_time != "end" else time_in_days[-1]
+                time_indices = np.where((time_in_days >= start_time) & (time_in_days <= end_time))[0]
+
+                # Select data within the filtered time range and take the mean over time
+                time_filtered_data = ds[var_name].isel(time=time_indices).mean(dim="time")
+
+                # Compute vertical coordinate
+                y_coord = compute_y_coord(ds, time_indices, height_cord, var_name)
+
+                # Apply y-axis limits
+                if height_cord == "z":
+                    y_min, y_max = (0, max_height_profile) if max_height_profile is not None else (y_coord.min(), y_coord.max())
+                elif height_cord == "p":
+                    y_min, y_max = (max_height_profile, y_coord.max()) if max_height_profile is not None else (y_coord.min(), y_coord.max())
+
+                # Filter data to include only levels within the y-axis limits
+                valid_indices = np.where((y_coord >= y_min) & (y_coord <= y_max))[0]
+                filtered_y_coord = y_coord[valid_indices]
+                filtered_data = time_filtered_data.isel(lev=valid_indices) if "lev" in time_filtered_data.dims else time_filtered_data.isel(ilev=valid_indices)
+
+                # Plot profile
+                plt.plot(np.squeeze(filtered_data), filtered_y_coord, label=short_id, linewidth=linewidth)
+
+            if valid_plot:
+                # Set y-axis limits
+                plt.ylim([y_min, y_max])
+
+                # Reverse the y-axis if plotting against pressure
+                if height_cord == "p":
+                    plt.gca().invert_yaxis()
+
+                # Labeling and saving the plot
+                var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
+                var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)
+
+                plt.xlabel(var_units, fontsize=14)
+                ylabel = 'Height (m)' if height_cord == "z" else 'Pressure (hPa)'
+                plt.ylabel(ylabel, fontsize=14)
+                plt.title(f"{var_long_name} Profile (Window {window_idx+1})", fontsize=16)
+                plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
+                plt.grid(color='#95a5a6', linestyle='--', linewidth=2, alpha=0.5)
+
+                # Save plot
+                plot_filename = os.path.join(output_subdir, f"{var_name}_profile_window{window_idx+1}.jpg")
+                plt.savefig(plot_filename, format='jpg')
+                plt.close()
+                print(f"Saved profile plot for {var_name} (Window {window_idx+1}) as {plot_filename}")
+
+                # Add to profile plots list for HTML generation
+                profile_plots.append((plot_filename, window_idx+1))
             else:
-                end_time = profile_time_e
-
-            time_indices = np.where((time_in_days >= profile_time_s) & (time_in_days <= end_time))[0]
-
-            # Select data within the filtered time range and take the mean over time
-            time_filtered_data = ds[var_name].isel(time=time_indices).mean(dim="time")
-
-            # Compute vertical coordinate
-            y_coord = compute_y_coord(ds, time_indices, height_cord, var_name)
-
-            # Apply y-axis limits
-            if height_cord == "z":
-                y_min, y_max = (0, max_height_profile) if max_height_profile is not None else (y_coord.min(), y_coord.max())
-            elif height_cord == "p":
-                y_min, y_max = (max_height_profile, y_coord.max()) if max_height_profile is not None else (y_coord.min(), y_coord.max())
-
-            # Filter data to include only levels within the y-axis limits
-            valid_indices = np.where((y_coord >= y_min) & (y_coord <= y_max))[0]
-            filtered_y_coord = y_coord[valid_indices]
-            filtered_data = time_filtered_data.isel(lev=valid_indices) if "lev" in time_filtered_data.dims else time_filtered_data.isel(ilev=valid_indices)
-
-            # Plot profile
-            plt.plot(np.squeeze(filtered_data), filtered_y_coord, label=short_id, linewidth=linewidth)
-
-        if valid_plot:
-            # Set y-axis limits
-            plt.ylim([y_min, y_max])
-
-            # Reverse the y-axis if plotting against pressure
-            if height_cord == "p":
-                plt.gca().invert_yaxis()
-
-            # Labeling and saving the plot
-            var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
-            var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)
-
-            plt.xlabel(var_units, fontsize=14)
-            ylabel = 'Height (m)' if height_cord == "z" else 'Pressure (hPa)'
-            plt.ylabel(ylabel, fontsize=14)
-            plt.title(f"{var_long_name} Profile", fontsize=16)
-            plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
-            plt.grid(color='#95a5a6',linestyle='--',linewidth=2,alpha=0.5)
-            plt.grid('True')
-
-            # Save plot
-            plot_filename = os.path.join(output_subdir, f"{var_name}_profile.jpg")
-            plt.savefig(plot_filename, format='jpg')
-            plt.close()
-            print(f"Saved profile plot for {var_name} as {plot_filename}")
-
-            # Add to profile plots list for HTML generation
-            profile_plots.append(plot_filename)
-        else:
-            print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
-
+                print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
 
 #############################################################################################################
 # Plot time series for variables with two dimensions (e.g., time, ncol)
@@ -550,21 +547,33 @@ time_height_html_template = """
 </html>
 """
 
-# Generate profile, timeseries, and time-height HTML files
-profile_html_content = Template(profile_html_template).render(title="Profile Plots", images=[os.path.basename(p) for p in profile_plots])
-timeseries_html_content = Template(timeseries_html_template).render(title="Time Series Plots", images=[os.path.basename(t) for t in timeseries_plots])
-time_height_html_content = Template(time_height_html_template).render(title="Time-Height Plots", images=[os.path.basename(p) for p in time_height_plots])
+# Generate profile HTML files for each averaging window
+for window_idx in range(len(profile_time_s)):
+    profile_html_content = Template(profile_html_template).render(
+        title=f"Profile Plots (Window {window_idx+1})",
+        images=[os.path.basename(p[0]) for p in profile_plots if p[1] == window_idx+1]
+    )
+    html_filename = os.path.join(output_dir, general_id, f"profile_plots_window{window_idx+1}.html")
+    with open(html_filename, "w") as f:
+        f.write(profile_html_content)
 
-# Write the HTML files to disk
-with open(os.path.join(output_dir, general_id, "profile_plots.html"), "w") as f:
-    f.write(profile_html_content)
+# Generate timeseries and time-height HTML files
+timeseries_html_content = Template(timeseries_html_template).render(
+    title="Time Series Plots", 
+    images=[os.path.basename(t) for t in timeseries_plots]
+)
+time_height_html_content = Template(time_height_html_template).render(
+    title="Time-Height Plots", 
+    images=[os.path.basename(p) for p in time_height_plots]
+)
+
 with open(os.path.join(output_dir, general_id, "timeseries_plots.html"), "w") as f:
     f.write(timeseries_html_content)
 with open(os.path.join(output_dir, general_id, "time_height_plots.html"), "w") as f:
     f.write(time_height_html_content)
 
-# Main HTML page with links to profile and timeseries pages
-main_html_content = """
+# Main HTML page with links to profile, timeseries, and time-height pages
+main_html_content = Template("""
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -574,23 +583,25 @@ main_html_content = """
 <body>
     <h1>{{ general_id }} Diagnostics</h1>
     <ul>
-        <li><a href="profile_plots.html">Profile Plots</a></li>
+        {% for window_idx in range(num_windows) %}
+        <li><a href="profile_plots_window{{ window_idx+1 }}.html">Profile Plots (Window {{ window_idx+1 }})</a></li>
+        {% endfor %}
         <li><a href="timeseries_plots.html">Time Series Plots</a></li>
         <li><a href="time_height_plots.html">Time-Height Plots</a></li>
     </ul>
 </body>
 </html>
-"""
+""").render(general_id=general_id, num_windows=len(profile_time_s))
 
-main_html = Template(main_html_content).render(general_id=general_id)
 with open(os.path.join(output_dir, general_id, "index.html"), "w") as f:
-    f.write(main_html)
+    f.write(main_html_content)
 
 # Tar all the plots and HTML files
 tar_filename = os.path.join(output_dir, f"{general_id}_diagnostics.tar")
 with tarfile.open(tar_filename, "w") as tar:
     tar.add(os.path.join(output_dir, general_id, "index.html"), arcname="index.html")
-    tar.add(os.path.join(output_dir, general_id, "profile_plots.html"), arcname="profile_plots.html")
+    for window_idx in range(len(profile_time_s)):
+        tar.add(os.path.join(output_dir, general_id, f"profile_plots_window{window_idx+1}.html"), arcname=f"profile_plots_window{window_idx+1}.html")
     tar.add(os.path.join(output_dir, general_id, "timeseries_plots.html"), arcname="timeseries_plots.html")
     tar.add(os.path.join(output_dir, general_id, "time_height_plots.html"), arcname="time_height_plots.html")
     tar.add(output_subdir, arcname="plots")
