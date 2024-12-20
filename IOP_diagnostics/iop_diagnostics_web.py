@@ -436,8 +436,8 @@ for var_name in all_vars:
 for ds in datasets:
     ds.close()
 
-# HTML Templates for profile and timeseries pages with grid layout
-html_template = """
+# HTML Templates with different width and max-width settings
+profile_html_template = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -454,8 +454,8 @@ html_template = """
             text-align: center;
         }
         img {
-            width: 90%;  /* Increased width */
-            max-width: 600px;  /* Increased max width */
+            width: 100%;  /* Profile plot width */
+            max-width: 600px;  /* Profile plot max width */
             height: auto;
         }
     </style>
@@ -474,12 +474,86 @@ html_template = """
 </html>
 """
 
-# Generate profile and timeseries HTML files
-profile_html_content = Template(html_template).render(title="Profile Plots", images=[os.path.basename(p) for p in profile_plots])
-timeseries_html_content = Template(html_template).render(title="Time Series Plots", images=[os.path.basename(t) for t in timeseries_plots])
-time_height_html_content = Template(html_template).render(title="Time-Height Plots",images=[os.path.basename(p) for p in time_height_plots])
+timeseries_html_template = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 10px;
+        }
+        .grid-item {
+            text-align: center;
+        }
+        img {
+            width: 100%;  /* Time series plot width */
+            max-width: 800px;  /* Time series plot max width */
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    <div class="grid-container">
+    {% for img in images %}
+        <div class="grid-item">
+            <h3>{{ img }}</h3>
+            <img src="plots/{{ img }}" alt="{{ img }}">
+        </div>
+    {% endfor %}
+    </div>
+</body>
+</html>
+"""
 
-# Write profile and timeseries HTML files to disk
+time_height_html_template = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 10px;
+        }
+        .grid-item {
+            text-align: center;
+        }
+        img {
+            width: 100%;  /* Time-height plot width */
+            max-width: 800px;  /* Time-height plot max width */
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    <div class="grid-container">
+    {% for img in images %}
+        <div class="grid-item">
+            <h3>{{ img }}</h3>
+            <img src="plots/{{ img }}" alt="{{ img }}">
+        </div>
+    {% endfor %}
+    </div>
+</body>
+</html>
+"""
+
+# Generate profile, timeseries, and time-height HTML files
+profile_html_content = Template(profile_html_template).render(title="Profile Plots", images=[os.path.basename(p) for p in profile_plots])
+timeseries_html_content = Template(timeseries_html_template).render(title="Time Series Plots", images=[os.path.basename(t) for t in timeseries_plots])
+time_height_html_content = Template(time_height_html_template).render(title="Time-Height Plots", images=[os.path.basename(p) for p in time_height_plots])
+
+# Write the HTML files to disk
 with open(os.path.join(output_dir, general_id, "profile_plots.html"), "w") as f:
     f.write(profile_html_content)
 with open(os.path.join(output_dir, general_id, "timeseries_plots.html"), "w") as f:
@@ -500,7 +574,7 @@ main_html_content = """
     <ul>
         <li><a href="profile_plots.html">Profile Plots</a></li>
         <li><a href="timeseries_plots.html">Time Series Plots</a></li>
-	<li><a href="time_height_plots.html">Time-Height Plots</a></li>
+        <li><a href="time_height_plots.html">Time-Height Plots</a></li>
     </ul>
 </body>
 </html>
@@ -520,3 +594,4 @@ with tarfile.open(tar_filename, "w") as tar:
     tar.add(output_subdir, arcname="plots")
 
 print(f"Created archive {tar_filename} containing all plots and HTML files.")
+
