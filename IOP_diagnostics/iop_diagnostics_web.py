@@ -28,22 +28,24 @@ from scipy.interpolate import interp1d
 output_dir = "dpxx_quickdiags"
 
 # User-specified general ID for this diagnostic set
-general_id = "gateideal_conv"  # Change as needed
+general_id = "magic_conv"  # Change as needed
 
 # Where are simulation case directories stored?
 #   This program assumes that all output is in the run directory for each case.
-base_dir = "/pscratch/sd/b/bogensch/dp_screamxx_conv"
+base_dir = "/pscratch/sd/b/bogensch/dp_screamxx_conv/"
 
 # User-specified list of casenames and corresponding short IDs
-casenames = ["scream_dpxx_GATEIDEAL.cntl.001a","scream_dpxx_GATEIDEAL.conv.001a"]  # Example casenames
+casenames = ["scream_dpxx_MAGIC.cntl.001a",
+             "scream_dpxx_MAGIC.conv.001a",
+             "scream_dpxx_MAGIC.conv.002a"]  # Example casenames
 # short IDs used in legend
-short_ids = ["CNTL","EXPR"]
+short_ids = ["CNTL","MICRO","MICRO+SHOC"]
 
 # All cases should end with this appendix for the output stream to be considered
-caseappend = ".horiz_avg.AVERAGE.nmins_x5.1974-08-30-00000.nc"
+caseappend = ".horiz_avg.AVERAGE.nmins_x5.2013-07-21-19620.nc"
 
 # Define start and end times for averaging for profiles as numerical values in days
-profile_time_s = 0.5  # Starting time for averaging
+profile_time_s = 0.2  # Starting time for averaging
 profile_time_e = 1.0  # Ending time for averaging (put "end" to average to end of simulation)
 
 # END: MANDATORY USER DEFINED SETTINGS
@@ -61,10 +63,10 @@ do_timeheight=True
 height_cord = "z"  # p = pressure; z = height
 
 # Optional: Maximum y-axis height for profile plots (in meters or mb; depending on vertical coordinate)
-max_height_profile = 20000  # Set to desired height in meters or mb, or None for automatic scaling
+max_height_profile = 2000  # Set to desired height in meters or mb, or None for automatic scaling
 
 # Optional: Maximum y-axis height for time-height (in meters or mb; depending on vertical coordinate)
-max_height_timeheight = max_height_profile  # Set to desired height in meters or mb, or None for automatic scaling
+max_height_timeheight = 4000  # Set to desired height in meters or mb, or None for automatic scaling
 
 # linewidth for curves
 linewidth = 4
@@ -346,7 +348,7 @@ for var_name in all_vars:
         # Handle case where global_min == global_max
         if global_min == global_max:
             print(f"Warning: Variable '{var_name}' has constant value {global_min}. Adjusting color scale.")
-            global_min -= 0.01 * abs(global_min) if global_min != 0 else -0.01
+            global_min -= 0.01 * abs(global_min) if global_min != 0 else 0.01
             global_max += 0.01 * abs(global_max) if global_max != 0 else 0.01
 
         levels = np.linspace(global_min, global_max, 20)  # Define consistent levels
@@ -455,7 +457,7 @@ profile_html_template = """
         }
         img {
             width: 100%;  /* Profile plot width */
-            max-width: 600px;  /* Profile plot max width */
+            max-width: 500px;  /* Profile plot max width */
             height: auto;
         }
     </style>
