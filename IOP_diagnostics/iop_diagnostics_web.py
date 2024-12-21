@@ -240,7 +240,7 @@ for var_name in all_vars:
                 plt.xlabel(var_units, fontsize=14)
                 ylabel = 'Height (m)' if height_cord == "z" else 'Pressure (hPa)'
                 plt.ylabel(ylabel, fontsize=14)
-                plt.title(f"{var_long_name} Profile (Window {window_idx+1})", fontsize=16)
+                plt.title(f"{var_long_name} Profile (Day {start_time} to Day {end_time})", fontsize=16)
                 plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
                 plt.grid(color='#95a5a6', linestyle='--', linewidth=2, alpha=0.5)
 
@@ -548,14 +548,15 @@ time_height_html_template = """
 """
 
 # Generate profile HTML files for each averaging window
-for window_idx in range(len(profile_time_s)):
+for window_idx, (start_time, end_time) in enumerate(zip(profile_time_s, profile_time_e)):
     profile_html_content = Template(profile_html_template).render(
-        title=f"Profile Plots (Window {window_idx+1})",
+        title=f"Profile Plots (Day {start_time} to Day {end_time})",
         images=[os.path.basename(p[0]) for p in profile_plots if p[1] == window_idx+1]
     )
     html_filename = os.path.join(output_dir, general_id, f"profile_plots_window{window_idx+1}.html")
     with open(html_filename, "w") as f:
         f.write(profile_html_content)
+
 
 # Generate timeseries and time-height HTML files
 timeseries_html_content = Template(timeseries_html_template).render(
@@ -583,15 +584,22 @@ main_html_content = Template("""
 <body>
     <h1>{{ general_id }} Diagnostics</h1>
     <ul>
-        {% for window_idx in range(num_windows) %}
-        <li><a href="profile_plots_window{{ window_idx+1 }}.html">Profile Plots (Window {{ window_idx+1 }})</a></li>
+        {% for idx, (start_time, end_time) in profile_windows %}
+        <li>
+            <a href="profile_plots_window{{ idx+1 }}.html">
+                Profile Plots (Day {{ "%.1f" | format(start_time) }} to Day {{ "%.1f" | format(end_time) }})
+            </a>
+        </li>
         {% endfor %}
         <li><a href="timeseries_plots.html">Time Series Plots</a></li>
         <li><a href="time_height_plots.html">Time-Height Plots</a></li>
     </ul>
 </body>
 </html>
-""").render(general_id=general_id, num_windows=len(profile_time_s))
+""").render(
+    general_id=general_id,
+    profile_windows=list(enumerate(zip(profile_time_s, profile_time_e)))
+)
 
 with open(os.path.join(output_dir, general_id, "index.html"), "w") as f:
     f.write(main_html_content)
