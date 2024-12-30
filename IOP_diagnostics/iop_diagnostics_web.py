@@ -28,7 +28,7 @@ from scipy.interpolate import interp1d
 output_dir = "dpxx_quickdiags"
 
 # User-specified general ID for this diagnostic set
-general_id = "magic_conv"  # Change as needed
+general_id = "MAGIC_conv"  # Change as needed
 
 # Where are simulation case directories stored?
 #   This program assumes that all output is in the run directory for each case.
@@ -45,7 +45,7 @@ short_ids = ["CNTL","MICRO","MICRO+SHOC"]
 caseappend = ".horiz_avg.AVERAGE.nmins_x5.2013-07-21-19620.nc"
 
 # Define start and end times for averaging for profiles as numerical values in days
-profile_time_s = [0.2, 1.0, 2.0]  # Starting times for averaging
+profile_time_s = [0.0, 1.0, 2.0]  # Starting times for averaging
 profile_time_e = [1.0, 2.0, 3.0]  # Ending times for averaging (put "end" to average to end of simulation)
 
 # END: MANDATORY USER DEFINED SETTINGS
@@ -54,7 +54,7 @@ profile_time_e = [1.0, 2.0, 3.0]  # Ending times for averaging (put "end" to ave
 # BEGIN: OPTIONAL user defined settings
 
 # Do time-height plots? These can take a bit longer to make
-do_timeheight=False
+do_timeheight=True
 
 # Choose vertical plotting coordinate; can be pressure or height.
 #  -If height then the variable Z3 (E3SM) or z_mid (EAMxx) needs to be in your output file.
@@ -63,7 +63,7 @@ do_timeheight=False
 height_cord = "z"  # p = pressure; z = height
 
 # Optional: Maximum y-axis height for profile plots (in meters or mb; depending on vertical coordinate)
-max_height_profile = 2000  # Set to desired height in meters or mb, or None for automatic scaling
+max_height_profile = 20000  # Set to desired height in meters or mb, or None for automatic scaling
 
 # Optional: Maximum y-axis height for time-height (in meters or mb; depending on vertical coordinate)
 max_height_timeheight = 4000  # Set to desired height in meters or mb, or None for automatic scaling
