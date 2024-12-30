@@ -28,7 +28,7 @@ from scipy.interpolate import interp1d
 output_dir = "dpxx_quickdiags"
 
 # User-specified general ID for this diagnostic set
-general_id = "MAGIC_conv"  # Change as needed
+general_id = "MAGIC_conv_les"  # Change as needed
 
 # Where are simulation case directories stored?
 #   This program assumes that all output is in the run directory for each case.
@@ -37,9 +37,10 @@ base_dir = "/pscratch/sd/b/bogensch/dp_screamxx_conv/"
 # User-specified list of casenames and corresponding short IDs
 casenames = ["scream_dpxx_MAGIC.cntl.001a",
              "scream_dpxx_MAGIC.conv.001a",
-             "scream_dpxx_MAGIC.conv.002a"]  # Example casenames
+             "scream_dpxx_MAGIC.conv.002a",
+	     "SAM_MAGIC.les.001a"]  # Example casenames
 # short IDs used in legend
-short_ids = ["CNTL","MICRO","MICRO+SHOC"]
+short_ids = ["CNTL","MICRO","MICRO+SHOC","LES"]
 
 # All cases should end with this appendix for the output stream to be considered
 caseappend = ".horiz_avg.AVERAGE.nmins_x5.2013-07-21-19620.nc"
@@ -54,7 +55,7 @@ profile_time_e = [1.0, 2.0, 3.0]  # Ending times for averaging (put "end" to ave
 # BEGIN: OPTIONAL user defined settings
 
 # Do time-height plots? These can take a bit longer to make
-do_timeheight=True
+do_timeheight=False
 
 # Choose vertical plotting coordinate; can be pressure or height.
 #  -If height then the variable Z3 (E3SM) or z_mid (EAMxx) needs to be in your output file.
@@ -63,7 +64,7 @@ do_timeheight=True
 height_cord = "z"  # p = pressure; z = height
 
 # Optional: Maximum y-axis height for profile plots (in meters or mb; depending on vertical coordinate)
-max_height_profile = 20000  # Set to desired height in meters or mb, or None for automatic scaling
+max_height_profile = 4000  # Set to desired height in meters or mb, or None for automatic scaling
 
 # Optional: Maximum y-axis height for time-height (in meters or mb; depending on vertical coordinate)
 max_height_timeheight = 4000  # Set to desired height in meters or mb, or None for automatic scaling
@@ -159,7 +160,7 @@ file_paths = [os.path.join(base_dir, case, "run", f"{case}{caseappend}") for cas
 datasets = []
 
 for fp, short_id in zip(file_paths, short_ids):
-    ds = xr.open_dataset(fp)
+    ds = xr.open_dataset(fp, decode_times=False)
 #    if "ncol" in ds.dims and ds.dims["ncol"] != 1:
 #        print(f"Warning: File {fp} has ncol={ds.dims['ncol']}, which is not equal to 1. Skipping this file.")
 #        continue
@@ -198,7 +199,7 @@ for var_name in all_vars:
                 valid_plot = True  # At least one dataset has the variable
 
                 # Convert `time` to a numeric array in days since the start
-                time_in_days = (ds['time'] - ds['time'][0]) / np.timedelta64(1, 'D')
+                time_in_days = ds['time']
 
                 # Determine indices for the specified range
                 start_time = start_time if start_time != "end" else time_in_days[0]
@@ -276,7 +277,7 @@ for var_name in all_vars:
             valid_plot = True  # At least one dataset has the variable
 
             # Convert `time` to a numeric array in days since the start
-            time_in_days = (ds['time'] - ds['time'][0]) / np.timedelta64(1, 'D')
+            time_in_days = ds['time']
 
             # Determine indices for the specified range
             start_time = time_series_time_s if time_series_time_s is not None else time_in_days[0]
@@ -367,7 +368,7 @@ for var_name in all_vars:
             valid_plot = True  # At least one dataset has the variable
 
             # Convert `time` to a numeric array in days since the start
-            time_in_days = (ds['time'] - ds['time'][0]) / np.timedelta64(1, 'D')
+            time_in_days = ds['time']
 
             # Determine indices for the specified range
             start_time = time_height_time_s if time_height_time_s is not None else time_in_days[0]
