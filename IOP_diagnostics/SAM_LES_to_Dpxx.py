@@ -2,9 +2,22 @@ import xarray as xr
 import numpy as np
 
 # Define input and output file paths
+#input_file = "/global/homes/b/bogensch/THREAD/SAM_LES/GATE_IDEAL_S_2048x2048x256_100m_2s.nc"
+#output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/SAM_GATEIDEAL.les.001a/run/SAM_GATEIDEAL.les.001a.horiz_avg.AVERAGE.nmins_x5.2013-07-21-19620.nc"
+#time_offset = 0.0
+
+# Define input and output file paths
 input_file = "/global/homes/b/bogensch/THREAD/SAM_LES/MAG3D.15A.20130720.1729_105h_128x128x460_LES.nc"
 output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/SAM_MAGIC.les.001a/run/SAM_MAGIC.les.001a.horiz_avg.AVERAGE.nmins_x5.2013-07-21-19620.nc"
 time_offset = 201.25
+
+#input_file = "/global/homes/b/bogensch/THREAD/GOAMAZON_analysis/LESfiles/GOAMAZON_goamazon_278_test1.nc"
+#output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/SAM_GOAMAZON.single.les.001a/run/SAM_GOAMAZON.single.les.001a.horiz_avg.AVERAGE.nmins_x5.2014-10-05-43200.nc"
+#time_offset = 278.5042
+
+#input_file = "/global/homes/b/bogensch/THREAD/GOAMAZON_analysis/LESfiles/GOAMAZON_goamazon_603_test3.nc"
+#output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/SAM_GOAMAZON.double.les.001a/run/SAM_GOAMAZON.double.les.001a.horiz_avg.AVERAGE.nmins_x5.2015-08-26-43200.nc"
+#time_offset = 603.5021
 
 # Open the input file
 ds_in = xr.open_dataset(input_file)
@@ -33,12 +46,29 @@ three_d_vars = [
     ("CLD", "cldfrac_tot_for_analysis_horiz_avg", 1.0),
     ("QCL", "qc_horiz_avg", 0.001),
     ("QPL", "qr_horiz_avg", 0.001),
+    ("THETAL", "LiqPotentialTemperature_horiz_avg",1.0),
+    ("THETA", "PotentialTemperature_horiz_avg", 1.0),
+    ("RELH", "RelativeHumidity_horiz_avg", 1./100.),
+    ("TABS", "T_mid_horiz_avg", 1.0),
+    ("U", "U_horiz_avg", 1.0),
+    ("V", "V_horiz_avg", 1.0),
+    ("QV", "qv_horiz_avg", 1./1000.),
+    ("QCI", "qi_horiz_avg", 1./1000.),
+    ("TKES", "tke_horiz_avg", 1.0),
+    ("TK", "eddy_diff_mom_horiz_avg", 1.0),
+    ("QPEVP", "micro_vap_liq_exchange_horiz_avg", 1./86400.),
 ]
 
 two_d_vars = [
     ("SHF", "surf_sens_flux_horiz_avg", 1.0),
     ("LHF", "surf_evap_horiz_avg", 4e-7),
+    ("CWP", "LiqWaterPath_horiz_avg",1./1000.),
+    ("IWP", "IceWaterPath_horiz_avg",1./1000.),
+    ("RWP", "RainWaterPath_horiz_avg",1./1000. ),
+    ("PREC","precip_total_surf_mass_flux_horiz_avg",1.15741e-8),
 ]
+
+# ("", "", ),
 
 # Process 3D variables
 for var_in, var_out, factor in three_d_vars:
