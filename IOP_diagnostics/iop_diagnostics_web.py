@@ -28,26 +28,25 @@ from scipy.interpolate import interp1d
 output_dir = "dpxx_quickdiags"
 
 # User-specified general ID for this diagnostic set
-general_id = "MAGIC_conv_les"  # Change as needed
+general_id = "CASS_conv"  # Change as needed
 
 # Where are simulation case directories stored?
 #   This program assumes that all output is in the run directory for each case.
 base_dir = "/pscratch/sd/b/bogensch/dp_screamxx_conv/"
 
 # User-specified list of casenames and corresponding short IDs
-casenames = ["scream_dpxx_MAGIC.cntl.001a",
-             "scream_dpxx_MAGIC.conv.001a",
-             "scream_dpxx_MAGIC.conv.002a",
-	     "SAM_MAGIC.les.001a"]  # Example casenames
+casenames = ["scream_dpxx_CASS.cntl.001a",
+             "scream_dpxx_CASS.conv.001a",
+	     "SAM_CASS.les.001a"]  # Example casenames
 # short IDs used in legend
-short_ids = ["CNTL","MICRO","MICRO+SHOC","LES"]
+short_ids = ["CNTL","MICRO","LES"]
 
 # All cases should end with this appendix for the output stream to be considered
-caseappend = ".horiz_avg.AVERAGE.nmins_x5.2013-07-21-19620.nc"
+caseappend = ".horiz_avg.AVERAGE.nmins_x5.2000-07-24-43200.nc"
 
 # Define start and end times for averaging for profiles as numerical values in days
-profile_time_s = [0.0, 1.0, 2.0]  # Starting times for averaging
-profile_time_e = [1.0, 2.0, 3.0]  # Ending times for averaging (put "end" to average to end of simulation)
+profile_time_s = [0,0.15,0.3,0.45]  # Starting times for averaging
+profile_time_e = [0.15,0.3,0.4,0.6]  # Ending times for averaging (put "end" to average to end of simulation)
 
 # END: MANDATORY USER DEFINED SETTINGS
 ##########################################################
@@ -55,7 +54,7 @@ profile_time_e = [1.0, 2.0, 3.0]  # Ending times for averaging (put "end" to ave
 # BEGIN: OPTIONAL user defined settings
 
 # Do time-height plots? These can take a bit longer to make
-do_timeheight=False
+do_timeheight=True
 
 # Choose vertical plotting coordinate; can be pressure or height.
 #  -If height then the variable Z3 (E3SM) or z_mid (EAMxx) needs to be in your output file.
@@ -64,10 +63,10 @@ do_timeheight=False
 height_cord = "z"  # p = pressure; z = height
 
 # Optional: Maximum y-axis height for profile plots (in meters or mb; depending on vertical coordinate)
-max_height_profile = 4000  # Set to desired height in meters or mb, or None for automatic scaling
+max_height_profile = 5000  # Set to desired height in meters or mb, or None for automatic scaling
 
 # Optional: Maximum y-axis height for time-height (in meters or mb; depending on vertical coordinate)
-max_height_timeheight = 4000  # Set to desired height in meters or mb, or None for automatic scaling
+max_height_timeheight = 5000  # Set to desired height in meters or mb, or None for automatic scaling
 
 # linewidth for curves
 linewidth = 4
@@ -87,7 +86,7 @@ time_height_time_e = None  # Ending time for time-height plots, None for default
 def compute_y_coord(ds, time_indices, height_cord, var_name):
     """
     Compute the vertical coordinate (y_coord) for a dataset.
-    
+
     Parameters:
         ds (xarray.Dataset): Dataset containing the variables.
         time_indices (numpy.ndarray): Indices of the time range to average over.
@@ -98,17 +97,20 @@ def compute_y_coord(ds, time_indices, height_cord, var_name):
         numpy.ndarray: The computed y-coordinate.
     """
     if height_cord == "z":
-        if "z_mid" in ds.data_vars:
-            y_coord = ds['z_mid'].isel(time=time_indices).mean(dim="time").squeeze()
-        elif "z_mid_horiz_avg" in ds.data_vars:
-            y_coord = ds['z_mid_horiz_avg'].isel(time=time_indices).mean(dim="time").squeeze()
-        elif "Z3" in ds.data_vars:
-            # Adjust Z3 by subtracting surface elevation
-            lev0 = ds['Z3'].isel(lev=-1).mean(dim="time")  # Get Z3 at highest ilev index
-            surface_elevation = lev0 - 10.0  # Assume bottom layer of 10 meters
-            y_coord = ds['Z3'].isel(time=time_indices).mean(dim="time").squeeze() - surface_elevation
-        else:
-            raise ValueError("Cannot determine height coordinates ('z_mid', or 'Z3').")
+        if height_cord == "z":
+            if "z_mid" in ds.data_vars:
+                height_var = "z_mid"
+            elif "z_mid_horiz_avg" in ds.data_vars:
+                height_var = "z_mid_horiz_avg"
+            elif "Z3" in ds.data_vars:
+                height_var = "Z3"
+            else:
+                raise ValueError("Cannot determine height coordinates ('z_mid', 'z_mid_horiz_avg', or 'Z3').")
+
+            # Compute y_coord and subtract surface elevation
+            y_coord = ds[height_var].isel(time=time_indices).mean(dim="time").squeeze()
+            surface_elevation = ds[height_var].isel(lev=-1).mean(dim="time") - 10.  # Surface elevation from highest index level
+            y_coord -= surface_elevation
 
         # If variable has dimensions of ilev then we need to interpolate the height coordinate to the ilev grid
         if "ilev" in ds[var_name].dims:
@@ -414,9 +416,14 @@ for var_name in all_vars:
             ax.tick_params(axis='y', labelsize=14)
 
         if valid_plot:
+	
+            # Get attributes for the variable from the first dataset that contains it
+            var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
+            var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)	
+	
             # Add a single colorbar for the entire figure
             cbar = fig.colorbar(contours[0], ax=axes, orientation='vertical', aspect=30, shrink=0.8, pad=0.02)
-            cbar.set_label(ds[var_name].attrs.get('units', 'Value'), fontsize=14)
+            cbar.set_label(var_units, fontsize=14)
             cbar.ax.tick_params(labelsize=12)  # Increase tick label size for colorbar
 
             # Save the plot
