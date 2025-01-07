@@ -7,36 +7,12 @@
 #######  LBA Transition from shallow cumulus to deep convection
 #######
 #######  Script Author: P. Bogenschutz (bogenschutz1@llnl.gov)
-
-#######  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#######  WARNING READ FIRST BEFORE RUNNING:
-#######
-#######  December 18, 2024 Update:
-#######  We are nearing the end of beta testing.  At this time we are encouraging all users
-#######  to now use DPxx instead of DPv0.  There is one final under-the-hood refactor that needs to go in
-#######  before I feel comfortable taking away official "beta" testing status.
 #######
 #######  IMPORTANT:
-#######    - You should now be using E3SM master.  The SCREAM and E3SM repos have merged and here-on-out
-#######      all SCREAM development will take place on the E3SM master.
+#######    - You should now be using E3SM master.  The SCREAM and E3SM repos
+#######      have merged and here-on-out all SCREAM development will take place
+#######      on the E3SM master.
 #######
-#######  Exciting news:
-#######    - It is now possible to get horizontally averaged output in DPxx.  Very useful to reduce
-#######      the amount of data written and post-processing times.  You have two options for this
-#######      (master should be current):
-#######      1) Use the SCREAM utility to map output onto a different grid.  Choosing this method, you need
-#######         to generate a remap file specific for your DP geometry.  For guidance on how to produce this
-#######         please see the script in the scmlib repo directory:
-#######         DPxx_SCREAM_SCRIPTS/regrid_utilities/generate_dpxx_horiz_avg_weights.py
-#######      2) The more straight forward method for most users: SCREAM recently added the ability to
-#######         support horizontally averaged output.  In this case, simply append any variable you
-#######         want horizontally averaged with "_horiz_avg".An example output stream that
-#######         horizontally averages most basic output can be found in this repo at:
-#######         DPxx_SCREAM_SCRIPTS/yaml_file_example/scream_horiz_avg_output_15min.yaml
-#######
-#######  Known issues (Dec 18, 2024):
-#######    - None at the moment
-#######  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #######################################################
 #######  BEGIN USER DEFINED SETTINGS
