@@ -532,7 +532,7 @@ time_height_html_template = """
     <style>
         .grid-container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 20px;
             padding: 10px;
         }
@@ -541,7 +541,7 @@ time_height_html_template = """
         }
         img {
             width: 100%;  /* Time-height plot width */
-            max-width: 800px;  /* Time-height plot max width */
+            max-width: 1100px;  /* Time-height plot max width */
             height: auto;
         }
     </style>
@@ -564,7 +564,7 @@ time_height_html_template = """
 for window_idx, (start_time, end_time) in enumerate(zip(profile_time_s, profile_time_e)):
     sorted_images = sorted([os.path.basename(p[0]) for p in profile_plots if p[1] == window_idx+1],key=str.lower)
     profile_html_content = Template(profile_html_template).render(
-        title=f"Profile Plots (Day {start_time} to Day {end_time})",
+        title=f"Profile Plots (Averaging Window: Day {start_time} to Day {end_time})",
         images=sorted_images
     )
     html_filename = os.path.join(output_dir, general_id, f"profile_plots_window{window_idx+1}.html")
@@ -603,7 +603,7 @@ main_html_content = Template("""
         {% for idx, (start_time, end_time) in profile_windows %}
         <li>
             <a href="profile_plots_window{{ idx+1 }}.html">
-                Profile Plots (Day {{ "%.1f" | format(start_time) }} to Day {{ "%.1f" | format(end_time) }})
+                Profile Plots (Averaging Window: Day {{ "%.1f" | format(start_time) }} to Day {{ "%.1f" | format(end_time) }})
             </a>
         </li>
         {% endfor %}
