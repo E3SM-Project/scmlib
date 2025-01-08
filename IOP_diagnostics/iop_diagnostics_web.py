@@ -28,25 +28,26 @@ from scipy.interpolate import interp1d
 output_dir = "dpxx_quickdiags"
 
 # User-specified general ID for this diagnostic set
-general_id = "CASS_conv"  # Change as needed
+general_id = "CASS_development"  # Change as needed
 
 # Where are simulation case directories stored?
 #   This program assumes that all output is in the run directory for each case.
 base_dir = "/pscratch/sd/b/bogensch/dp_screamxx_conv/"
 
 # User-specified list of casenames and corresponding short IDs
-casenames = ["scream_dpxx_CASS.cntl.001a",
+casenames = ["scream_dpxx_CASS.cntl.001b",
              "scream_dpxx_CASS.conv.001a",
+             "scream_dpxx_CASS.conv.001b",
 	     "SAM_CASS.les.001a"]  # Example casenames
 # short IDs used in legend
-short_ids = ["CNTL","MICRO","LES"]
+short_ids = ["CNTL","All Mods","Rfrac Only","SAM-LES"]
 
 # All cases should end with this appendix for the output stream to be considered
 caseappend = ".horiz_avg.AVERAGE.nmins_x5.2000-07-24-43200.nc"
 
 # Define start and end times for averaging for profiles as numerical values in days
-profile_time_s = [0,0.15,0.3,0.45]  # Starting times for averaging
-profile_time_e = [0.15,0.3,0.4,0.6]  # Ending times for averaging (put "end" to average to end of simulation)
+profile_time_s = [0.0]  # Starting times for averaging
+profile_time_e = [0.5]  # Ending times for averaging (put "end" to average to end of simulation)
 
 # END: MANDATORY USER DEFINED SETTINGS
 ##########################################################
@@ -60,19 +61,19 @@ do_timeheight=True
 #  -If height then the variable Z3 (E3SM) or z_mid (EAMxx) needs to be in your output file.
 #  -If pressure then PS (E3SM) or ps (EAMxx) should be in your output file.  If it is not then
 #    the package will use hybrid levels to plot, which may not be accurate compared to observations.
-height_cord = "z"  # p = pressure; z = height
+height_cord = "p"  # p = pressure; z = height
 
 # Optional: Maximum y-axis height for profile plots (in meters or mb; depending on vertical coordinate)
-max_height_profile = 5000  # Set to desired height in meters or mb, or None for automatic scaling
+max_height_profile = 600  # Set to desired height in meters or mb, or None for automatic scaling
 
 # Optional: Maximum y-axis height for time-height (in meters or mb; depending on vertical coordinate)
-max_height_timeheight = 5000  # Set to desired height in meters or mb, or None for automatic scaling
+max_height_timeheight = 600  # Set to desired height in meters or mb, or None for automatic scaling
 
 # linewidth for curves
 linewidth = 4
 
 # Optional: Time range for time series plots in days
-time_series_time_s = None  # Starting time for time series, None for default (entire range)
+time_series_time_s = 0  # Starting time for time series, None for default (entire range)
 time_series_time_e = None  # Ending time for time series, None for default (entire range)
 
 # Optional: Time range for time-height plots in days
@@ -135,6 +136,10 @@ def compute_y_coord(ds, time_indices, height_cord, var_name):
             else:
                 print(f"Warning: Hybrid coefficients or surface pressure data are missing. Using hybrid pressure coordinates.")
                 y_coord = ds['lev'] if "lev" in ds[var_name].dims else ds['ilev']
+        elif 'p_mid_obs' in ds.data_vars:
+            y_coord = ds['p_mid_obs']
+        elif 'p_mid_les' in ds.data_vars:
+            y_coord = ds['p_mid_les'].isel(time=time_indices).mean(dim="time")
         else:
             print(f"Warning: 'PS' or 'ps' is missing. Using hybrid pressure coordinates.")
             y_coord = ds['lev'] if "lev" in ds[var_name].dims else ds['ilev']
