@@ -64,10 +64,10 @@ do_timeheight=True
 height_cord = "p"  # p = pressure; z = height
 
 # Optional: Maximum y-axis height for profile plots (in meters or mb; depending on vertical coordinate)
-max_height_profile = 600  # Set to desired height in meters or mb, or None for automatic scaling
+max_height_profile = 500  # Set to desired height in meters or mb, or None for automatic scaling
 
 # Optional: Maximum y-axis height for time-height (in meters or mb; depending on vertical coordinate)
-max_height_timeheight = 600  # Set to desired height in meters or mb, or None for automatic scaling
+max_height_timeheight = 500  # Set to desired height in meters or mb, or None for automatic scaling
 
 # linewidth for curves
 linewidth = 4
@@ -343,12 +343,40 @@ for var_name in all_vars:
         global_min, global_max = float('inf'), float('-inf')
         for ds in datasets:
             if var_name in ds.data_vars:
-                if 'ncol' in ds[var_name].dims:
-                    data = ds[var_name].mean(dim="ncol")
-                else:
-                    data = ds[var_name]
-                global_min = min(global_min, data.min().values)
-                global_max = max(global_max, data.max().values)
+
+                # Convert `time` to a numeric array in days since the start
+                time_in_days = ds['time']
+
+                # Determine indices for the specified range
+                start_time = time_height_time_s if time_height_time_s is not None else time_in_days[0]
+                end_time = time_height_time_e if time_height_time_e is not None else time_in_days[-1]
+                time_indices = np.where((time_in_days >= start_time) & (time_in_days <= end_time))[0]
+
+                # Compute vertical coordinate
+                y_coord = compute_y_coord(ds, time_indices, height_cord, var_name)
+
+                # Filter y_coord and data to include only levels within the y-axis limits
+                if height_cord == "z":
+                    y_min, y_max = (0, max_height_timeheight) if max_height_timeheight is not None else (y_coord.min(), y_coord.max())
+                elif height_cord == "p":
+                    y_min, y_max = (max_height_timeheight, y_coord.max()) if max_height_timeheight is not None else (y_coord.min(), y_coord.max())
+
+                valid_indices = np.where((y_coord >= y_min) & (y_coord <= y_max))[0]
+
+#                # Add one index before the first valid index, if it exists and is not already 0
+#                if valid_indices.size > 0 and valid_indices[0] > 0:
+#                    valid_indices = np.insert(valid_indices, 0, valid_indices[0] - 1)
+
+                filtered_y_coord = y_coord[valid_indices]
+                filtered_data = ds[var_name].isel(lev=valid_indices) if "lev" in ds[var_name].dims else ds[var_name].isel(ilev=valid_indices)
+
+                # Handle cases where 'ncol' exists
+                if 'ncol' in filtered_data.dims:
+                    filtered_data = filtered_data.mean(dim="ncol")
+
+                # Update global min and max
+                global_min = min(global_min, filtered_data.min().values)
+                global_max = max(global_max, filtered_data.max().values)
 
         # Handle case where global_min == global_max
         if global_min == global_max:
