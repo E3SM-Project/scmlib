@@ -30,6 +30,11 @@ time_offset = 205.5017
 #output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/SAM_GOAMAZON.double.les.001a/run/SAM_GOAMAZON.double.les.001a.horiz_avg.AVERAGE.nmins_x5.2015-08-26-43200.nc"
 #time_offset = 603.5021
 
+# Define input and output file paths
+input_file = "/global/homes/b/bogensch/THREAD/SAM_LES/COMBLE_MIP_V2.4_with_ice_vm.nc"
+output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/SAM_COMBLE.les.001a/run/SAM_COMBLE.les.001a.horiz_avg.AVERAGE.nmins_x5.2020-03-12-79200.nc"
+time_offset = 71.92007
+
 # Ensure the directory for the output file exists
 output_dir = os.path.dirname(output_file)
 if not os.path.exists(output_dir):
