@@ -46,8 +46,8 @@ short_ids = ["CNTL","All Mods","Rfrac Only","SAM-LES"]
 caseappend = ".horiz_avg.AVERAGE.nmins_x5.2000-07-24-43200.nc"
 
 # Define start and end times for averaging for profiles as numerical values in days
-profile_time_s = [0.0]  # Starting times for averaging
-profile_time_e = [0.5]  # Ending times for averaging (put "end" to average to end of simulation)
+profile_time_s = [0.0,0.2]  # Starting times for averaging
+profile_time_e = [0.5,0.5]  # Ending times for averaging (put "end" to average to end of simulation)
 
 # END: MANDATORY USER DEFINED SETTINGS
 ##########################################################
@@ -562,27 +562,30 @@ time_height_html_template = """
 
 # Generate profile HTML files for each averaging window
 for window_idx, (start_time, end_time) in enumerate(zip(profile_time_s, profile_time_e)):
+    sorted_images = sorted([os.path.basename(p[0]) for p in profile_plots if p[1] == window_idx+1],key=str.lower)
     profile_html_content = Template(profile_html_template).render(
         title=f"Profile Plots (Day {start_time} to Day {end_time})",
-        images=[os.path.basename(p[0]) for p in profile_plots if p[1] == window_idx+1]
+        images=sorted_images
     )
     html_filename = os.path.join(output_dir, general_id, f"profile_plots_window{window_idx+1}.html")
     with open(html_filename, "w") as f:
         f.write(profile_html_content)
 
-
-# Generate timeseries and time-height HTML files
+# Generate timeseries HTML file
+sorted_timeseries_images = sorted([os.path.basename(t) for t in timeseries_plots],key=str.lower)
 timeseries_html_content = Template(timeseries_html_template).render(
-    title="Time Series Plots", 
-    images=[os.path.basename(t) for t in timeseries_plots]
+    title="Time Series Plots",
+    images=sorted_timeseries_images
 )
-time_height_html_content = Template(time_height_html_template).render(
-    title="Time-Height Plots", 
-    images=[os.path.basename(p) for p in time_height_plots]
-)
-
 with open(os.path.join(output_dir, general_id, "timeseries_plots.html"), "w") as f:
     f.write(timeseries_html_content)
+
+# Generate time-height HTML file
+sorted_time_height_images = sorted([os.path.basename(p) for p in time_height_plots],key=str.lower)
+time_height_html_content = Template(time_height_html_template).render(
+    title="Time-Height Plots",
+    images=sorted_time_height_images
+)
 with open(os.path.join(output_dir, general_id, "time_height_plots.html"), "w") as f:
     f.write(time_height_html_content)
 
