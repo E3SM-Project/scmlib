@@ -22,26 +22,26 @@ from iop_diagnostics import run_diagnostics
 output_dir = "dpxx_quickdiags"
 
 # User-specified general ID for this diagnostic set
-general_id = "MAGIC_development"  # Change as needed
+general_id = "MAGIC_e3sm"  # Change as needed
 
 # Where are simulation case directories stored?
 #   This program assumes that all output is in the run directory for each case.
-base_dir = "/pscratch/sd/b/bogensch/dp_screamxx_conv/"
+base_dir = "/pscratch/sd/b/bogensch/dp_scream3"
 
 # User-specified list of casenames and corresponding short IDs
-casenames = ["scream_dpxx_MAGIC.cntl.001a",
-             "scream_dpxx_MAGIC.conv.001a",
-             "scream_dpxx_MAGIC.conv.001b",
-	     "SAM_MAGIC.les.001a"]  # Example casenames
+casenames = ["e3sm_scm_MAGIC.v2.001a",
+             "e3sm_scm_MAGIC.v2.5m.001a"]  # Example casenames
 # short IDs used in legend
-short_ids = ["CNTL","All Mods","Rfrac Only","SAM-LES"]
+short_ids = ["CNTL","dz = 5m"]
 
 # All cases should end with this appendix for the output stream to be considered
-caseappend = ".horiz_avg.AVERAGE.nmins_x5.2013-07-21-19620.nc"
+caseappend = ".eam.h0.2013-07-21-19620.nc"
 
-# Define start and end times for averaging for profiles as numerical values in days
-profile_time_s = [0.0,1.0]  # Starting times for averaging
-profile_time_e = [3.0,2.0]  # Ending times for averaging (put "end" to average to end of simulation)
+# Define averaging windows for profile plots as numerical values in days.  You can have
+#  as many averaging windows as you would like.  Each index for these arrays corresponds
+#  to an averaging window.  This example does daily averaging for three days.
+profile_time_s = [0.0,1.0,2.0]  # Starting times for averaging
+profile_time_e = [1.0,2.0,3.0]  # Ending times for averaging (put "end" to average to end of simulation)
 
 # END: MANDATORY USER DEFINED SETTINGS
 ##########################################################
