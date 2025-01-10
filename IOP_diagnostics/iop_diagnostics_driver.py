@@ -43,6 +43,10 @@ caseappend = ".eam.h0.2013-07-21-19620.nc"
 profile_time_s = [0.0,1.0,2.0]  # Starting times for averaging
 profile_time_e = [1.0,2.0,3.0]  # Ending times for averaging (put "end" to average to end of simulation)
 
+# Note that time series and time-height plots will by default plot the entire range
+#  in your simulation.  If you want to modify this, then please see the optional
+#  user defined settings below.
+
 # END: MANDATORY USER DEFINED SETTINGS
 ##########################################################
 ##########################################################
