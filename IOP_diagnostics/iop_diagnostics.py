@@ -32,7 +32,7 @@ def compute_y_coord(ds, time_indices, height_cord, var_name):
 
             # Compute y_coord and subtract surface elevation
             y_coord = ds[height_var].isel(time=time_indices).mean(dim="time").squeeze()
-            surface_elevation = ds[height_var].isel(lev=-1).mean(dim="time") - 10.  # Surface elevation from highest index level
+            surface_elevation = ds[height_var].isel(lev=-1).mean(dim="time").squeeze() - 10.  # Surface elevation from highest index level
             y_coord -= surface_elevation
 
         # If variable has dimensions of ilev then we need to interpolate the height coordinate to the ilev grid
@@ -59,7 +59,7 @@ def compute_y_coord(ds, time_indices, height_cord, var_name):
                 print(f"Warning: Hybrid coefficients or surface pressure data are missing. Using hybrid pressure coordinates.")
                 y_coord = ds['lev'] if "lev" in ds[var_name].dims else ds['ilev']
         elif 'p_mid_obs' in ds.data_vars:
-            y_coord = ds['p_mid_obs']
+            y_coord = ds['p_mid_obs'].isel(time=time_indices).mean(dim="time")
         elif 'p_mid_les' in ds.data_vars:
             y_coord = ds['p_mid_les'].isel(time=time_indices).mean(dim="time")
         else:
