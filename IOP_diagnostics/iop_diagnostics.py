@@ -327,18 +327,31 @@ def run_diagnostics(
 
             levels = np.linspace(global_min, global_max, 20)  # Define consistent levels
 
-            # Loop over each dataset, creating a multi-panel plot for each case
-            fig, axes = plt.subplots(1, len(datasets), figsize=(15, 6), sharey=True, constrained_layout=True)
-            if len(datasets) == 1:
-                axes = [axes]  # Ensure axes is always a list
+            # Loop over each dataset, creating a multi-panel plot for each case with 2 plots per row
+            num_datasets = len(datasets)
+            # Determine the number of rows and columns for the layout
+            n_cols = 2
+            n_rows = -(-len(datasets) // n_cols)  # Ceiling division to determine rows needed
+
+            # Create the subplots
+            fig, axes = plt.subplots(
+                n_rows, n_cols,
+                figsize=(15, n_rows * 6),
+                sharey=True,
+                constrained_layout=True
+            )
+
+            # Ensure `axes` is always a 2D array
+            axes = np.atleast_2d(axes)
 
             valid_plot = False  # Track if any data was valid for this variable
             contours = []  # Store contour objects for shared colorbar
 
-            for ax, (ds, short_id) in zip(axes, zip(datasets, short_ids)):
+            # Iterate over datasets and plot in each subplot
+            for idx, (ax, (ds, short_id)) in enumerate(zip(axes.flat, zip(datasets, short_ids))):
                 if var_name not in ds.data_vars:
                     print(f"Warning: Variable '{var_name}' not found in case '{short_id}'. Skipping for this case.")
-                    ax.set_visible(False)
+                    ax.set_visible(False)  # Hide this subplot
                     continue  # Skip this case if variable is missing
 
                 valid_plot = True  # At least one dataset has the variable
@@ -368,7 +381,7 @@ def run_diagnostics(
 
                 ax.set_title(short_id, fontsize=14)
                 ax.set_xlabel("Time (days)", fontsize=12)
-                if ax is axes[0]:
+                if idx % n_cols == 0:  # Add ylabel only for the first column
                     ylabel = 'Height (m)' if height_cord == "z" else 'Pressure (hPa)'
                     ax.set_ylabel(ylabel, fontsize=12)
 
@@ -389,11 +402,14 @@ def run_diagnostics(
                 ax.tick_params(axis='x', labelsize=14)
                 ax.tick_params(axis='y', labelsize=14)
 
-            if valid_plot:
+            # Hide unused axes
+            for ax in axes.flat[len(datasets):]:
+                ax.set_visible(False)  # Hide any extra subplot
 
+            if valid_plot:
                 # Get attributes for the variable from the first dataset that contains it
                 var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
-                var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)	
+                var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)
 
                 # Add a single colorbar for the entire figure
                 cbar = fig.colorbar(contours[0], ax=axes, orientation='vertical', aspect=30, shrink=0.8, pad=0.02)
@@ -410,6 +426,8 @@ def run_diagnostics(
                 time_height_plots.append(plot_filename)
             else:
                 print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
+
+  
 
 
 
@@ -510,7 +528,7 @@ def run_diagnostics(
             }
             img {
                 width: 100%;  /* Time-height plot width */
-                max-width: 1100px;  /* Time-height plot max width */
+                max-width: 900px;  /* Time-height plot max width */
                 height: auto;
             }
         </style>
