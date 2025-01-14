@@ -78,6 +78,9 @@ time_series_time_e = None  # Ending time for time series, None for default (enti
 time_height_time_s = None  # Starting time for time-height plots, None for default (entire range)
 time_height_time_e = None  # Ending time for time-height plots, None for default (entire range)
 
+# Define the colormap for time height contourf plots.  Default is "plasma".
+time_height_cmap = "plasma"
+
 # END: OPTIONAL user defined settings
 ##########################################################
 ##########################################################
@@ -100,6 +103,7 @@ run_diagnostics(
     time_series_time_s,
     time_series_time_e,
     time_height_time_s,
-    time_height_time_e
+    time_height_time_e,
+    usercmap=time_height_cmap
 )
 

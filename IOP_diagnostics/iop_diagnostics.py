@@ -87,7 +87,8 @@ def run_diagnostics(
     time_series_time_s,
     time_series_time_e,
     time_height_time_s,
-    time_height_time_e
+    time_height_time_e,
+    usercmap="plasma"
 ):
 
     # Define some sizing parameters
@@ -386,10 +387,10 @@ def run_diagnostics(
                 y_coord = compute_y_coord(ds, time_indices, height_cord, var_name)
 
                 # Plot the contourf plot
-                contour = ax.contourf(time_values, np.squeeze(y_coord), data.T, levels=levels, cmap="viridis")
+                contour = ax.contourf(time_values, np.squeeze(y_coord), data.T, levels=levels, cmap=usercmap)
                 contours.append(contour)
 
-                ax.set_title(short_id, fontsize=14)
+                ax.set_title(short_id, fontsize=16)
                 ax.set_xlabel("Time (days)", fontsize=labelsize)
                 if idx % n_cols == 0:  # Add ylabel only for the first column
                     ylabel = 'Height (m)' if height_cord == "z" else 'Pressure (hPa)'
