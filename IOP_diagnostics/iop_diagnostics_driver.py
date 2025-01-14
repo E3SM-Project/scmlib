@@ -78,8 +78,8 @@ time_series_time_e = None  # Ending time for time series, None for default (enti
 time_height_time_s = None  # Starting time for time-height plots, None for default (entire range)
 time_height_time_e = None  # Ending time for time-height plots, None for default (entire range)
 
-# Define the colormap for time height contourf plots.  Default is "plasma_r".
-time_height_cmap = "plasma_r"
+# Define the colormap for time height contourf plots.  Default is "viridis_r".
+time_height_cmap = "viridis_r"
 
 # END: OPTIONAL user defined settings
 ##########################################################
