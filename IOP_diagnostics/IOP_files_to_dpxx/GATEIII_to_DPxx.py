@@ -3,9 +3,9 @@ import numpy as np
 import os
 
 # Define input and output file paths
-input_file = "/global/cfs/cdirs/e3sm/inputdata/atm/cam/scam/iop/DYNAMO_amie_iopfile_4scam.nc"
-output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/OBS_DYNAMO_amie.les.001a/run/OBS_DYNAMO_amie.les.001a.horiz_avg.AVERAGE.nhours_x1.2011-10-15-00000.nc"
-time_offset = 13.0
+input_file = "/global/cfs/cdirs/e3sm/inputdata/atm/cam/scam/iop/GATEIII_iopfile_4scam.nc"
+output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/OBS_GATEIII.001a/run/OBS_GATEIII.001a.horiz_avg.AVERAGE.nhours_x1.1974-08-30-00000.nc"
+time_offset = 0.0
 
 # Ensure the directory for the output file exists
 output_dir = os.path.dirname(output_file)
@@ -36,16 +36,11 @@ three_d_vars = [
     ("u", "U_horiz_avg", 1.0),
     ("v", "V_horiz_avg", 1.0),
     ("T", "T_mid_horiz_avg", 1.0),
+    ("relhum", "RelativeHumidity_horiz_avg", 1.0/100.0)
 ]
 
 two_d_vars = [
-    ("shflx", "surf_sens_flux_horiz_avg", 1.0),
-    ("lhflx", "surf_evap_horiz_avg", 4e-7),
-    ("lhflx", "surf_upward_latent_heat_flux_horiz_avg", 1.0),
-    ("LWP", "LiqWaterPath_horiz_avg", 0.01*1000.0),
-    ("prec_srf", "precip_total_surf_mass_flux_horiz_avg", 2.77778e-7),
-    ("lw_net_toa", "LW_flux_up_at_model_top_horiz_avg", 1.0),
-    ("wspd_srf","wind_speed_10m_horiz_avg", 1.0),
+    ("Prec", "precip_total_surf_mass_flux_horiz_avg", 1.0)
 ]
 
 # ("", "", ),
