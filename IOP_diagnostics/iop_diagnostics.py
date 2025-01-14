@@ -88,7 +88,7 @@ def run_diagnostics(
     time_series_time_e,
     time_height_time_s,
     time_height_time_e,
-    usercmap="plasma"
+    usercmap="plasma_r"
 ):
 
     # Define some sizing parameters
