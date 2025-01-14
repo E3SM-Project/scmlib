@@ -90,6 +90,10 @@ def run_diagnostics(
     time_height_time_e
 ):
 
+    # Define some sizing parameters
+    ticksize=14
+    labelsize=14
+
     # START CODE
 
     # Make output directory for plots
@@ -186,12 +190,15 @@ def run_diagnostics(
                     var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
                     var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)
 
-                    plt.xlabel(var_units, fontsize=14)
+                    plt.xlabel(var_units, fontsize=labelsize)
                     ylabel = 'Height (m)' if height_cord == "z" else 'Pressure (hPa)'
-                    plt.ylabel(ylabel, fontsize=14)
+                    plt.ylabel(ylabel, fontsize=labelsize)
                     plt.title(f"{var_long_name} Profile (Day {start_time} to Day {end_time})", fontsize=16)
                     plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
                     plt.grid(color='#95a5a6', linestyle='--', linewidth=2, alpha=0.5)
+
+                    # Make things easier to see
+                    plt.tick_params(labelsize=ticksize)
 
                     # Save plot
                     plot_filename = os.path.join(output_subdir, f"{var_name}_profile_window{window_idx+1}.jpg")
@@ -246,19 +253,22 @@ def run_diagnostics(
 
             if valid_plot:
                 # Labeling and saving the plot with larger font sizes
-                plt.xlabel("Time (days)", fontsize=14)
+                plt.xlabel("Time (days)", fontsize=labelsize)
 
                 # Get attributes for the variable from the first dataset that contains it
                 var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
                 var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)
 
                 # Labeling and setting the plot title
-                plt.ylabel(var_units, fontsize=14)
+                plt.ylabel(var_units, fontsize=labelsize)
                 title = f"{var_long_name} Time Series"  
                 plt.title(title, fontsize=16)
                 plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
                 plt.grid(color='#95a5a6',linestyle='--',linewidth=2,alpha=0.5)
                 plt.grid('True')
+
+                # Make things easier to see
+                plt.tick_params(labelsize=ticksize)
 
                 # Save plot in the general_id subdirectory
                 plot_filename = os.path.join(output_subdir, f"{var_name}_timeseries.jpg")
@@ -380,10 +390,10 @@ def run_diagnostics(
                 contours.append(contour)
 
                 ax.set_title(short_id, fontsize=14)
-                ax.set_xlabel("Time (days)", fontsize=12)
+                ax.set_xlabel("Time (days)", fontsize=labelsize)
                 if idx % n_cols == 0:  # Add ylabel only for the first column
                     ylabel = 'Height (m)' if height_cord == "z" else 'Pressure (hPa)'
-                    ax.set_ylabel(ylabel, fontsize=12)
+                    ax.set_ylabel(ylabel, fontsize=labelsize)
 
                 # Set y-axis limit if specified
                 if height_cord == "z":
@@ -415,6 +425,9 @@ def run_diagnostics(
                 cbar = fig.colorbar(contours[0], ax=axes, orientation='vertical', aspect=30, shrink=0.8, pad=0.02)
                 cbar.set_label(var_units, fontsize=14)
                 cbar.ax.tick_params(labelsize=12)  # Increase tick label size for colorbar
+
+                # Make things easier to see
+                plt.tick_params(labelsize=ticksize)
 
                 # Save the plot
                 plot_filename = os.path.join(output_subdir, f"{var_name}_time_height.jpg")
