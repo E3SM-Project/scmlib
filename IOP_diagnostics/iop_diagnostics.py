@@ -75,6 +75,8 @@ def run_diagnostics(
     general_id,
     base_dir,
     casenames,
+    les_file,
+    obs_file,
     short_ids,
     caseappend,
     profile_time_s,
@@ -104,20 +106,34 @@ def run_diagnostics(
     # Make output directory for diagnostics
     os.makedirs(output_dir, exist_ok=True)
 
-    # Verify the lengths of casenames and short_ids are the same
-    if len(casenames) != len(short_ids):
-        raise ValueError("The number of casenames must match the number of short_ids.")
-
     # Collect datasets and simulation labels
     file_paths = [os.path.join(base_dir, case, "run", f"{case}{caseappend}") for case in casenames]
+    file_paths_alt = [os.path.join(base_dir, case, f"{case}{caseappend}") for case in casenames]
     datasets = []
 
-    for fp, short_id in zip(file_paths, short_ids):
-        ds = xr.open_dataset(fp, decode_times=False)
-    #    if "ncol" in ds.dims and ds.dims["ncol"] != 1:
-    #        print(f"Warning: File {fp} has ncol={ds.dims['ncol']}, which is not equal to 1. Skipping this file.")
-    #        continue
-        datasets.append(ds)
+    for fp, fp_alt, short_id in zip(file_paths, file_paths_alt, short_ids):
+        if os.path.exists(fp):
+            ds = xr.open_dataset(fp, decode_times=False)
+            datasets.append(ds)
+        elif os.path.exists(fp_alt):
+            ds = xr.open_dataset(fp_alt, decode_times=False)
+            datasets.append(ds)
+        else:
+            raise ValueError("Error: Neither {fp} nor {fp_alt} exists for case {short_id}. Aborting.")
+
+    # Add LES file
+    if les_file is not None:
+       ds = xr.open_dataset(les_file, decode_times=False)
+       datasets.append(ds)
+
+    # Add Observation file
+    if obs_file is not None:
+       ds = xr.open_dataset(obs_file, decode_times=False)
+       datasets.append(ds)
+
+    # Verify the lengths of casenames and short_ids are the same
+    if len(datasets) != len(short_ids):
+        raise ValueError("The number of casenames must match the number of short_ids.")
 
     # Prepare lists to keep track of plot filenames for HTML pages
     profile_plots = []
@@ -262,7 +278,7 @@ def run_diagnostics(
 
                 # Labeling and setting the plot title
                 plt.ylabel(var_units, fontsize=labelsize)
-                title = f"{var_long_name} Time Series"  
+                title = f"{var_long_name} Time Series"
                 plt.title(title, fontsize=16)
                 plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
                 plt.grid(color='#95a5a6',linestyle='--',linewidth=2,alpha=0.5)

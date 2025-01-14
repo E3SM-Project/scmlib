@@ -24,18 +24,32 @@ output_dir = "dpxx_quickdiags"
 # User-specified general ID for this diagnostic set
 general_id = "MAGIC_e3sm"  # Change as needed
 
+######## Begin manage simulation output
+
 # Where are simulation case directories stored?
 #   This program assumes that all output is in the run directory for each case.
-base_dir = "/pscratch/sd/b/bogensch/dp_scream3"
+simulation_dir = "/pscratch/sd/b/bogensch/dp_scream3"
 
 # User-specified list of casenames and corresponding short IDs
 casenames = ["e3sm_scm_MAGIC.v2.001a",
              "e3sm_scm_MAGIC.v2.5m.001a"]  # Example casenames
-# short IDs used in legend
-short_ids = ["CNTL","dz = 5m"]
 
 # All cases should end with this appendix for the output stream to be considered
 caseappend = ".eam.h0.2013-07-21-19620.nc"
+
+######## End manage simulation output
+######## Begin manage LES and observation output
+
+# Directory and file for LES (large eddy simulation) data.  If none, state None
+les_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/les_data/SAM_MAGIC.les.e3sm.nc"
+
+# Directory and file for Observation data.  If none, state None
+obs_file = None
+
+######## End manage LES and observation output
+
+# short IDs used in legend; be sure to include LES and OBS if added
+short_ids = ["CNTL","dz = 5m","SAM-LES"]
 
 # Define averaging windows for profile plots as numerical values in days.  You can have
 #  as many averaging windows as you would like.  Each index for these arrays corresponds
@@ -89,8 +103,10 @@ time_height_cmap = "viridis_r"
 run_diagnostics(
     output_dir,
     general_id,
-    base_dir,
+    simulation_dir,
     casenames,
+    les_file,
+    obs_file,
     short_ids,
     caseappend,
     profile_time_s,
@@ -104,6 +120,6 @@ run_diagnostics(
     time_series_time_e,
     time_height_time_s,
     time_height_time_e,
-    usercmap=time_height_cmap
+    usercmap=time_height_cmap,
 )
 
