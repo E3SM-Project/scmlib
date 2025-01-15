@@ -48,7 +48,7 @@ obs_file = None
 
 ######## End manage LES and observation output
 
-# short IDs used in legend; be sure to include LES and OBS if added
+# short IDs used in legend; be sure to include LES and OBS if added.
 short_ids = ["CNTL","dz = 5m","SAM-LES"]
 
 # Define averaging windows for profile plots as numerical values in days.  You can have
