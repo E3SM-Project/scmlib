@@ -4,7 +4,7 @@ import os
 
 # Define input and output file paths
 input_file = "/global/cfs/cdirs/e3sm/inputdata/atm/cam/scam/iop/ARM97_iopfile_4scam.nc"
-output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/OBS_ARM97.001a/run/OBS_ARM97.001a.horiz_avg.AVERAGE.nhours_x1.1997-06-23-00000.nc"
+output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/obs_data/OBS_ARM97.dpxx.nc"
 time_offset = 5.0
 
 # Ensure the directory for the output file exists
