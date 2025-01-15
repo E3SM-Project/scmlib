@@ -2,37 +2,34 @@ import xarray as xr
 import numpy as np
 import os
 
+outpath="/pscratch/sd/b/bogensch/dp_screamxx_conv/les_data/"
+
 # Define input and output file paths
 input_file = "/global/homes/b/bogensch/THREAD/CASS_LES/thick_512x512x156_50m_50m_1s.nc"
-output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/SAM_CASS.les.001a/run/SAM_CASS.les.001a.horiz_avg.AVERAGE.nmins_x5.2000-07-24-43200.nc"
+output_file = outpath+"SAM_CASS.les.dpxx.nc"
 time_offset = 205.5017
 
 # Define input and output file paths
-#input_file = "/global/homes/b/bogensch/THREAD/SAM_LES/GATE_IDEAL_S_2048x2048x256_100m_2s.nc"
-#output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/SAM_GATEIDEAL.les.001a/run/SAM_GATEIDEAL.les.001a.horiz_avg.AVERAGE.nmins_x5.1974-08-30-00000.nc"
-#time_offset = 0.0
+input_file = "/global/homes/b/bogensch/THREAD/SAM_LES/GATE_IDEAL_S_2048x2048x256_100m_2s.nc"
+output_file = outpath+"SAM_GATE_IDEAL.les.dpxx.nc"
+time_offset = 0.0
 
 # Define input and output file paths
-#input_file = "/global/homes/b/bogensch/THREAD/SAM_LES/GATE_IDEAL_S_2048x2048x256_100m_2s.nc"
-#output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/SAM_GATEIDEAL.les.001a/run/SAM_GATEIDEAL.les.001a.horiz_avg.AVERAGE.nmins_x5.1974-08-30-00000.nc"
-#time_offset = 0.0
+input_file = "/global/homes/b/bogensch/THREAD/SAM_LES/MAG3D.15A.20130720.1729_105h_128x128x460_LES.nc"
+output_file = outpath+"SAM_MAGIC.les.dpxx.nc"
+time_offset = 201.25
 
-# Define input and output file paths
-#input_file = "/global/homes/b/bogensch/THREAD/SAM_LES/MAG3D.15A.20130720.1729_105h_128x128x460_LES.nc"
-#output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/SAM_MAGIC.les.001a/run/SAM_MAGIC.les.001a.horiz_avg.AVERAGE.nmins_x5.2013-07-21-19620.nc"
-#time_offset = 201.25
+input_file = "/global/homes/b/bogensch/THREAD/GOAMAZON_analysis/LESfiles/GOAMAZON_goamazon_278_test1.nc"
+output_file = outpath+"SAM_GOAMAZON.single.les.dpxx.nc"
+time_offset = 278.5042
 
-#input_file = "/global/homes/b/bogensch/THREAD/GOAMAZON_analysis/LESfiles/GOAMAZON_goamazon_278_test1.nc"
-#output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/SAM_GOAMAZON.single.les.001a/run/SAM_GOAMAZON.single.les.001a.horiz_avg.AVERAGE.nmins_x5.2014-10-05-43200.nc"
-#time_offset = 278.5042
-
-#input_file = "/global/homes/b/bogensch/THREAD/GOAMAZON_analysis/LESfiles/GOAMAZON_goamazon_603_test3.nc"
-#output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/SAM_GOAMAZON.double.les.001a/run/SAM_GOAMAZON.double.les.001a.horiz_avg.AVERAGE.nmins_x5.2015-08-26-43200.nc"
-#time_offset = 603.5021
+input_file = "/global/homes/b/bogensch/THREAD/GOAMAZON_analysis/LESfiles/GOAMAZON_goamazon_603_test3.nc"
+output_file = outpath+"SAM_GOAMAZON.double.les.dpxx.nc"
+time_offset = 603.5021
 
 # Define input and output file paths
 input_file = "/global/homes/b/bogensch/THREAD/SAM_LES/COMBLE_MIP_V2.4_with_ice_vm.nc"
-output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/SAM_COMBLE.les.001a/run/SAM_COMBLE.les.001a.horiz_avg.AVERAGE.nmins_x5.2020-03-12-79200.nc"
+output_file = outpath+"SAM_COMBLE.les.dpxx.nc"
 time_offset = 71.92007
 
 # Ensure the directory for the output file exists
