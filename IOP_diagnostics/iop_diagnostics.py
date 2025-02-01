@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import tarfile
 from jinja2 import Template
 from scipy.interpolate import interp1d
+from datetime import datetime
+import sys
 
 def compute_y_coord(ds, time_indices, height_cord, var_name):
     """
@@ -69,6 +71,42 @@ def compute_y_coord(ds, time_indices, height_cord, var_name):
         raise ValueError(f"Invalid height_cord: {height_cord}. Must be 'z' or 'p'.")
 
     return y_coord
+
+import netCDF4
+from datetime import datetime
+
+# get formatted date and time of start of dataset
+def extract_time_info(ds):
+
+    try:
+        # For xarray, you can access the time variable's attributes as follows:
+        time_units = ds['time'].attrs['units']  # Expected format: "days since YYYY-MM-DD HH:MM:SS"
+    except (KeyError, AttributeError):
+        print("Warning: 'time' variable or its 'units' attribute is not available.")
+        return -999, -999
+
+    try:
+        # Extract the date and time portions from the units string.
+        _, ref_str = time_units.split("since")
+        ref_str = ref_str.strip()  # "YYYY-MM-DD HH:MM:SS"
+        date_str, time_str = ref_str.split(" ")
+    except ValueError:
+        print("Warning: The 'time:units' attribute is not in the expected format 'days since YYYY-MM-DD HH:MM:SS'.")
+        return -999, -999
+
+    # Format the date to "yyyymmdd"
+    formatted_date = date_str.replace("-", "")
+
+    try:
+        from datetime import datetime
+        time_obj = datetime.strptime(time_str, "%H:%M:%S")
+        time_in_seconds = time_obj.hour * 3600 + time_obj.minute * 60 + time_obj.second
+    except ValueError:
+        print("Warning: The time portion in 'time:units' is not in the expected format (HH:MM:SS).")
+        return -999, -999
+
+    return formatted_date, time_in_seconds
+
 
 def run_diagnostics(
     output_dir,
@@ -148,6 +186,12 @@ def run_diagnostics(
         if 'PRECC' in ds.data_vars and 'PRECL' in ds.data_vars:
             # Add 'PRECT' to all_vars if it's not already there
             all_vars.add('PRECT')
+ 
+    # Determine the formatted date and time in seconds for model runs;
+    #  only test the first file since all model runs should have the same start time
+    start_date, start_seconds = extract_time_info(datasets[0])
+    print(start_date, start_seconds)
+    sys.exit()
 
     #############################################################################################################
     # Plot profile variables with three dimensions (e.g., time, ncol, lev or ilev)
