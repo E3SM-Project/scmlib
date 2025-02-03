@@ -867,6 +867,180 @@ sed -i s/FSCM/FSCM-ARM97/ $outfile
 sed -i '/REPLAY_iopfile_4scam/d' $outfile
 sed -i s/CASEcaltype/NO_LEAP/ $outfile
 
+################################
+# CGILS S12 (stratus) CNTL
+################################
+
+set casename = CGILS_s12_cntl
+set outfile = run_e3sm_scm_$casename.csh
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Stratus location - control"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/35.0/ $outfile
+sed -i s/CASElon/235.0/ $outfile
+sed -i s/CASEsrfprop/.false./ $outfile
+sed -i s/CASErelax/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEprecipoff/.false./ $outfile
+sed -i s/CASEnccons/100.0D6/ $outfile
+sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i s/CASEstartdate/2003-07-15/ $outfile
+sed -i s/CASEstartinsec/0/ $outfile
+sed -i s/CASEstopoption/ndays/ $outfile
+sed -i s/CASEstopn/100/ $outfile
+sed -i s/FORCINGPROVIDER/"Yi Qin"/ $outfile
+sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c011425_CGILS_s12_cntl.nc"/ $outfile
+sed -i s/CASESSTyearalign/2003/ $outfile
+sed -i s/CASESSTyearstart/2003/ $outfile
+sed -i s/CASESSTyearend/2004/ $outfile
+
+################################
+# CGILS S12 (stratus) P2K
+################################
+
+set casename = CGILS_s12_p2k
+set outfile = run_e3sm_scm_$casename.csh
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Stratus location - Plus 2 K SST"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/35.0/ $outfile
+sed -i s/CASElon/235.0/ $outfile
+sed -i s/CASEsrfprop/.false./ $outfile
+sed -i s/CASErelax/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEprecipoff/.false./ $outfile
+sed -i s/CASEnccons/100.0D6/ $outfile
+sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i s/CASEstartdate/2003-07-15/ $outfile
+sed -i s/CASEstartinsec/0/ $outfile
+sed -i s/CASEstopoption/ndays/ $outfile
+sed -i s/CASEstopn/100/ $outfile
+sed -i s/FORCINGPROVIDER/"Yi Qin"/ $outfile
+sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c011425_CGILS_s12_p2k.nc"/ $outfile
+sed -i s/CASESSTyearalign/2003/ $outfile
+sed -i s/CASESSTyearstart/2003/ $outfile
+sed -i s/CASESSTyearend/2004/ $outfile
+
+################################
+# CGILS S11 (stratocumulus) CNTL
+################################
+
+set casename = CGILS_s11_cntl
+set outfile = run_e3sm_scm_$casename.csh
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Stratocumulus location - control"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/32.0/ $outfile
+sed -i s/CASElon/231.0/ $outfile
+sed -i s/CASEsrfprop/.false./ $outfile
+sed -i s/CASErelax/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEprecipoff/.false./ $outfile
+sed -i s/CASEnccons/100.0D6/ $outfile
+sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i s/CASEstartdate/2003-07-15/ $outfile
+sed -i s/CASEstartinsec/0/ $outfile
+sed -i s/CASEstopoption/ndays/ $outfile
+sed -i s/CASEstopn/100/ $outfile
+sed -i s/FORCINGPROVIDER/"Yi Qin"/ $outfile
+sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c011425_CGILS_s11_cntl.nc"/ $outfile
+sed -i s/CASESSTyearalign/2003/ $outfile
+sed -i s/CASESSTyearstart/2003/ $outfile
+sed -i s/CASESSTyearend/2004/ $outfile
+
+################################
+# CGILS S11 (stratocumulus) P2k
+################################
+
+set casename = CGILS_s11_p2k
+set outfile = run_e3sm_scm_$casename.csh
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Stratocumulus location - Plus 2 K SST"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/32.0/ $outfile
+sed -i s/CASElon/231.0/ $outfile
+sed -i s/CASEsrfprop/.false./ $outfile
+sed -i s/CASErelax/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEprecipoff/.false./ $outfile
+sed -i s/CASEnccons/100.0D6/ $outfile
+sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i s/CASEstartdate/2003-07-15/ $outfile
+sed -i s/CASEstartinsec/0/ $outfile
+sed -i s/CASEstopoption/ndays/ $outfile
+sed -i s/CASEstopn/100/ $outfile
+sed -i s/FORCINGPROVIDER/"Yi Qin"/ $outfile
+sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c011425_CGILS_s11_p2k.nc"/ $outfile
+sed -i s/CASESSTyearalign/2003/ $outfile
+sed -i s/CASESSTyearstart/2003/ $outfile
+sed -i s/CASESSTyearend/2004/ $outfile
+
+################################
+# CGILS S6 (cumulus) CNTL
+################################
+
+set casename = CGILS_s6_cntl
+set outfile = run_e3sm_scm_$casename.csh
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Cumulus location - control"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/17.0/ $outfile
+sed -i s/CASElon/211.0/ $outfile
+sed -i s/CASEsrfprop/.false./ $outfile
+sed -i s/CASErelax/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEprecipoff/.false./ $outfile
+sed -i s/CASEnccons/100.0D6/ $outfile
+sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i s/CASEstartdate/2003-07-15/ $outfile
+sed -i s/CASEstartinsec/0/ $outfile
+sed -i s/CASEstopoption/ndays/ $outfile
+sed -i s/CASEstopn/100/ $outfile
+sed -i s/FORCINGPROVIDER/"Yi Qin"/ $outfile
+sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c011425_CGILS_s6_cntl.nc"/ $outfile
+sed -i s/CASESSTyearalign/2003/ $outfile
+sed -i s/CASESSTyearstart/2003/ $outfile
+sed -i s/CASESSTyearend/2004/ $outfile
+
+################################
+# CGILS S6 (cumulus) P2k
+################################
+
+set casename = CGILS_s6_p2k
+set outfile = run_e3sm_scm_$casename.csh
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Cumulus location - Plus 2 K SST"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/17.0/ $outfile
+sed -i s/CASElon/211.0/ $outfile
+sed -i s/CASEsrfprop/.false./ $outfile
+sed -i s/CASErelax/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEprecipoff/.false./ $outfile
+sed -i s/CASEnccons/100.0D6/ $outfile
+sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i s/CASEstartdate/2003-07-15/ $outfile
+sed -i s/CASEstartinsec/0/ $outfile
+sed -i s/CASEstopoption/ndays/ $outfile
+sed -i s/CASEstopn/100/ $outfile
+sed -i s/FORCINGPROVIDER/"Yi Qin"/ $outfile
+sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c011425_CGILS_s6_p2k.nc"/ $outfile
+sed -i s/CASESSTyearalign/2003/ $outfile
+sed -i s/CASESSTyearstart/2003/ $outfile
+sed -i s/CASESSTyearend/2004/ $outfile
+
 foreach file (*.csh)
   if ($file != run_e3sm_scm_TEMPLATE.csh && $file != generate_scmscripts.csh) then
     sed -i '/OBSERVEDAERO/d' $file
@@ -919,3 +1093,6 @@ if ($setupfor == user) then
   end
 
 endif
+
+# Move CGILS scripts to their own folder
+mv run_e3sm_scm_CGILS*.csh CGILS
