@@ -1077,9 +1077,9 @@ sed -i s/CASEdosub/true/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
 sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c011425_CGILS_s12_cntl.nc"/ $outfile
-sed -i s/CASESSTyearalign/2013/ $outfile
-sed -i s/CASESSTyearstart/2013/ $outfile
-sed -i s/CASESSTyearend/2014/ $outfile
+sed -i s/CASESSTyearalign/2003/ $outfile
+sed -i s/CASESSTyearstart/2003/ $outfile
+sed -i s/CASESSTyearend/2004/ $outfile
 sed -i s/FORCINGPROVIDER/"Yi Qin"/ $outfile
 
 ################################
@@ -1112,9 +1112,9 @@ sed -i s/CASEdosub/true/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
 sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c011425_CGILS_s12_p2k.nc"/ $outfile
-sed -i s/CASESSTyearalign/2013/ $outfile
-sed -i s/CASESSTyearstart/2013/ $outfile
-sed -i s/CASESSTyearend/2014/ $outfile
+sed -i s/CASESSTyearalign/2003/ $outfile
+sed -i s/CASESSTyearstart/2003/ $outfile
+sed -i s/CASESSTyearend/2004/ $outfile
 sed -i s/FORCINGPROVIDER/"Yi Qin"/ $outfile
 
 ################################
@@ -1147,9 +1147,9 @@ sed -i s/CASEdosub/true/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
 sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c011425_CGILS_s11_cntl.nc"/ $outfile
-sed -i s/CASESSTyearalign/2013/ $outfile
-sed -i s/CASESSTyearstart/2013/ $outfile
-sed -i s/CASESSTyearend/2014/ $outfile
+sed -i s/CASESSTyearalign/2003/ $outfile
+sed -i s/CASESSTyearstart/2003/ $outfile
+sed -i s/CASESSTyearend/2004/ $outfile
 sed -i s/FORCINGPROVIDER/"Yi Qin"/ $outfile
 
 ################################
@@ -1182,9 +1182,9 @@ sed -i s/CASEdosub/true/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
 sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c011425_CGILS_s11_p2k.nc"/ $outfile
-sed -i s/CASESSTyearalign/2013/ $outfile
-sed -i s/CASESSTyearstart/2013/ $outfile
-sed -i s/CASESSTyearend/2014/ $outfile
+sed -i s/CASESSTyearalign/2003/ $outfile
+sed -i s/CASESSTyearstart/2003/ $outfile
+sed -i s/CASESSTyearend/2004/ $outfile
 sed -i s/FORCINGPROVIDER/"Yi Qin"/ $outfile
 
 ################################
@@ -1217,9 +1217,9 @@ sed -i s/CASEdosub/true/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
 sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c011425_CGILS_s6_cntl.nc"/ $outfile
-sed -i s/CASESSTyearalign/2013/ $outfile
-sed -i s/CASESSTyearstart/2013/ $outfile
-sed -i s/CASESSTyearend/2014/ $outfile
+sed -i s/CASESSTyearalign/2003/ $outfile
+sed -i s/CASESSTyearstart/2003/ $outfile
+sed -i s/CASESSTyearend/2004/ $outfile
 sed -i s/FORCINGPROVIDER/"Yi Qin"/ $outfile
 
 ################################
@@ -1252,9 +1252,9 @@ sed -i s/CASEdosub/true/ $outfile
 sed -i s/CASEwalltime/05:00:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
 sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c011425_CGILS_s6_p2k.nc"/ $outfile
-sed -i s/CASESSTyearalign/2013/ $outfile
-sed -i s/CASESSTyearstart/2013/ $outfile
-sed -i s/CASESSTyearend/2014/ $outfile
+sed -i s/CASESSTyearalign/2003/ $outfile
+sed -i s/CASESSTyearstart/2003/ $outfile
+sed -i s/CASESSTyearend/2004/ $outfile
 sed -i s/FORCINGPROVIDER/"Yi Qin"/ $outfile
 
 foreach file (*.csh)

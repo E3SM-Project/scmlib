@@ -216,9 +216,9 @@
   set input_data_dir = `./xmlquery DIN_LOC_ROOT -value`
 
   ./xmlchange SSTICE_DATA_FILENAME="$input_data_dir/ocn/docn7/SSTDATA/sst_HadOIBl_bc_1x1_clim_c011425_CGILS_s11_p2k.nc"
-  ./xmlchange SSTICE_YEAR_ALIGN=2013
-  ./xmlchange SSTICE_YEAR_START=2013
-  ./xmlchange SSTICE_YEAR_END=2014
+  ./xmlchange SSTICE_YEAR_ALIGN=2003
+  ./xmlchange SSTICE_YEAR_START=2003
+  ./xmlchange SSTICE_YEAR_END=2004
 
 # Set relevant namelist modifications  
   ./atmchange se_ne_x=$num_ne_x
