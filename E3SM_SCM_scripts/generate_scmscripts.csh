@@ -325,6 +325,58 @@ sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
 sed -i s/CASEcaltype/GREGORIAN/ $outfile
 
 ################################
+# GOAMAZON (single pulse)
+################################
+
+set casename = GOAMAZON_singlepulse
+set outfile = run_e3sm_scm_$casename.csh 
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Transition from shallow cumulus to deep cumulus (single pulse)"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/-3.2/ $outfile
+sed -i s/CASElon/299.4/ $outfile
+sed -i s/CASEsrfprop/.true./ $outfile
+sed -i s/CASErelax/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEprecipoff/.false./ $outfile
+sed -i s/CASEnccons/100.0D6/ $outfile
+sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i s/CASEstartdate/2014-10-05/ $outfile
+sed -i s/CASEstartinsec/0/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/12/ $outfile
+sed -i s/FORCINGPROVIDER/"Yang Tian (Tian and Zhang 2025)"/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
+
+################################
+# GOAMAZON (double pulse)
+################################
+
+set casename = GOAMAZON_doublepulse
+set outfile = run_e3sm_scm_$casename.csh 
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Transition from shallow cumulus to deep cumulus (double pulse)"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/-3.2/ $outfile
+sed -i s/CASElon/299.4/ $outfile
+sed -i s/CASEsrfprop/.true./ $outfile
+sed -i s/CASErelax/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEprecipoff/.false./ $outfile
+sed -i s/CASEnccons/100.0D6/ $outfile
+sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i s/CASEstartdate/2015-08-26/ $outfile
+sed -i s/CASEstartinsec/0/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/12/ $outfile
+sed -i s/FORCINGPROVIDER/"Yang Tian (Tian and Zhang 2025)"/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
+
+################################
 # DYNAMO_northsounding
 ################################
 
