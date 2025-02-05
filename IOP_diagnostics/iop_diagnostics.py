@@ -210,6 +210,8 @@ def run_diagnostics(
                     # Labeling and saving the plot
                     var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
                     var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)
+                    if (var_long_name == "MISSING"):
+                        var_long_name = var_name
 
                     plt.xlabel(var_units, fontsize=labelsize)
                     ylabel = 'Height (m)' if height_cord == "z" else 'Pressure (hPa)'
@@ -303,6 +305,8 @@ def run_diagnostics(
                     # Get attributes for the variable from the first dataset that contains it
                     var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
                     var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)
+                    if (var_long_name == "MISSING"):
+                        var_long_name = var_name
 
                 # Labeling and setting the plot title
                 plt.ylabel(var_units, fontsize=labelsize)
@@ -461,6 +465,8 @@ def run_diagnostics(
                 # Get attributes for the variable from the first dataset that contains it
                 var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
                 var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)
+                if (var_long_name == "MISSING"):
+                    var_long_name = var_name
 
                 # Add a single colorbar for the entire figure
                 cbar = fig.colorbar(contours[0], ax=axes, orientation='vertical', aspect=30, shrink=0.8, pad=0.02)
