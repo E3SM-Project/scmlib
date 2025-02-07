@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import tarfile
 from jinja2 import Template
 from scipy.interpolate import interp1d
+from datetime import datetime, timedelta
+import sys
 
 def compute_y_coord(ds, time_indices, height_cord, var_name):
     """
@@ -69,6 +71,84 @@ def compute_y_coord(ds, time_indices, height_cord, var_name):
         raise ValueError(f"Invalid height_cord: {height_cord}. Must be 'z' or 'p'.")
 
     return y_coord
+
+#############################
+
+import netCDF4
+from datetime import datetime
+
+# get formatted date and time of start of dataset
+def extract_time_info(ds):
+
+    try:
+        # For xarray, you can access the time variable's attributes as follows:
+        time_units = ds['time'].attrs['units']  # Expected format: "days since YYYY-MM-DD HH:MM:SS"
+    except (KeyError, AttributeError):
+        print("Warning: 'time' variable or its 'units' attribute is not available.")
+        return -999, -999
+
+    try:
+        # Extract the date and time portions from the units string.
+        _, ref_str = time_units.split("since")
+        ref_str = ref_str.strip()  # "YYYY-MM-DD HH:MM:SS"
+        date_str, time_str = ref_str.split(" ")
+    except ValueError:
+        print("Warning: The 'time:units' attribute is not in the expected format 'days since YYYY-MM-DD HH:MM:SS'.")
+        return -999, -999
+
+    # Format the date to "yyyymmdd"
+    formatted_date = date_str.replace("-", "")
+
+    try:
+        from datetime import datetime
+        time_obj = datetime.strptime(time_str, "%H:%M:%S")
+        time_in_seconds = time_obj.hour * 3600 + time_obj.minute * 60 + time_obj.second
+    except ValueError:
+        print("Warning: The time portion in 'time:units' is not in the expected format (HH:MM:SS).")
+        return -999, -999
+
+    return formatted_date, time_in_seconds
+
+#############################
+
+def compute_date_time_difference(date1, time1_seconds, date2, time2_seconds):
+    """
+    Compute the difference in days (as a floating-point value) between two dates and times.
+
+    Parameters:
+        date1 (str): First date in 'yyyymmdd' format.
+        time1_seconds (int): Time of the first date in seconds (0 to 86400).
+        date2 (str): Second date in 'yyyymmdd' format.
+        time2_seconds (int): Time of the second date in seconds (0 to 86400).
+
+    Returns:
+        float: Difference in days, including the fractional day component.
+    """
+    try:
+        # Convert date strings to datetime objects
+        date_obj1 = datetime.strptime(date1, "%Y%m%d")
+        date_obj2 = datetime.strptime(date2, "%Y%m%d")
+
+        # Validate time in seconds (must be between 0 and 86400)
+        if not (0 <= time1_seconds <= 86400 and 0 <= time2_seconds <= 86400):
+            print("Error: Time in seconds must be between 0 and 86400.")
+            return -999.0  # Error flag
+
+        # Add time offset to the datetime objects
+        datetime1 = date_obj1 + timedelta(seconds=time1_seconds)
+        datetime2 = date_obj2 + timedelta(seconds=time2_seconds)
+
+        # Compute the difference in days as a float
+        day_difference = abs((datetime2 - datetime1).total_seconds()) / 86400.0
+
+        return round(day_difference, 6)  # Rounded for better precision
+
+    except ValueError:
+        print("Error: One or both dates are not in the correct 'yyyymmdd' format.")
+        return -999.0  # Error flag
+
+#################################
+###### Main program
 
 def run_diagnostics(
     output_dir,
@@ -148,6 +228,21 @@ def run_diagnostics(
         if 'PRECC' in ds.data_vars and 'PRECL' in ds.data_vars:
             # Add 'PRECT' to all_vars if it's not already there
             all_vars.add('PRECT')
+ 
+    # Determine the formatted date and time in seconds for model runs;
+    #  only test the first file since all model runs should have the same start time
+    start_date_base, start_seconds_base = extract_time_info(datasets[0])
+    print(start_date_base, start_seconds_base)
+
+    time_offset = []
+    for ds in datasets:
+        test_date, test_seconds = extract_time_info(ds)
+        if (test_date == -999):
+            offset=0.0
+        else:
+            offset = compute_date_time_difference(start_date_base, start_seconds_base,
+	                                          test_date, test_seconds)
+        time_offset.append(offset)
 
     #############################################################################################################
     # Plot profile variables with three dimensions (e.g., time, ncol, lev or ilev)
@@ -164,7 +259,7 @@ def run_diagnostics(
                 valid_plot = False  # Track if any data was valid for this variable
 
                 # Loop over each dataset, using short_ids for the legend
-                for ds, short_id in zip(datasets, short_ids):
+                for idx, (ds, short_id) in enumerate(zip(datasets, short_ids)):
                     if var_name not in ds.data_vars:
                         print(f"Warning: Variable '{var_name}' not found in case '{short_id}'. Skipping for this case.")
                         continue  # Skip this case if variable is missing
@@ -172,7 +267,7 @@ def run_diagnostics(
                     valid_plot = True  # At least one dataset has the variable
 
                     # Convert `time` to a numeric array in days since the start
-                    time_in_days = ds['time']
+                    time_in_days = ds['time'] - time_offset[idx]
 
                     # Determine indices for the specified range
                     start_time = start_time if start_time != "end" else time_in_days[0]
@@ -254,7 +349,7 @@ def run_diagnostics(
             valid_plot = False  # Track if any data was valid for this variable
 
             # Loop over each dataset, using short_ids for the legend
-            for ds, short_id in zip(datasets, short_ids):
+            for idx, (ds, short_id) in enumerate(zip(datasets, short_ids)):
                 if var_name not in ds.data_vars:
                     if var_name == 'PRECT':
                         if 'PRECC' and 'PRECL' in ds.data_vars:
@@ -270,7 +365,7 @@ def run_diagnostics(
                 valid_plot = True  # At least one dataset has the variable
 
                 # Convert `time` to a numeric array in days since the start
-                time_in_days = ds['time']
+                time_in_days = ds['time'] - time_offset[idx]
 
                 # Determine indices for the specified range
                 start_time = time_series_time_s if time_series_time_s is not None else time_in_days[0]
@@ -342,7 +437,7 @@ def run_diagnostics(
             # Find global min and max values for consistent color scale across cases
             global_min, global_max = float('inf'), float('-inf')
             num_plots = 0
-            for ds in datasets:
+            for idx, ds in enumerate(datasets):
                 if var_name in ds.data_vars:
 
                     # Convert `time` to a numeric array in days since the start
