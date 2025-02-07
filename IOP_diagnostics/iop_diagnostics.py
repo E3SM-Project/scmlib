@@ -244,8 +244,6 @@ def run_diagnostics(
 	                                          test_date, test_seconds)
         time_offset.append(offset)
 
-    print(time_offset)
-
     #############################################################################################################
     # Plot profile variables with three dimensions (e.g., time, ncol, lev or ilev)
     for var_name in all_vars:
