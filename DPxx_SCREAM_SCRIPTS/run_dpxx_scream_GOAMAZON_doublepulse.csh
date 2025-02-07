@@ -3,11 +3,11 @@
 #######################################################################
 #######################################################################
 #######  Script to run SCREAMv1 in doubly periodic (DP) mode (DP-EAMxx)
-#######  ISDAC
-#######  Indirect and semi-direct aerosol campaign
+#######  GOAMAZON_doublepulse
+#######  Transition from shallow cumulus to deep cumulus (double pulse)
 #######
 #######  Script Author: P. Bogenschutz (bogenschutz1@llnl.gov)
-#######  Forcing provided by: Shuaiqi Tang and Shaocheng Xie
+#######  Forcing provided by: Yang Tian (Tian and Zhang 2025)
 #######
 #######  IMPORTANT:
 #######    - You should now be using E3SM master.  The SCREAM and E3SM repos
@@ -24,7 +24,7 @@
 #######  of the scmlib repo to get you started.
 
   # Set the name of your case here
-  setenv casename scream_dpxx_ISDAC
+  setenv casename scream_dpxx_GOAMAZON_doublepulse
 
   # Set the case directory here
   setenv casedirectory /pscratch/sd/b/bogensch/dp_screamxx
@@ -55,16 +55,16 @@
   # - Some cases are small enough to run on debug queues
   # - Setting to true only supported for NERSC and Livermore Computing,
   #   else user will need to modify script to submit to debug queue
-  setenv debug_queue false
+  setenv debug_queue true
 
   # Set number of processors to use, should be less than or equal
   #   to the total number of elements in your domain.  Note that if you are running
   #   on pm-gpu you will want to set this to either "4" or "8" if running the standard
   #   domain size and resolution (RCE excluded).
-  set num_procs = 96
+  set num_procs = 384
 
   # set walltime
-  set walltime = '05:00:00'
+  set walltime = '00:30:00'
 
   ## SET DOMAIN SIZE AND DYNAMICS RESOLUTION:
   # - Note that these scripts are set to run with dx=dy=3.33 km
@@ -75,12 +75,12 @@
   # (there are 3x3 unique dynamics columns per element, hence the "3" factor)
 
   # Set number of elements in the x&y directions
-  set num_ne_x = 10
-  set num_ne_y = 10
+  set num_ne_x = 20
+  set num_ne_y = 20
 
   # Set domain length [m] in x&y direction
-  set domain_size_x = 100000
-  set domain_size_y = 100000
+  set domain_size_x = 200000
+  set domain_size_y = 200000
 
   # BELOW SETS RESOLUTION DEPENDENT SETTINGS
   # (Note that all default values below are appropriate for dx=dy=3.33 km and do not
@@ -116,18 +116,18 @@
 ###########################################################################
 
 # Case specific information kept here
-  set lat = 71.3 # latitude
-  set lon = 156.4 # longitude
+  set lat = -3.2 # latitude
+  set lon = 299.4 # longitude
   set do_iop_srf_prop = true # Use surface fluxes in IOP file?
   set do_iop_nudge_tq = false # Relax T&Q to observations?
   set do_iop_nudge_uv = true # Relax U&V to observations?
   set do_iop_nudge_coriolis = false # Nudge to geostrophic winds?
   set do_iop_subsidence = false # compute LS vertical transport?
-  set startdate = 2008-04-01 # Start date in IOP file
-  set start_in_sec = 10800 # start time in seconds in IOP file
-  set stop_option = ndays
-  set stop_n = 29
-  set iop_file = ISDAC_iopfile_4scam.nc #IOP file name
+  set startdate = 2015-08-26 # Start date in IOP file
+  set start_in_sec = 43200 # start time in seconds in IOP file
+  set stop_option = nhours
+  set stop_n = 12
+  set iop_file = GOAMAZON_doublepulse_iopfile_4scam.nc #IOP file name
   set do_turnoff_swrad = false # Turn off SW calculation (if false, keep false)
 # End Case specific stuff here
 

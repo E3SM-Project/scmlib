@@ -46,6 +46,10 @@
   # Name of project to run on, if submitting to queue
   setenv projectname e3sm
 
+  # Path where output YAML files are located (i.e. where you specify your output streams)
+  #  See example files in DPxx_SCREAM_SCRIPTS/yaml_file_example to get you started.
+  setenv yamlpath /pscratch/sd/b/bogensch/dp_scream/codes/scmlib/DPxx_SCREAM_SCRIPTS/yaml_file_example
+
   # This script is set up to run with the DARWIN_0405_p1_iopfile_4scam.nc (April, 2005) forcingfile
   # Other time periods exist (see E3SM SCM page) 
   set startdate = 2004-11-03
@@ -245,9 +249,9 @@
  # configure yaml output
  # See the example yaml files in the DPxx_SCREAM_SCRIPTS/yaml_file_example
  # Note that you can have as many output streams (yaml files) as you want!
-cp /global/homes/b/bogensch/dp_scream_scripts_xx/dpxx_outputfiles/scream_output_avg_1hour.yaml.yaml .
-cp /global/homes/b/bogensch/dp_scream_scripts_xx/dpxx_outputfiles/scream_horiz_avg_output_15min.yaml .
-./atmchange output_yaml_files="./scream_output_avg_1hour.yaml.yaml"
+cp ${yamlpath}/scream_output_avg_1hour.yaml .
+cp ${yamlpath}/scream_horiz_avg_output_15min.yaml .
+./atmchange output_yaml_files="./scream_output_avg_1hour.yaml"
 ./atmchange output_yaml_files+="./scream_horiz_avg_output_15min.yaml"
 
 # avoid the monthly cice file from writing as this

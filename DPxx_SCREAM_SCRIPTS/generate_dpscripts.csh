@@ -645,6 +645,66 @@ sed -i s/FORCINGPROVIDER/"Shuaiqi Tang and Shaocheng Xie"/ $outfile
 sed -i s/LENGTHNOTE/NOTE:/ $outfile
 
 ################################
+# GOAMAZON (single pulse)
+################################
+
+set casename = GOAMAZON_singlepulse
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Transition from shallow cumulus to deep cumulus (single pulse)"/ $outfile
+sed -i s/CASElat/-3.2/ $outfile
+sed -i s/CASElon/299.4/ $outfile
+sed -i s/CASEsrfprop/true/ $outfile
+sed -i s/CASEstartdate/2014-10-05/ $outfile
+sed -i s/CASEstartinsec/43200/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/12/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/CASEnumprocs/384/ $outfile
+sed -i s/CASEnex/20/ $outfile
+sed -i s/CASEney/20/ $outfile
+sed -i s/CASElex/200000/ $outfile
+sed -i s/CASEley/200000/ $outfile
+sed -i s/CASEtqnudge/false/ $outfile
+sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
+sed -i s/CASEdosub/false/ $outfile
+sed -i s/CASEwalltime/00:30:00/ $outfile
+sed -i s/CASEnhtfrq/-24/ $outfile
+sed -i s/FORCINGPROVIDER/"Yang Tian (Tian and Zhang 2025)"/ $outfile
+
+################################
+# GOAMAZON (double pulse)
+################################
+
+set casename = GOAMAZON_doublepulse
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Transition from shallow cumulus to deep cumulus (double pulse)"/ $outfile
+sed -i s/CASElat/-3.2/ $outfile
+sed -i s/CASElon/299.4/ $outfile
+sed -i s/CASEsrfprop/true/ $outfile
+sed -i s/CASEstartdate/2015-08-26/ $outfile
+sed -i s/CASEstartinsec/43200/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/12/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/CASEnumprocs/384/ $outfile
+sed -i s/CASEnex/20/ $outfile
+sed -i s/CASEney/20/ $outfile
+sed -i s/CASElex/200000/ $outfile
+sed -i s/CASEley/200000/ $outfile
+sed -i s/CASEtqnudge/false/ $outfile
+sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
+sed -i s/CASEdosub/false/ $outfile
+sed -i s/CASEwalltime/00:30:00/ $outfile
+sed -i s/CASEnhtfrq/-24/ $outfile
+sed -i s/FORCINGPROVIDER/"Yang Tian (Tian and Zhang 2025)"/ $outfile
+
+################################
 # DYNAMO_northsounding
 ################################
 
@@ -1047,6 +1107,216 @@ sed -i '/CICE_CONFIG_OPTS/d' $outfile
 sed -i '/CALENDAR/d' $outfile
 sed -i '/constant_zenith_deg/d' $outfile
 
+################################
+# CGILS S12 (stratus) CNTL
+################################
+
+set casename = CGILS_s12_cntl
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Stratus location - control"/ $outfile
+sed -i s/CASElat/35.0/ $outfile
+sed -i s/CASElon/235.0/ $outfile
+sed -i s/CASEswoff/false/ $outfile
+sed -i s/CASEsrfprop/false/ $outfile
+sed -i s/CASEstartdate/2003-07-15/ $outfile
+sed -i s/CASEstartinsec/0/ $outfile
+sed -i s/CASEstopoption/ndays/ $outfile
+sed -i s/CASEdebug/false/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
+sed -i s/CASEstopn/100/ $outfile
+sed -i s/CASEnex/5/ $outfile
+sed -i s/CASEney/5/ $outfile
+sed -i s/CASElex/50000/ $outfile
+sed -i s/CASEley/50000/ $outfile
+sed -i s/CASEtqnudge/false/ $outfile
+sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/true/ $outfile
+sed -i s/CASEdosub/true/ $outfile
+sed -i s/CASEwalltime/05:00:00/ $outfile
+sed -i s/CASEnhtfrq/-1/ $outfile
+sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c011425_CGILS_s12_cntl.nc"/ $outfile
+sed -i s/CASESSTyearalign/2003/ $outfile
+sed -i s/CASESSTyearstart/2003/ $outfile
+sed -i s/CASESSTyearend/2004/ $outfile
+sed -i s/FORCINGPROVIDER/"Yi Qin"/ $outfile
+
+################################
+# CGILS S12 (stratus) P2K
+################################
+
+set casename = CGILS_s12_p2k
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Stratus location - Plus 2 K SST"/ $outfile
+sed -i s/CASElat/35.0/ $outfile
+sed -i s/CASElon/235.0/ $outfile
+sed -i s/CASEswoff/false/ $outfile
+sed -i s/CASEsrfprop/false/ $outfile
+sed -i s/CASEstartdate/2003-07-15/ $outfile
+sed -i s/CASEstartinsec/0/ $outfile
+sed -i s/CASEstopoption/ndays/ $outfile
+sed -i s/CASEdebug/false/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
+sed -i s/CASEstopn/100/ $outfile
+sed -i s/CASEnex/5/ $outfile
+sed -i s/CASEney/5/ $outfile
+sed -i s/CASElex/50000/ $outfile
+sed -i s/CASEley/50000/ $outfile
+sed -i s/CASEtqnudge/false/ $outfile
+sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/true/ $outfile
+sed -i s/CASEdosub/true/ $outfile
+sed -i s/CASEwalltime/05:00:00/ $outfile
+sed -i s/CASEnhtfrq/-1/ $outfile
+sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c011425_CGILS_s12_p2k.nc"/ $outfile
+sed -i s/CASESSTyearalign/2003/ $outfile
+sed -i s/CASESSTyearstart/2003/ $outfile
+sed -i s/CASESSTyearend/2004/ $outfile
+sed -i s/FORCINGPROVIDER/"Yi Qin"/ $outfile
+
+################################
+# CGILS S11 (stratocumulus) CNTL
+################################
+
+set casename = CGILS_s11_cntl
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Stratocumulus location - control"/ $outfile
+sed -i s/CASElat/32.0/ $outfile
+sed -i s/CASElon/231.0/ $outfile
+sed -i s/CASEswoff/false/ $outfile
+sed -i s/CASEsrfprop/false/ $outfile
+sed -i s/CASEstartdate/2003-07-15/ $outfile
+sed -i s/CASEstartinsec/0/ $outfile
+sed -i s/CASEstopoption/ndays/ $outfile
+sed -i s/CASEdebug/false/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
+sed -i s/CASEstopn/100/ $outfile
+sed -i s/CASEnex/5/ $outfile
+sed -i s/CASEney/5/ $outfile
+sed -i s/CASElex/50000/ $outfile
+sed -i s/CASEley/50000/ $outfile
+sed -i s/CASEtqnudge/false/ $outfile
+sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/true/ $outfile
+sed -i s/CASEdosub/true/ $outfile
+sed -i s/CASEwalltime/05:00:00/ $outfile
+sed -i s/CASEnhtfrq/-1/ $outfile
+sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c011425_CGILS_s11_cntl.nc"/ $outfile
+sed -i s/CASESSTyearalign/2003/ $outfile
+sed -i s/CASESSTyearstart/2003/ $outfile
+sed -i s/CASESSTyearend/2004/ $outfile
+sed -i s/FORCINGPROVIDER/"Yi Qin"/ $outfile
+
+################################
+# CGILS S11 (stratocumulus) P2K
+################################
+
+set casename = CGILS_s11_p2k
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Stratocumulus location - Plus 2 K SST"/ $outfile
+sed -i s/CASElat/32.0/ $outfile
+sed -i s/CASElon/231.0/ $outfile
+sed -i s/CASEswoff/false/ $outfile
+sed -i s/CASEsrfprop/false/ $outfile
+sed -i s/CASEstartdate/2003-07-15/ $outfile
+sed -i s/CASEstartinsec/0/ $outfile
+sed -i s/CASEstopoption/ndays/ $outfile
+sed -i s/CASEdebug/false/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
+sed -i s/CASEstopn/100/ $outfile
+sed -i s/CASEnex/5/ $outfile
+sed -i s/CASEney/5/ $outfile
+sed -i s/CASElex/50000/ $outfile
+sed -i s/CASEley/50000/ $outfile
+sed -i s/CASEtqnudge/false/ $outfile
+sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/true/ $outfile
+sed -i s/CASEdosub/true/ $outfile
+sed -i s/CASEwalltime/05:00:00/ $outfile
+sed -i s/CASEnhtfrq/-1/ $outfile
+sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c011425_CGILS_s11_p2k.nc"/ $outfile
+sed -i s/CASESSTyearalign/2003/ $outfile
+sed -i s/CASESSTyearstart/2003/ $outfile
+sed -i s/CASESSTyearend/2004/ $outfile
+sed -i s/FORCINGPROVIDER/"Yi Qin"/ $outfile
+
+################################
+# CGILS S6 (cumulus) CNTL
+################################
+
+set casename = CGILS_s6_cntl
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Cumulus location - control"/ $outfile
+sed -i s/CASElat/17.0/ $outfile
+sed -i s/CASElon/211.0/ $outfile
+sed -i s/CASEswoff/false/ $outfile
+sed -i s/CASEsrfprop/false/ $outfile
+sed -i s/CASEstartdate/2003-07-15/ $outfile
+sed -i s/CASEstartinsec/0/ $outfile
+sed -i s/CASEstopoption/ndays/ $outfile
+sed -i s/CASEdebug/false/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
+sed -i s/CASEstopn/100/ $outfile
+sed -i s/CASEnex/5/ $outfile
+sed -i s/CASEney/5/ $outfile
+sed -i s/CASElex/50000/ $outfile
+sed -i s/CASEley/50000/ $outfile
+sed -i s/CASEtqnudge/false/ $outfile
+sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/true/ $outfile
+sed -i s/CASEdosub/true/ $outfile
+sed -i s/CASEwalltime/05:00:00/ $outfile
+sed -i s/CASEnhtfrq/-1/ $outfile
+sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c011425_CGILS_s6_cntl.nc"/ $outfile
+sed -i s/CASESSTyearalign/2003/ $outfile
+sed -i s/CASESSTyearstart/2003/ $outfile
+sed -i s/CASESSTyearend/2004/ $outfile
+sed -i s/FORCINGPROVIDER/"Yi Qin"/ $outfile
+
+################################
+# CGILS S6 (cumulus) P2K
+################################
+
+set casename = CGILS_s6_p2k
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Cumulus location - Plus 2 K SST"/ $outfile
+sed -i s/CASElat/17.0/ $outfile
+sed -i s/CASElon/211.0/ $outfile
+sed -i s/CASEswoff/false/ $outfile
+sed -i s/CASEsrfprop/false/ $outfile
+sed -i s/CASEstartdate/2003-07-15/ $outfile
+sed -i s/CASEstartinsec/0/ $outfile
+sed -i s/CASEstopoption/ndays/ $outfile
+sed -i s/CASEdebug/false/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
+sed -i s/CASEstopn/100/ $outfile
+sed -i s/CASEnex/5/ $outfile
+sed -i s/CASEney/5/ $outfile
+sed -i s/CASElex/50000/ $outfile
+sed -i s/CASEley/50000/ $outfile
+sed -i s/CASEtqnudge/false/ $outfile
+sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/true/ $outfile
+sed -i s/CASEdosub/true/ $outfile
+sed -i s/CASEwalltime/05:00:00/ $outfile
+sed -i s/CASEnhtfrq/-1/ $outfile
+sed -i s/CASESSTdata/"sst_HadOIBl_bc_1x1_clim_c011425_CGILS_s6_p2k.nc"/ $outfile
+sed -i s/CASESSTyearalign/2003/ $outfile
+sed -i s/CASESSTyearstart/2003/ $outfile
+sed -i s/CASESSTyearend/2004/ $outfile
+sed -i s/FORCINGPROVIDER/"Yi Qin"/ $outfile
+
 foreach file (*.csh)
   if ($file != run_dpxx_scream_TEMPLATE.csh && $file != generate_dpscripts.csh) then
     sed -i '/OBSERVEDAERO/d' $file
@@ -1136,3 +1406,6 @@ if ($setupfor == pm) then
   end
 
 endif
+
+# Move CGILS scripts to their own folder
+mv run_dpxx_scream_CGILS*.csh CGILS

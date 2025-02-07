@@ -3,11 +3,11 @@
 #######################################################################
 #######################################################################
 #######  Script to run SCREAMv1 in doubly periodic (DP) mode (DP-EAMxx)
-#######  ISDAC
-#######  Indirect and semi-direct aerosol campaign
+#######  CGILS_s6_p2k
+#######  Cumulus location - Plus 2 K SST
 #######
 #######  Script Author: P. Bogenschutz (bogenschutz1@llnl.gov)
-#######  Forcing provided by: Shuaiqi Tang and Shaocheng Xie
+#######  Forcing provided by: Yi Qin
 #######
 #######  IMPORTANT:
 #######    - You should now be using E3SM master.  The SCREAM and E3SM repos
@@ -24,7 +24,7 @@
 #######  of the scmlib repo to get you started.
 
   # Set the name of your case here
-  setenv casename scream_dpxx_ISDAC
+  setenv casename scream_dpxx_CGILS_s6_p2k
 
   # Set the case directory here
   setenv casedirectory /pscratch/sd/b/bogensch/dp_screamxx
@@ -61,7 +61,7 @@
   #   to the total number of elements in your domain.  Note that if you are running
   #   on pm-gpu you will want to set this to either "4" or "8" if running the standard
   #   domain size and resolution (RCE excluded).
-  set num_procs = 96
+  set num_procs = 24
 
   # set walltime
   set walltime = '05:00:00'
@@ -75,12 +75,12 @@
   # (there are 3x3 unique dynamics columns per element, hence the "3" factor)
 
   # Set number of elements in the x&y directions
-  set num_ne_x = 10
-  set num_ne_y = 10
+  set num_ne_x = 5
+  set num_ne_y = 5
 
   # Set domain length [m] in x&y direction
-  set domain_size_x = 100000
-  set domain_size_y = 100000
+  set domain_size_x = 50000
+  set domain_size_y = 50000
 
   # BELOW SETS RESOLUTION DEPENDENT SETTINGS
   # (Note that all default values below are appropriate for dx=dy=3.33 km and do not
@@ -116,18 +116,18 @@
 ###########################################################################
 
 # Case specific information kept here
-  set lat = 71.3 # latitude
-  set lon = 156.4 # longitude
-  set do_iop_srf_prop = true # Use surface fluxes in IOP file?
+  set lat = 17.0 # latitude
+  set lon = 211.0 # longitude
+  set do_iop_srf_prop = false # Use surface fluxes in IOP file?
   set do_iop_nudge_tq = false # Relax T&Q to observations?
-  set do_iop_nudge_uv = true # Relax U&V to observations?
-  set do_iop_nudge_coriolis = false # Nudge to geostrophic winds?
-  set do_iop_subsidence = false # compute LS vertical transport?
-  set startdate = 2008-04-01 # Start date in IOP file
-  set start_in_sec = 10800 # start time in seconds in IOP file
+  set do_iop_nudge_uv = false # Relax U&V to observations?
+  set do_iop_nudge_coriolis = true # Nudge to geostrophic winds?
+  set do_iop_subsidence = true # compute LS vertical transport?
+  set startdate = 2003-07-15 # Start date in IOP file
+  set start_in_sec = 0 # start time in seconds in IOP file
   set stop_option = ndays
-  set stop_n = 29
-  set iop_file = ISDAC_iopfile_4scam.nc #IOP file name
+  set stop_n = 100
+  set iop_file = CGILS_s6_p2k_iopfile_4scam.nc #IOP file name
   set do_turnoff_swrad = false # Turn off SW calculation (if false, keep false)
 # End Case specific stuff here
 
@@ -215,6 +215,10 @@
 # Get local input data directory path
   set input_data_dir = `./xmlquery DIN_LOC_ROOT -value`
 
+  ./xmlchange SSTICE_DATA_FILENAME="$input_data_dir/ocn/docn7/SSTDATA/sst_HadOIBl_bc_1x1_clim_c011425_CGILS_s6_p2k.nc"
+  ./xmlchange SSTICE_YEAR_ALIGN=2003
+  ./xmlchange SSTICE_YEAR_START=2003
+  ./xmlchange SSTICE_YEAR_END=2004
 
 # Set relevant namelist modifications  
   ./atmchange se_ne_x=$num_ne_x
