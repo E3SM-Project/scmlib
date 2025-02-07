@@ -4,8 +4,8 @@ import os
 
 # Define input and output file paths
 input_file = "/global/cfs/cdirs/e3sm/inputdata/atm/cam/scam/iop/ARM97_iopfile_4scam.nc"
-output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/obs_data/OBS_ARM97.dpxx.nc"
-time_offset = 5.0
+output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/obs_data/OBS_ARM97_full.dpxx.nc"
+time_offset = 0.0
 
 # Ensure the directory for the output file exists
 output_dir = os.path.dirname(output_file)
@@ -23,7 +23,7 @@ ds_out = xr.Dataset()
 
 # 1. Transfer and adjust the "time" variable
 time_data = ds_in["tsec"].values
-time_data = time_data/86400.
+time_data = (time_data-time_data[0])/86400.
 ds_out["time"] = xr.DataArray(time_data - time_offset, dims=["time"])
 
 p_data = ds_in["lev"].values/100.
@@ -65,6 +65,9 @@ for var_in, var_out, factor in two_d_vars:
 
 # Copy attributes from the input dataset to the output dataset
 ds_out.attrs = ds_in.attrs
+
+# Add the units attribute
+ds_out["time"].attrs["units"] = "days since 1997-06-18 23:29:45"
 
 # Save the new dataset to a NetCDF file
 ds_out.to_netcdf(output_file)

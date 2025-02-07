@@ -23,7 +23,7 @@ ds_out = xr.Dataset()
 
 # 1. Transfer and adjust the "time" variable
 time_data = ds_in["tsec"].values
-time_data = time_data/86400.
+time_data = (time_data-time_data[0])/86400.
 ds_out["time"] = xr.DataArray(time_data - time_offset, dims=["time"])
 
 p_data = ds_in["lev"].values/100.
@@ -64,6 +64,9 @@ for var_in, var_out, factor in two_d_vars:
 
 # Copy attributes from the input dataset to the output dataset
 ds_out.attrs = ds_in.attrs
+
+# Add the units attribute
+ds_out["time"].attrs["units"] = "days since 1974-08-30 00:00:00"
 
 # Save the new dataset to a NetCDF file
 ds_out.to_netcdf(output_file)
