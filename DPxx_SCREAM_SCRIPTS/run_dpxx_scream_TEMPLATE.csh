@@ -21,8 +21,8 @@
 #######################################################
 #######  BEGIN USER DEFINED SETTINGS
 ####### NOTE: beyond this section you will need to configure your
-#######  ouput yaml file(s).  Please do a search for "yaml" and you will
-#######  be brought to the correct location.
+#######  ouput yaml file(s).  Please do a search for "yamlpath" and you will
+#######  be brought to the correct locations.
 ####### See the example yaml file in the DPxx_SCREAM_SCRIPTS/yaml_file_example
 #######  of the scmlib repo to get you started.
 
@@ -42,7 +42,7 @@
   setenv machine pm-cpu
 
   # Compiler (pm-cpu should use "gnu"; pm-gpu should use "gnugpu"; LC should use "intel";
-  #           frontier should use "crayclang-scream")
+  #           frontier should use "craycray-mphipcc")
   #   more machine compiler defaults will be added as they are tested/validated.
   setenv compiler gnu
 
@@ -51,6 +51,8 @@
 
   # Path where output YAML files are located (i.e. where you specify your output streams)
   #  See example files in DPxx_SCREAM_SCRIPTS/yaml_file_example to get you started.
+  # NOTE, you will likely need to edit the section of the script where the yaml files
+  #  are appended to your case.  Do a search for "yamlpath" to find this location.
   setenv yamlpath /pscratch/sd/b/bogensch/dp_scream/codes/scmlib/DPxx_SCREAM_SCRIPTS/yaml_file_example
 
   # LENGTHNOTE This is a long case! Consider selecting a subset timeperiod to run on
