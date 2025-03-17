@@ -3,8 +3,8 @@
 #######################################################################
 #######################################################################
 #######  Script to run SCREAMv1 in doubly periodic (DP) mode (DP-EAMxx)
-#######  EPCAPE_20230515
-#######  EPCAPE 2023-05-15
+#######  EPCAPE_2023-04-26
+#######  EPCAPE 2023-04-06
 #######
 #######  Script Author: P. Bogenschutz (bogenschutz1@llnl.gov)
 #######  Forcing provided by: Haipeng Zhang
@@ -24,7 +24,7 @@
 #######  of the scmlib repo to get you started.
 
   # Set the name of your case here
-  setenv casename scream_dpxx_EPCAPE_20230515
+  setenv casename scream_dpxx_EPCAPE_2023-04-26
 
   # Set the case directory here
   setenv casedirectory /pscratch/sd/b/bogensch/dp_screamxx
@@ -125,11 +125,11 @@
   set do_iop_nudge_uv = false # Relax U&V to observations?
   set do_iop_nudge_coriolis = true # Nudge to geostrophic winds?
   set do_iop_subsidence = true # compute LS vertical transport?
-  set startdate = 2023-05-15 # Start date in IOP file
+  set startdate = 2023-04-26 # Start date in IOP file
   set start_in_sec = 00000 # start time in seconds in IOP file
   set stop_option = nhours
   set stop_n = 66
-  set iop_file = EPCAPE_20230515_iopfile_4scam.nc #IOP file name
+  set iop_file = EPCAPE_2023-04-26_iopfile_4scam.nc #IOP file name
   set do_turnoff_swrad = false # Turn off SW calculation (if false, keep false)
 # End Case specific stuff here
 
