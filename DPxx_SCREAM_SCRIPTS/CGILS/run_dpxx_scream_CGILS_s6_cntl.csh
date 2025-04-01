@@ -128,7 +128,7 @@
   set startdate = 2003-07-15 # Start date in IOP file
   set start_in_sec = 0 # start time in seconds in IOP file
   set stop_option = ndays
-  set stop_n = 100
+  set stop_n = 10
   set iop_file = CGILS_s6_cntl_iopfile_4scam.nc #IOP file name
   set do_turnoff_swrad = false # Turn off SW calculation (if false, keep false)
 # End Case specific stuff here
