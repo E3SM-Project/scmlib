@@ -81,7 +81,7 @@
   set micro_nccons_val = 100.0D6 # cons_droplet value for liquid
   set micro_nicons_val = 0.0001D6 # cons_droplet value for ice
   set startdate = 2015-08-26 # Start date in IOP file
-  set start_in_sec = 0 # start time in seconds in IOP file
+  set start_in_sec = 43200 # start time in seconds in IOP file
   set stop_option = nhours
   set stop_n = 12
   set iop_file = GOAMAZON_doublepulse_iopfile_4scam.nc #IOP file name

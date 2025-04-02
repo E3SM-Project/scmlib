@@ -344,7 +344,7 @@ sed -i s/CASEprecipoff/.false./ $outfile
 sed -i s/CASEnccons/100.0D6/ $outfile
 sed -i s/CASEnicons/0.0001D6/ $outfile
 sed -i s/CASEstartdate/2014-10-05/ $outfile
-sed -i s/CASEstartinsec/0/ $outfile
+sed -i s/CASEstartinsec/43200/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEstopn/12/ $outfile
 sed -i s/FORCINGPROVIDER/"Yang Tian (Tian and Zhang 2025)"/ $outfile
@@ -370,7 +370,7 @@ sed -i s/CASEprecipoff/.false./ $outfile
 sed -i s/CASEnccons/100.0D6/ $outfile
 sed -i s/CASEnicons/0.0001D6/ $outfile
 sed -i s/CASEstartdate/2015-08-26/ $outfile
-sed -i s/CASEstartinsec/0/ $outfile
+sed -i s/CASEstartinsec/43200/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEstopn/12/ $outfile
 sed -i s/FORCINGPROVIDER/"Yang Tian (Tian and Zhang 2025)"/ $outfile
