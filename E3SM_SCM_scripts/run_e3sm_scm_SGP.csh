@@ -126,6 +126,9 @@
     set grid=T42_T42
   endif
 
+# For the vast majority of cases, initializing from ne4 files is sufficient.
+#  However, there are some scenarios where initializing from ne30_ne30 makes more
+#  sense to ensure better surface type.  This will make the SCM about 3 time slower.
   if ($dycore == SE) then
     set grid=ne4_ne4
   endif
@@ -221,6 +224,17 @@
     ./xmlchange CAM_TARGET=theta-l
   endif
 
+# Set timesteps, long term solution will be to modify compset. This will ensure
+#  if a user initializes from a different resolution (i.e. ne30), the time steps
+#  will still be consistent with what SCM expects.
+if ($e3sm_version != v1) then
+cat <<EOF >> user_nl_${atm_mod}
+ se_tstep = 1800
+ dt_remap_factor = 1
+ dt_tracer_factor = 1
+EOF
+endif
+
 # if we want to turn off SW radiation, then set appropriate namelist settings here
   if ($do_turnoff_swrad == true) then
     set iradsw_in = 0
@@ -240,7 +254,7 @@
 cat <<EOF >> user_nl_${atm_mod}
  cld_macmic_num_steps = $clubb_micro_steps
  cosp_lite = .true.
- use_gw_front = .true.
+ use_gw_front = .false.
  iopfile = '$input_data_dir/$iop_path/$iop_file'
  mfilt = 10000
  nhtfrq = 1
