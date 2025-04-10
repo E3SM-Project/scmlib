@@ -1,11 +1,11 @@
 %YAML 1.1
 ---
-averaging_type: average
-max_snapshots_per_file: 100000
+Averaging Type: Average
+Max Snapshots Per File: 100000
 filename_prefix: ${CASE}.horiz_avg
-fields:
-  physics_pg2:
-    field_names:
+Fields:
+  Physics PG2:
+    Field Names:
     - z_mid_horiz_avg
     - p_mid_horiz_avg
     # HOMME
@@ -114,5 +114,5 @@ fields:
 #    - w3_horiz_avg
 #    - w_variance_horiz_avg    
 output_control:
-  frequency: 15
+  Frequency: 15
   frequency_units: nmins
