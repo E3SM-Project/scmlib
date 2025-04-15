@@ -4,12 +4,19 @@ import numpy as np
 #######################################################################
 ###### Start user input
 
-# These geometry parameters should match what you plan to use in your simulation
+# Define the target latitude and longitude.  this is the lat/lon that you want to extract from the
+#  ELM restart file.  It should also be the lat/lon you plan to use in your DPxx simulation.
+target_lat = -3.2
+target_lon = 299.4
+
+# These geometry parameters should match what you plan to use in your DPxx simulation
 num_ne_x=5
 num_ne_y=5
 
-# Define the input and output file paths
+# Define the file where your ELM restart file resides
 input_file = '/pscratch/sd/b/bogensch/E3SM_simulations/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.002a/run/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.002a.elm.r.2014-10-01-00000.nc'
+
+# Provide the path for your output file
 output_path = '/pscratch/sd/b/bogensch/dp_screamxx/land_ic/'
 
 output_file = output_path+'elm_dpxx_init_nex'+str(num_ne_x)+'_ney'+str(num_ne_y)+'.nc'
@@ -35,10 +42,6 @@ new_dims = {
     'month': 12,
     'string_length': 64,
 }
-
-# Define the target latitude and longitude
-target_lat = -3.2
-target_lon = 299.4
 
 # Open the input NetCDF file
 with xr.open_dataset(input_file) as ds_in:
