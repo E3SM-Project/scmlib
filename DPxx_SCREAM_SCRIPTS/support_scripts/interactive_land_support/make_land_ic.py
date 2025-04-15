@@ -14,7 +14,7 @@ target_lon = 299.4
 num_ne_x=20
 num_ne_y=20
 
-# Define the file where your ELM restart file resides
+# Define the file where your ELM restart file resides that you want to extract from
 input_file = '/pscratch/sd/b/bogensch/E3SM_simulations/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.002a/run/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.002a.elm.r.2014-01-01-00000.nc'
 
 # Provide the path for your output file
@@ -135,14 +135,6 @@ with xr.open_dataset(input_file) as ds_in:
             data_vars[var_name] = (var_dims, final_values)
             print(f"{var_name}: Filled with cyclic values from {len(column_matching_indices)} matching column indices.")
 
-
-#        elif 'column' in var_dims:
-#            values_at_matching_indices = var_data.isel(column=column_matching_indices).values
-#            repeated_values = np.tile(values_at_matching_indices, int(np.ceil(new_dims['column'] / len(values_at_matching_indices))))[:new_dims['column']]
-#            new_shape = tuple(new_dims.get(dim, ds_in.dims[dim]) for dim in var_dims)
-#            data_vars[var_name] = (var_dims, repeated_values.reshape(new_shape))
-#            print(f"{var_name}: Filled with cyclic values from {len(column_matching_indices)} matching column indices.")
-
         elif 'pft' in var_dims:
             values_at_matching_indices = var_data.isel(pft=pft_matching_indices).values
             repeated_values = np.tile(values_at_matching_indices, int(np.ceil(new_dims['pft'] / len(values_at_matching_indices))))[:new_dims['pft']]
@@ -190,22 +182,6 @@ with xr.open_dataset(input_file) as ds_in:
 
     # Add global attribute
     ds_out.attrs['title'] = "ELM Restart information"
-
-
-    # Replace all missing values explicitly with their _FillValue
-#    for var_name, data_array in data_vars_with_metadata.items():
-#        fill_value = data_array.encoding.get('_FillValue', None)
-#        fill_value = 0
-
-#        if fill_value is not None:
-#            if np.issubdtype(data_array.dtype, np.floating):
-#                data_array.values = np.where(np.isnan(data_array.values), fill_value, data_array.values)
-#            elif np.issubdtype(data_array.dtype, np.integer):
-#                missing_value = ds_in[var_name].attrs.get('missing_value', None)
-#                if missing_value is not None:
-#                    data_array.values = np.where(data_array.values == missing_value, fill_value, data_array.values)
-#            print(f"Replaced missing values in {var_name} with _FillValue: {fill_value}")
-
 
     # Save the dataset to a new NetCDF file
     ds_out.to_netcdf(output_file)
