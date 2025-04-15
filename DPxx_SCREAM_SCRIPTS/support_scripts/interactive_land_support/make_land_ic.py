@@ -1,5 +1,6 @@
 import xarray as xr
 import numpy as np
+import re
 
 #######################################################################
 ###### Start user input
@@ -10,19 +11,32 @@ target_lat = -3.2
 target_lon = 299.4
 
 # These geometry parameters should match what you plan to use in your DPxx simulation
-num_ne_x=5
-num_ne_y=5
+num_ne_x=20
+num_ne_y=20
 
 # Define the file where your ELM restart file resides
-input_file = '/pscratch/sd/b/bogensch/E3SM_simulations/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.002a/run/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.002a.elm.r.2014-10-01-00000.nc'
+input_file = '/pscratch/sd/b/bogensch/E3SM_simulations/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.002a/run/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.002a.elm.r.2014-01-01-00000.nc'
 
 # Provide the path for your output file
 output_path = '/pscratch/sd/b/bogensch/dp_screamxx/land_ic/'
 
-output_file = output_path+'elm_dpxx_init_nex'+str(num_ne_x)+'_ney'+str(num_ne_y)+'.nc'
-
 ###### End user input
 #######################################################################
+
+# Attempt to extract date from input ELM file for the sake of the output file
+match = re.search(r'\d{4}-\d{2}-\d{2}', input_file)
+
+if match:
+    extracted_date = match.group()
+    print("Extracted date:", extracted_date)
+else:
+    print("No date found in string.")
+    extracted_date = ''
+
+# Form the name of the outputfile
+output_file = output_path+'elm_dpxx_init_nex'+str(num_ne_x)+'_ney'+str(num_ne_y)+'_'+extracted_date+'.nc'
+
+# start to extract
 
 phys_col=num_ne_x*num_ne_y*4
 
