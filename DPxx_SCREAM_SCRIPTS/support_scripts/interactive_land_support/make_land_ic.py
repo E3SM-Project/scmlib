@@ -1,17 +1,35 @@
 import xarray as xr
 import numpy as np
 
+#######################################################################
+###### Start user input
+
+# These geometry parameters should match what you plan to use in your simulation
+num_ne_x=5
+num_ne_y=5
+
 # Define the input and output file paths
 input_file = '/pscratch/sd/b/bogensch/E3SM_simulations/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.002a/run/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.002a.elm.r.2014-10-01-00000.nc'
-output_file = '/pscratch/sd/b/bogensch/dp_screamxx/land_ic/land_ic_test.nc'
+output_path = '/pscratch/sd/b/bogensch/dp_screamxx/land_ic/'
+
+output_file = output_path+'elm_dpxx_init_nex'+str(num_ne_x)+'_ney'+str(num_ne_y)+'.nc'
+
+###### End user input
+#######################################################################
+
+phys_col=num_ne_x*num_ne_y*4
+
+num_landunits = 5
+num_cols = 17
+num_pfts = 33
 
 # Define new sizes for only specific dimensions
 new_dims = {
-    'gridcell': 100,
-    'topounit': 100,
-    'landunit': 500,
-    'column': 1700,
-    'pft': 3300,
+    'gridcell': phys_col,
+    'topounit': phys_col,
+    'landunit': phys_col*num_landunits,
+    'column': phys_col*num_cols,
+    'pft': phys_col*num_pfts,
     'levurb': 5,
     'max_chars': 256,
     'month': 12,
