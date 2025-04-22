@@ -523,8 +523,8 @@ set outfile = run_dpxx_scream_$casename.csh
 cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Continuous forcing (2004-2015) over ARM SGP site"/ $outfile
-sed -i s/CASElat/36.605/ $outfile
-sed -i s/CASElon/262.515/ $outfile
+sed -i s/CASElat/36.61/ $outfile
+sed -i s/CASElon/262.51/ $outfile
 sed -i s/CASEsrfprop/true/ $outfile
 sed -i s/CASELONGstartdate/2004-01-01/ $outfile
 sed -i s/CASEstartinsec/0/ $outfile
