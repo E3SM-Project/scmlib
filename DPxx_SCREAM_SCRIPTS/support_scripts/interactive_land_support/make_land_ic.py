@@ -1,24 +1,31 @@
 import xarray as xr
 import numpy as np
 import re
+import sys
 
 #######################################################################
 ###### Start user input
 
 # Define the target latitude and longitude.  this is the lat/lon that you want to extract from the
 #  ELM restart file.  It should also be the lat/lon you plan to use in your DPxx simulation.
+
+# GoAmazon
 target_lat = -3.2
 target_lon = 299.4
+
+# SGP
+target_lat = 36.6
+target_lon = 262.51
 
 # These geometry parameters should match what you plan to use in your DPxx simulation
 num_ne_x=20
 num_ne_y=20
 
 # Define the file where your ELM restart file resides that you want to extract from
-input_file = '/pscratch/sd/b/bogensch/E3SM_simulations/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.002a/run/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.002a.elm.r.2014-01-01-00000.nc'
+input_file = '/pscratch/sd/b/bogensch/E3SM_simulations/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.002a/run/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.002a.elm.r.2014-07-01-00000.nc'
 
 # Provide the path for your output file
-output_path = '/pscratch/sd/b/bogensch/dp_screamxx/land_ic/'
+output_path = '/pscratch/sd/b/bogensch/dp_screamxx/land_ic/SGP_'
 
 ###### End user input
 #######################################################################
@@ -40,38 +47,64 @@ output_file = output_path+'elm_dpxx_init_nex'+str(num_ne_x)+'_ney'+str(num_ne_y)
 
 phys_col=num_ne_x*num_ne_y*4
 
-num_landunits = 5
-num_cols = 17
-num_pfts = 33
-
-# Define new sizes for only specific dimensions
-new_dims = {
-    'gridcell': phys_col,
-    'topounit': phys_col,
-    'landunit': phys_col*num_landunits,
-    'column': phys_col*num_cols,
-    'pft': phys_col*num_pfts,
-    'levurb': 5,
-    'max_chars': 256,
-    'month': 12,
-    'string_length': 64,
-}
-
 # Open the input NetCDF file
 with xr.open_dataset(input_file) as ds_in:
     # Find the closest index for gridcell
     def find_closest_index(lat_var, lon_var, target_lat, target_lon):
         latitudes = ds_in[lat_var].values
         longitudes = ds_in[lon_var].values
-        distances = np.sqrt((latitudes - target_lat)**2 + (longitudes - target_lon)**2)
+        distances = np.abs(latitudes-target_lat)+np.abs(longitudes - target_lon)
+        print("STUFF ", latitudes[np.argmin(distances)],longitudes[np.argmin(distances)])
         return np.argmin(distances)
 
     gridcell_index = find_closest_index('grid1d_lat', 'grid1d_lon', target_lat, target_lon)
 
     # Find matching indices for landunit, column, and pft based on gridcell_index
-    landunit_matching_indices = np.where(ds_in['land1d_gridcell_index'].values == gridcell_index)[0]
-    column_matching_indices = np.where(ds_in['cols1d_gridcell_index'].values == gridcell_index)[0]
-    pft_matching_indices = np.where(ds_in['pfts1d_gridcell_index'].values == gridcell_index)[0]
+    landunit_matching_indices = np.where(ds_in['land1d_gridcell_index'].values == gridcell_index+1)[0]
+    column_matching_indices = np.where(ds_in['cols1d_gridcell_index'].values == gridcell_index+1)[0]
+    pft_matching_indices = np.where(ds_in['pfts1d_gridcell_index'].values == gridcell_index+1)[0]
+
+    """
+    grid1d_lat=ds_in['grid1d_lat'].values
+    grid1d_lon=ds_in['grid1d_lon'].values
+
+    print('GRIDCELL ', grid1d_lat[gridcell_index])
+    print('GRIDCELL ', grid1d_lon[gridcell_index])
+
+    land1d_lat=ds_in['land1d_lat'].values
+    land1d_lon=ds_in['land1d_lon'].values
+    print('LAND ',land1d_lat[landunit_matching_indices])
+    print('LAND ',land1d_lon[landunit_matching_indices])
+
+    cols1d_lat=ds_in['cols1d_lat'].values
+    cols1d_lon=ds_in['cols1d_lon'].values
+    print('COLS ',cols1d_lat[column_matching_indices])
+    print('COLS ',cols1d_lon[column_matching_indices])
+
+    pfts1d_lat=ds_in['pfts1d_lat'].values
+    pfts1d_lon=ds_in['pfts1d_lon'].values
+    print('PFTS ',pfts1d_lat[pft_matching_indices])
+    print('PFTS ',pfts1d_lon[pft_matching_indices])
+
+    sys.exit()
+    """
+
+    num_landunits = len(landunit_matching_indices)
+    num_cols = len(column_matching_indices)
+    num_pfts = len(pft_matching_indices)
+
+    # Define new sizes for only specific dimensions
+    new_dims = {
+        'gridcell': phys_col,
+        'topounit': phys_col,
+        'landunit': phys_col*num_landunits,
+        'column': phys_col*num_cols,
+        'pft': phys_col*num_pfts,
+        'levurb': 5,
+        'max_chars': 256,
+        'month': 12,
+        'string_length': 64,
+    }
 
     # Create dictionaries to hold data and metadata for the new file
     data_vars = {}
