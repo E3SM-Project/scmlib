@@ -64,31 +64,6 @@ with xr.open_dataset(input_file) as ds_in:
     column_matching_indices = np.where(ds_in['cols1d_gridcell_index'].values == gridcell_index+1)[0]
     pft_matching_indices = np.where(ds_in['pfts1d_gridcell_index'].values == gridcell_index+1)[0]
 
-    """
-    grid1d_lat=ds_in['grid1d_lat'].values
-    grid1d_lon=ds_in['grid1d_lon'].values
-
-    print('GRIDCELL ', grid1d_lat[gridcell_index])
-    print('GRIDCELL ', grid1d_lon[gridcell_index])
-
-    land1d_lat=ds_in['land1d_lat'].values
-    land1d_lon=ds_in['land1d_lon'].values
-    print('LAND ',land1d_lat[landunit_matching_indices])
-    print('LAND ',land1d_lon[landunit_matching_indices])
-
-    cols1d_lat=ds_in['cols1d_lat'].values
-    cols1d_lon=ds_in['cols1d_lon'].values
-    print('COLS ',cols1d_lat[column_matching_indices])
-    print('COLS ',cols1d_lon[column_matching_indices])
-
-    pfts1d_lat=ds_in['pfts1d_lat'].values
-    pfts1d_lon=ds_in['pfts1d_lon'].values
-    print('PFTS ',pfts1d_lat[pft_matching_indices])
-    print('PFTS ',pfts1d_lon[pft_matching_indices])
-
-    sys.exit()
-    """
-
     num_landunits = len(landunit_matching_indices)
     num_cols = len(column_matching_indices)
     num_pfts = len(pft_matching_indices)
