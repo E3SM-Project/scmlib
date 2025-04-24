@@ -14,18 +14,18 @@ target_lat = -3.2
 target_lon = 299.4
 
 # SGP
-target_lat = 36.6
-target_lon = 262.51
+#target_lat = 36.6
+#target_lon = 262.51
 
 # These geometry parameters should match what you plan to use in your DPxx simulation
 num_ne_x=20
 num_ne_y=20
 
 # Define the file where your ELM restart file resides that you want to extract from
-input_file = '/pscratch/sd/b/bogensch/E3SM_simulations/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.002a/run/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.002a.elm.r.2014-07-01-00000.nc'
+input_file = '/pscratch/sd/b/bogensch/E3SM_simulations/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.002a/run/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.002a.elm.r.2014-01-01-00000.nc'
 
 # Provide the path for your output file
-output_path = '/pscratch/sd/b/bogensch/dp_screamxx/land_ic/SGP_'
+output_path = '/pscratch/sd/b/bogensch/dp_screamxx/land_ic/GOAMAZON_'
 
 ###### End user input
 #######################################################################
@@ -194,4 +194,4 @@ with xr.open_dataset(input_file) as ds_in:
     # Save the dataset to a new NetCDF file
     ds_out.to_netcdf(output_file)
 
-print("New dataset created successfully.")
+print("New dataset created successfully:", output_file)
