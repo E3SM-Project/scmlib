@@ -9,39 +9,49 @@ import sys
 # Define the target latitude and longitude.  this is the lat/lon that you want to extract from the
 #  ELM restart file.  It should also be the lat/lon you plan to use in your DPxx simulation.
 
-# GoAmazon
-target_lat = -3.2
-target_lon = 299.4
+# Enter location to extract.  "GOAMAZON" and "SGP" are currently supported.  Custom locations
+#   can easily be added.
+site='GOAMAZON'
 
-# SGP
-#target_lat = 36.6
-#target_lon = 262.51
+# Enter Date Timestamp to be extracted (yyyy-dd-mm-ttttt)
+date='2014-01-01-00000'
 
 # These geometry parameters should match what you plan to use in your DPxx simulation
-num_ne_x=20
-num_ne_y=20
+num_ne_x=5
+num_ne_y=5
 
 # Define the file where your ELM restart file resides that you want to extract from
-input_file = '/pscratch/sd/b/bogensch/E3SM_simulations/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.002a/run/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.002a.elm.r.2014-01-01-00000.nc'
+input_file = '/pscratch/sd/b/bogensch/E3SM_simulations/land_initial_conditions_dpxx/SGP_GOAMAZON_2013-2015'
+# Case name of run used to spin up ELM files
+input_case = 'IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.003a'
 
 # Provide the path for your output file
-output_path = '/pscratch/sd/b/bogensch/dp_screamxx/land_ic/GOAMAZON_'
+output_path = '/pscratch/sd/b/bogensch/dp_screamxx/land_ic/'
 
 ###### End user input
 #######################################################################
 
-# Attempt to extract date from input ELM file for the sake of the output file
-match = re.search(r'\d{4}-\d{2}-\d{2}', input_file)
-
-if match:
-    extracted_date = match.group()
-    print("Extracted date:", extracted_date)
+if (site == 'GOAMAZON'):
+    target_lat = -3.2
+    target_lon = 299.4
+elif (site == 'SGP'):
+    target_lat = 36.6
+    target_lon = 262.51
+elif (site == 'CUSTOM'):
+    target_lat = 0
+    target_lon = 0
 else:
-    print("No date found in string.")
-    extracted_date = ''
+    print("Site location no defined or supported.  Aborting.")
+    sys.exit()
+
+# make input file string
+input_file = input_file+'/'+input_case+'.elm.r.'+date+'.nc'
+
+# Attempt to extract date from input ELM file for the sake of the output file
+match = re.search(r'\d{4}-\d{2}-\d{2}-\d{5}', input_file)
 
 # Form the name of the outputfile
-output_file = output_path+'elm_dpxx_init_nex'+str(num_ne_x)+'_ney'+str(num_ne_y)+'_'+extracted_date+'.nc'
+output_file = output_path+site+'_elm_dpxx_init_nex'+str(num_ne_x)+'_ney'+str(num_ne_y)+'_'+date+'.nc'
 
 # start to extract
 
@@ -54,7 +64,6 @@ with xr.open_dataset(input_file) as ds_in:
         latitudes = ds_in[lat_var].values
         longitudes = ds_in[lon_var].values
         distances = np.abs(latitudes-target_lat)+np.abs(longitudes - target_lon)
-        print("STUFF ", latitudes[np.argmin(distances)],longitudes[np.argmin(distances)])
         return np.argmin(distances)
 
     gridcell_index = find_closest_index('grid1d_lat', 'grid1d_lon', target_lat, target_lon)
