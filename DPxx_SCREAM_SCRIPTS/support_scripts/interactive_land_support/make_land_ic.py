@@ -17,8 +17,8 @@ site='GOAMAZON'
 date='2015-08-26-43200'
 
 # These geometry parameters should match what you plan to use in your DPxx simulation
-num_ne_x=20
-num_ne_y=20
+num_ne_x=267
+num_ne_y=267
 
 # Define the file where your ELM restart file resides that you want to extract from
 input_file = '/pscratch/sd/b/bogensch/E3SM_simulations/land_initial_conditions_dpxx/SGP_GOAMAZON_2013-2015'
@@ -59,6 +59,25 @@ phys_col=num_ne_x*num_ne_y*4
 
 # Open the input NetCDF file
 with xr.open_dataset(input_file) as ds_in:
+    # Code to deal with pft, landunit, and column related variables
+    def expand_dimension(var_data, dim_name, matching_indices, new_size, all_dims, ds_in_dims):
+        """Expand a variable along the given dimension by tiling and trimming."""
+        values_at_matching_indices = var_data.isel({dim_name: matching_indices}).values
+        original_shape = values_at_matching_indices.shape  # (n_matching, other_dims...)
+
+        n_matching = original_shape[0]
+        n_target = new_size
+        n_repeat = int(np.ceil(n_target / n_matching))
+
+        tiled_values = np.tile(values_at_matching_indices, (n_repeat,) + (1,) * (values_at_matching_indices.ndim - 1))
+        final_values = tiled_values[:n_target, ...]
+
+        new_shape = tuple(all_dims.get(d, ds_in_dims[d]) for d in var_data.dims)
+        assert final_values.shape == new_shape, f"Shape mismatch for {dim_name}: expected {new_shape}, got {final_values.shape}"
+
+        return (var_data.dims, final_values)
+
+
     # Find the closest index for gridcell
     def find_closest_index(lat_var, lon_var, target_lat, target_lon):
         latitudes = ds_in[lat_var].values
@@ -106,7 +125,6 @@ with xr.open_dataset(input_file) as ds_in:
         else:
             coords[dim_name] = (dim_name, np.arange(dim_size))
 
-    # Loop over each variable in the dataset
     for var_name, var_data in ds_in.data_vars.items():
         var_dims = var_data.dims
 
@@ -123,78 +141,21 @@ with xr.open_dataset(input_file) as ds_in:
             print(f"{var_name}: Set to value at closest topounit index {gridcell_index}")
 
         elif 'landunit' in var_dims:
-            values_at_matching_indices = var_data.isel(landunit=landunit_matching_indices).values
-            original_shape = values_at_matching_indices.shape  # e.g., (n_col, second_dim, ...)
-
-            # Number of matching columns and number of repeats needed
-            n_matching = original_shape[0]
-            n_target = new_dims['landunit']
-            n_repeat = int(np.ceil(n_target / n_matching))
-
-            # Repeat only along the first axis (column), preserve the rest
-            tiled_values = np.tile(values_at_matching_indices, (n_repeat,) + (1,) * (values_at_matching_indices.ndim - 1))
-
-            # Trim to desired number of columns
-            final_values = tiled_values[:n_target, ...]
-
-            # Define new shape, replacing only the column dimension with new_dims value
-            new_shape = tuple(new_dims.get(dim, ds_in.dims[dim]) for dim in var_dims)
-
-            # Confirm shape match and assign
-            assert final_values.shape == new_shape, f"Shape mismatch: expected {new_shape}, got {final_values.shape}"
-            data_vars[var_name] = (var_dims, final_values)
+            data_vars[var_name] = expand_dimension(var_data, 'landunit', landunit_matching_indices, new_dims['landunit'], new_dims, ds_in.dims)
             print(f"{var_name}: Filled with cyclic values from {len(landunit_matching_indices)} matching landunit indices.")
 
         elif 'column' in var_dims:
-            values_at_matching_indices = var_data.isel(column=column_matching_indices).values
-            original_shape = values_at_matching_indices.shape  # e.g., (n_col, second_dim, ...)
-
-            # Number of matching columns and number of repeats needed
-            n_matching = original_shape[0]
-            n_target = new_dims['column']
-            n_repeat = int(np.ceil(n_target / n_matching))
-
-            # Repeat only along the first axis (column), preserve the rest
-            tiled_values = np.tile(values_at_matching_indices, (n_repeat,) + (1,) * (values_at_matching_indices.ndim - 1))
-
-            # Trim to desired number of columns
-            final_values = tiled_values[:n_target, ...]
-
-            # Define new shape, replacing only the column dimension with new_dims value
-            new_shape = tuple(new_dims.get(dim, ds_in.dims[dim]) for dim in var_dims)
-
-            # Confirm shape match and assign
-            assert final_values.shape == new_shape, f"Shape mismatch: expected {new_shape}, got {final_values.shape}"
-            data_vars[var_name] = (var_dims, final_values)
+            data_vars[var_name] = expand_dimension(var_data, 'column', column_matching_indices, new_dims['column'], new_dims, ds_in.dims)
             print(f"{var_name}: Filled with cyclic values from {len(column_matching_indices)} matching column indices.")
 
         elif 'pft' in var_dims:
-            values_at_matching_indices = var_data.isel(pft=pft_matching_indices).values
-            original_shape = values_at_matching_indices.shape  # e.g., (n_col, second_dim, ...)
-
-            # Number of matching columns and number of repeats needed
-            n_matching = original_shape[0]
-            n_target = new_dims['pft']
-            n_repeat = int(np.ceil(n_target / n_matching))
-
-            # Repeat only along the first axis (column), preserve the rest
-            tiled_values = np.tile(values_at_matching_indices, (n_repeat,) + (1,) * (values_at_matching_indices.ndim - 1))
-
-            # Trim to desired number of columns
-            final_values = tiled_values[:n_target, ...]
-
-            # Define new shape, replacing only the column dimension with new_dims value
-            new_shape = tuple(new_dims.get(dim, ds_in.dims[dim]) for dim in var_dims)
-
-            # Confirm shape match and assign
-            assert final_values.shape == new_shape, f"Shape mismatch: expected {new_shape}, got {final_values.shape}"
-            data_vars[var_name] = (var_dims, final_values)
+            data_vars[var_name] = expand_dimension(var_data, 'pft', pft_matching_indices, new_dims['pft'], new_dims, ds_in.dims)
             print(f"{var_name}: Filled with cyclic values from {len(pft_matching_indices)} matching pft indices.")
 
         else:
-            # Copy other variables without changing dimensions
             data_vars[var_name] = (var_dims, var_data.values)
             print(f"{var_name}: Copied as-is")
+
 
 
     # Copy metadata to new DataArray objects with _FillValue set correctly
