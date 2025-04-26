@@ -14,11 +14,11 @@ import sys
 site='GOAMAZON'
 
 # Enter Date Timestamp to be extracted (yyyy-dd-mm-ttttt)
-date='2014-01-01-00000'
+date='2015-08-26-43200'
 
 # These geometry parameters should match what you plan to use in your DPxx simulation
-num_ne_x=5
-num_ne_y=5
+num_ne_x=20
+num_ne_y=20
 
 # Define the file where your ELM restart file resides that you want to extract from
 input_file = '/pscratch/sd/b/bogensch/E3SM_simulations/land_initial_conditions_dpxx/SGP_GOAMAZON_2013-2015'
@@ -124,9 +124,25 @@ with xr.open_dataset(input_file) as ds_in:
 
         elif 'landunit' in var_dims:
             values_at_matching_indices = var_data.isel(landunit=landunit_matching_indices).values
-            repeated_values = np.tile(values_at_matching_indices, int(np.ceil(new_dims['landunit'] / len(values_at_matching_indices))))[:new_dims['landunit']]
+            original_shape = values_at_matching_indices.shape  # e.g., (n_col, second_dim, ...)
+
+            # Number of matching columns and number of repeats needed
+            n_matching = original_shape[0]
+            n_target = new_dims['landunit']
+            n_repeat = int(np.ceil(n_target / n_matching))
+
+            # Repeat only along the first axis (column), preserve the rest
+            tiled_values = np.tile(values_at_matching_indices, (n_repeat,) + (1,) * (values_at_matching_indices.ndim - 1))
+
+            # Trim to desired number of columns
+            final_values = tiled_values[:n_target, ...]
+
+            # Define new shape, replacing only the column dimension with new_dims value
             new_shape = tuple(new_dims.get(dim, ds_in.dims[dim]) for dim in var_dims)
-            data_vars[var_name] = (var_dims, repeated_values.reshape(new_shape))
+
+            # Confirm shape match and assign
+            assert final_values.shape == new_shape, f"Shape mismatch: expected {new_shape}, got {final_values.shape}"
+            data_vars[var_name] = (var_dims, final_values)
             print(f"{var_name}: Filled with cyclic values from {len(landunit_matching_indices)} matching landunit indices.")
 
         elif 'column' in var_dims:
@@ -154,10 +170,25 @@ with xr.open_dataset(input_file) as ds_in:
 
         elif 'pft' in var_dims:
             values_at_matching_indices = var_data.isel(pft=pft_matching_indices).values
-            repeated_values = np.tile(values_at_matching_indices, int(np.ceil(new_dims['pft'] / len(values_at_matching_indices))))[:new_dims['pft']]
-            new_shape = tuple(new_dims.get(dim, ds_in.dims[dim]) for dim in var_dims)
-            data_vars[var_name] = (var_dims, repeated_values.reshape(new_shape))
+            original_shape = values_at_matching_indices.shape  # e.g., (n_col, second_dim, ...)
 
+            # Number of matching columns and number of repeats needed
+            n_matching = original_shape[0]
+            n_target = new_dims['pft']
+            n_repeat = int(np.ceil(n_target / n_matching))
+
+            # Repeat only along the first axis (column), preserve the rest
+            tiled_values = np.tile(values_at_matching_indices, (n_repeat,) + (1,) * (values_at_matching_indices.ndim - 1))
+
+            # Trim to desired number of columns
+            final_values = tiled_values[:n_target, ...]
+
+            # Define new shape, replacing only the column dimension with new_dims value
+            new_shape = tuple(new_dims.get(dim, ds_in.dims[dim]) for dim in var_dims)
+
+            # Confirm shape match and assign
+            assert final_values.shape == new_shape, f"Shape mismatch: expected {new_shape}, got {final_values.shape}"
+            data_vars[var_name] = (var_dims, final_values)
             print(f"{var_name}: Filled with cyclic values from {len(pft_matching_indices)} matching pft indices.")
 
         else:
