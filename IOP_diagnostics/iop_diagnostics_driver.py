@@ -95,6 +95,16 @@ time_height_time_e = None  # Ending time for time-height plots, None for default
 # Define the colormap for time height contourf plots.  Default is "viridis_r".
 time_height_cmap = "viridis_r"
 
+# Optional arguments to define line color and style for profile and time series plots.
+#  The number of entries MUST match the number of short_ids for each.  If None is specified
+#  then will default to python defaults.
+line_colors=None
+line_styles=None
+
+# Optional arguments to define tick size and label size for plots.  Default is 14.
+ticksize=14
+labelsize=14
+
 # END: OPTIONAL user defined settings
 ##########################################################
 ##########################################################
@@ -121,5 +131,9 @@ run_diagnostics(
     time_height_time_s,
     time_height_time_e,
     usercmap=time_height_cmap,
+    line_colors=line_colors,
+    line_styles=line_styles,
+    ticksize=ticksize,
+    labelsize=labelsize
 )
 
