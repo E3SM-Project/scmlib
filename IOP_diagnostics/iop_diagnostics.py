@@ -170,143 +170,110 @@ def run_diagnostics(
     time_series_time_e,
     time_height_time_s,
     time_height_time_e,
-    usercmap="viridis_r"
+    usercmap="viridis_r",
+    line_colors=None,
+    line_styles=None,
+    ticksize=14,
+    labelsize=14
 ):
 
-    # Define some sizing parameters
-    ticksize=14
-    labelsize=14
-
-    # START CODE
-
-    # Make output directory for plots
     output_subdir = os.path.join(output_dir, general_id, "plots")
     os.makedirs(output_subdir, exist_ok=True)
-
-    # Make output directory for diagnostics
     os.makedirs(output_dir, exist_ok=True)
 
-    # Copy over logos for webpages
-    os.system('cp logos/thread_logo.png '+output_subdir)
-    os.system('cp logos/asr_logo_final.png '+output_subdir)
-    os.system('cp logos/arm_logo.png '+output_subdir)
-    os.system('cp logos/e3sm_logo.png '+output_subdir)
+    os.system('cp logos/thread_logo.png ' + output_subdir)
+    os.system('cp logos/asr_logo_final.png ' + output_subdir)
+    os.system('cp logos/arm_logo.png ' + output_subdir)
+    os.system('cp logos/e3sm_logo.png ' + output_subdir)
 
-    # Collect datasets and simulation labels
     file_paths = [os.path.join(base_dir, case, "run", f"{case}{caseappend}") for case in casenames]
     datasets = []
 
-    for fp, short_id in zip(file_paths, short_ids):
+    for fp in file_paths:
         ds = xr.open_dataset(fp, decode_times=False)
         datasets.append(ds)
 
-    # Add LES file
     if les_file is not None:
-       ds = xr.open_dataset(les_file, decode_times=False)
-       datasets.append(ds)
+        ds = xr.open_dataset(les_file, decode_times=False)
+        datasets.append(ds)
 
-    # Add Observation file
     if obs_file is not None:
-       ds = xr.open_dataset(obs_file, decode_times=False)
-       datasets.append(ds)
+        ds = xr.open_dataset(obs_file, decode_times=False)
+        datasets.append(ds)
 
-    # Verify the lengths of casenames and short_ids are the same
     if len(datasets) != len(short_ids):
         raise ValueError("The number of casenames must match the number of short_ids.")
+    if line_colors and len(line_colors) != len(datasets):
+        raise ValueError("Length of 'line_colors' must match the number of casenames.")
+    if line_styles and len(line_styles) != len(datasets):
+        raise ValueError("Length of 'line_styles' must match the number of casenames.")
 
-    # Prepare lists to keep track of plot filenames for HTML pages
     profile_plots = []
     timeseries_plots = []
     time_height_plots = []
 
-    # Collect all unique variables across datasets
     all_vars = set()
     for ds in datasets:
         all_vars.update(ds.data_vars.keys())
-
-        # Check if both 'PRECC' and 'PRECL' are in the dataset
         if 'PRECC' in ds.data_vars and 'PRECL' in ds.data_vars:
-            # Add 'PRECT' to all_vars if it's not already there
             all_vars.add('PRECT')
- 
-    # Determine the formatted date and time in seconds for model runs;
-    #  only test the first file since all model runs should have the same start time
+
     start_date_base, start_seconds_base = extract_time_info(datasets[0])
     print(start_date_base, start_seconds_base)
 
     time_offset = []
     for ds in datasets:
         test_date, test_seconds = extract_time_info(ds)
-        if (test_date == -999):
-            offset=0.0
-        else:
-            offset = compute_date_time_difference(start_date_base, start_seconds_base,
-	                                          test_date, test_seconds)
+        offset = compute_date_time_difference(start_date_base, start_seconds_base, test_date, test_seconds) if test_date != -999 else 0.0
         time_offset.append(offset)
 
-    #############################################################################################################
-    # Plot profile variables with three dimensions (e.g., time, ncol, lev or ilev)
     for var_name in all_vars:
-        # Determine if the variable qualifies as a profile variable
         if any(var_name in ds.data_vars and
-            ds[var_name].ndim in [2, 3] and
-            any(dim in ['lev', 'ilev'] for dim in ds[var_name].dims) and
-            'time' in ds[var_name].dims for ds in datasets):
+               ds[var_name].ndim in [2, 3] and
+               any(dim in ['lev', 'ilev'] for dim in ds[var_name].dims) and
+               'time' in ds[var_name].dims for ds in datasets):
 
-            # Loop over multiple averaging windows
             for window_idx, (start_time, end_time) in enumerate(zip(profile_time_s, profile_time_e)):
                 plt.figure(figsize=(8, 6))
-                valid_plot = False  # Track if any data was valid for this variable
+                valid_plot = False
 
-                # Loop over each dataset, using short_ids for the legend
                 for idx, (ds, short_id) in enumerate(zip(datasets, short_ids)):
                     if var_name not in ds.data_vars:
                         print(f"Warning: Variable '{var_name}' not found in case '{short_id}'. Skipping for this case.")
-                        continue  # Skip this case if variable is missing
+                        continue
 
-                    valid_plot = True  # At least one dataset has the variable
-
-                    # Convert `time` to a numeric array in days since the start
+                    valid_plot = True
                     time_in_days = ds['time'] - time_offset[idx]
+                    stime = start_time if start_time != "end" else time_in_days[0]
+                    etime = end_time if end_time != "end" else time_in_days[-1]
+                    time_indices = np.where((time_in_days >= stime) & (time_in_days <= etime))[0]
 
-                    # Determine indices for the specified range
-                    start_time = start_time if start_time != "end" else time_in_days[0]
-                    end_time = end_time if end_time != "end" else time_in_days[-1]
-                    time_indices = np.where((time_in_days >= start_time) & (time_in_days <= end_time))[0]
-
-                    # Select data within the filtered time range and take the mean over time
                     time_filtered_data = ds[var_name].isel(time=time_indices).mean(dim="time")
-
-                    # Compute vertical coordinate
                     y_coord = compute_y_coord(ds, time_indices, height_cord, var_name)
 
-                    # Apply y-axis limits
                     if height_cord == "z":
-                        y_min, y_max = (0, max_height_profile) if max_height_profile is not None else (y_coord.min(), y_coord.max())
-                    elif height_cord == "p":
-                        y_min, y_max = (max_height_profile, y_coord.max()) if max_height_profile is not None else (y_coord.min(), y_coord.max())
+                        y_min, y_max = (0, max_height_profile) if max_height_profile else (y_coord.min(), y_coord.max())
+                    else:
+                        y_min, y_max = (max_height_profile, y_coord.max()) if max_height_profile else (y_coord.min(), y_coord.max())
 
-                    # Filter data to include only levels within the y-axis limits
                     valid_indices = np.where((y_coord >= y_min) & (y_coord <= y_max))[0]
                     filtered_y_coord = y_coord[valid_indices]
                     filtered_data = time_filtered_data.isel(lev=valid_indices) if "lev" in time_filtered_data.dims else time_filtered_data.isel(ilev=valid_indices)
 
-                    # Plot profile
-                    plt.plot(np.squeeze(filtered_data), filtered_y_coord, label=short_id, linewidth=linewidth)
+                    plot_kwargs = {'label': short_id, 'linewidth': linewidth}
+                    if line_colors: plot_kwargs['color'] = line_colors[idx]
+                    if line_styles: plot_kwargs['linestyle'] = line_styles[idx]
+
+                    plt.plot(np.squeeze(filtered_data), filtered_y_coord, **plot_kwargs)
 
                 if valid_plot:
-                    # Set y-axis limits
                     plt.ylim([y_min, y_max])
-
-                    # Reverse the y-axis if plotting against pressure
                     if height_cord == "p":
                         plt.gca().invert_yaxis()
 
-                    # Labeling and saving the plot
                     var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
                     var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)
-                    if (var_long_name == "MISSING"):
-                        var_long_name = var_name
+                    if var_long_name == "MISSING": var_long_name = var_name
 
                     plt.xlabel(var_units, fontsize=labelsize)
                     ylabel = 'Height (m)' if height_cord == "z" else 'Pressure (hPa)'
@@ -314,26 +281,17 @@ def run_diagnostics(
                     plt.title(f"{var_long_name} Profile (Day {start_time} to Day {end_time})", fontsize=16)
                     plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
                     plt.grid(color='#95a5a6', linestyle='--', linewidth=2, alpha=0.5)
-
-                    # Make things easier to see
                     plt.tick_params(labelsize=ticksize)
 
-                    # Save plot
                     plot_filename = os.path.join(output_subdir, f"{var_name}_profile_window{window_idx+1}.jpg")
                     plt.savefig(plot_filename, format='jpg')
                     plt.close()
                     print(f"Saved profile plot for {var_name} (Window {window_idx+1}) as {plot_filename}")
-
-                    # Add to profile plots list for HTML generation
                     profile_plots.append((plot_filename, window_idx+1))
                 else:
                     print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
 
-    #############################################################################################################
-    # Plot time series for variables with two dimensions (e.g., time, ncol)
-    prect_treatment=False # Initialize special treatment for PRECT to False
     for var_name in all_vars:
-        # Determine if the variable qualifies as a time series variable
         if (
             any(
                 var_name in ds.data_vars and
@@ -344,86 +302,64 @@ def run_diagnostics(
             )
             or (var_name == 'PRECT')
         ):
-
             plt.figure(figsize=(10, 5))
-            valid_plot = False  # Track if any data was valid for this variable
+            valid_plot = False
+            prect_treatment = False
 
-            # Loop over each dataset, using short_ids for the legend
             for idx, (ds, short_id) in enumerate(zip(datasets, short_ids)):
                 if var_name not in ds.data_vars:
-                    if var_name == 'PRECT':
-                        if 'PRECC' and 'PRECL' in ds.data_vars:
-                            print(f"Computing PRECT from PRECC and PRECL for case '{short_id}'.")
-                            prect_treatment=True
-                        else:
-                            print(f"Variable is PRECT and PRECC and PRECL are not found for '{short_id}'.  Skipping")
-                            continue
+                    if var_name == 'PRECT' and 'PRECC' in ds.data_vars and 'PRECL' in ds.data_vars:
+                        prect_treatment = True
                     else:
-                        print(f"Warning: Variable '{var_name}' not found in case '{short_id}'. Skipping for this case.")
-                        continue  # Skip this case if variable is missing
+                        continue
 
-                valid_plot = True  # At least one dataset has the variable
-
-                # Convert `time` to a numeric array in days since the start
                 time_in_days = ds['time'] - time_offset[idx]
+                stime = time_series_time_s if time_series_time_s is not None else time_in_days[0]
+                etime = time_series_time_e if time_series_time_e is not None else time_in_days[-1]
+                time_indices = np.where((time_in_days >= stime) & (time_in_days <= etime))[0]
 
-                # Determine indices for the specified range
-                start_time = time_series_time_s if time_series_time_s is not None else time_in_days[0]
-                end_time = time_series_time_e if time_series_time_e is not None else time_in_days[-1]
-                time_indices = np.where((time_in_days >= start_time) & (time_in_days <= end_time))[0]
-
-                # check first to see if we are doing special treatment calculation for PRECT
                 if prect_treatment:
-                    variable_data = ds['PRECC'].isel(time=time_indices)[:,0]+\
-                        ds['PRECL'].isel(time=time_indices)[:,0]
-                    prect_treatment=False # reset
+                    variable_data = ds['PRECC'].isel(time=time_indices)[:, 0] + ds['PRECL'].isel(time=time_indices)[:, 0]
+                    prect_treatment = False
                 elif ds[var_name].ndim == 2 and 'ncol' in ds[var_name].dims:
-                        variable_data = ds[var_name].isel(time=time_indices)[:, 0]  # Select the single column (ncol = 1)
+                    variable_data = ds[var_name].isel(time=time_indices)[:, 0]
                 elif ds[var_name].ndim == 1 and 'time' in ds[var_name].dims:
                     variable_data = ds[var_name].isel(time=time_indices)
                 else:
-                    print(f"Warning: Variable '{var_name}' has unexpected dimensions. Skipping for this case.")
                     continue
 
-                # Plot time series with increased line width
-                plt.plot(time_in_days[time_indices], variable_data, label=short_id, linewidth=linewidth)
+                plot_kwargs = {'label': short_id, 'linewidth': linewidth}
+                if line_colors: plot_kwargs['color'] = line_colors[idx]
+                if line_styles: plot_kwargs['linestyle'] = line_styles[idx]
+
+                plt.plot(time_in_days[time_indices], variable_data, **plot_kwargs)
+                valid_plot = True
 
             if valid_plot:
-                # Labeling and saving the plot with larger font sizes
                 plt.xlabel("Time (days)", fontsize=labelsize)
-
-                # Do special treatment variables first
-                if (var_name == 'PRECT'):
-                    var_units='m/s'
-                    var_long_name='Total Surface Precipitation Rate'
+                if var_name == 'PRECT':
+                    var_units = 'm/s'
+                    var_long_name = 'Total Surface Precipitation Rate'
                 else:
-                    # Get attributes for the variable from the first dataset that contains it
                     var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
                     var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)
-                    if (var_long_name == "MISSING"):
-                        var_long_name = var_name
+                    if var_long_name == "MISSING": var_long_name = var_name
 
-                # Labeling and setting the plot title
                 plt.ylabel(var_units, fontsize=labelsize)
-                title = f"{var_long_name} Time Series"
-                plt.title(title, fontsize=16)
+                plt.title(f"{var_long_name} Time Series", fontsize=16)
                 plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
-                plt.grid(color='#95a5a6',linestyle='--',linewidth=2,alpha=0.5)
-                plt.grid('True')
-
-                # Make things easier to see
+                plt.grid(color='#95a5a6', linestyle='--', linewidth=2, alpha=0.5)
                 plt.tick_params(labelsize=ticksize)
 
-                # Save plot in the general_id subdirectory
                 plot_filename = os.path.join(output_subdir, f"{var_name}_timeseries.jpg")
                 plt.savefig(plot_filename, format='jpg')
                 plt.close()
                 print(f"Saved time series plot for {var_name} as {plot_filename}")
-
-                # Add to timeseries plots list for HTML generation
                 timeseries_plots.append(plot_filename)
             else:
                 print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
+
+
 
     #############################################################################################################
     # Plot time-height variables (two or three dimensions: time, ncol, lev or ilev)
