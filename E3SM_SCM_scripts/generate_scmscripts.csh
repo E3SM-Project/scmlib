@@ -1093,6 +1093,90 @@ sed -i s/CASESSTyearalign/2003/ $outfile
 sed -i s/CASESSTyearstart/2003/ $outfile
 sed -i s/CASESSTyearend/2004/ $outfile
 
+################################
+# EPCAPE 2023-04-26
+################################
+
+set casename = EPCAPE_2023-04-26
+set outfile = run_e3sm_scm_$casename.csh
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"EPCAPE 2023-04-06"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/32.68/ $outfile
+sed -i s/CASElon/242.13/ $outfile
+sed -i s/CASEsrfprop/.true./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASErelax/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEprecipoff/.false./ $outfile
+sed -i s/CASEnccons/100.0D6/ $outfile
+sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i s/CASEstartdate/2023-04-26/ $outfile
+sed -i s/CASEstartinsec/00000/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/66/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/FORCINGPROVIDER/"Haipeng Zhang"/ $outfile
+
+################################
+# EPCAPE 2023-05-15
+################################
+
+set casename = EPCAPE_2023-05-15
+set outfile = run_e3sm_scm_$casename.csh
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"EPCAPE 2023-05-15"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/32.68/ $outfile
+sed -i s/CASElon/242.13/ $outfile
+sed -i s/CASEsrfprop/.true./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASErelax/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEprecipoff/.false./ $outfile
+sed -i s/CASEnccons/100.0D6/ $outfile
+sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i s/CASEstartdate/2023-05-15/ $outfile
+sed -i s/CASEstartinsec/00000/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/66/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/FORCINGPROVIDER/"Haipeng Zhang"/ $outfile
+
+################################
+# EPCAPE 2023-07-02
+################################
+
+set casename = EPCAPE_2023-07-02
+set outfile = run_e3sm_scm_$casename.csh
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"EPCAPE 2023-07-02"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/32.68/ $outfile
+sed -i s/CASElon/242.13/ $outfile
+sed -i s/CASEsrfprop/.true./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASErelax/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEprecipoff/.false./ $outfile
+sed -i s/CASEnccons/100.0D6/ $outfile
+sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i s/CASEstartdate/2023-07-02/ $outfile
+sed -i s/CASEstartinsec/00000/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/66/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/FORCINGPROVIDER/"Haipeng Zhang"/ $outfile
+
 foreach file (*.csh)
   if ($file != run_e3sm_scm_TEMPLATE.csh && $file != generate_scmscripts.csh) then
     sed -i '/OBSERVEDAERO/d' $file
@@ -1148,3 +1232,4 @@ endif
 
 # Move CGILS scripts to their own folder
 mv run_e3sm_scm_CGILS*.csh CGILS
+mv run_e3sm_scm_EPCAPE*.csh EPCAPE
