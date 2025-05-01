@@ -1317,6 +1317,96 @@ sed -i s/CASESSTyearstart/2003/ $outfile
 sed -i s/CASESSTyearend/2004/ $outfile
 sed -i s/FORCINGPROVIDER/"Yi Qin"/ $outfile
 
+################################
+# EPCAPE 2023-04-26
+################################
+
+set casename = EPCAPE_2023-04-26
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"EPCAPE 2023-04-06"/ $outfile
+sed -i s/CASElat/32.68/ $outfile
+sed -i s/CASElon/242.13/ $outfile
+sed -i s/CASEsrfprop/true/ $outfile
+sed -i s/CASEstartdate/2023-04-26/ $outfile
+sed -i s/CASEstartinsec/00000/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/66/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
+sed -i s/CASEnex/5/ $outfile
+sed -i s/CASEney/5/ $outfile
+sed -i s/CASElex/50000/ $outfile
+sed -i s/CASEley/50000/ $outfile
+sed -i s/CASEtqnudge/false/ $outfile
+sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/true/ $outfile
+sed -i s/CASEdosub/true/ $outfile
+sed -i s/CASEwalltime/00:30:00/ $outfile
+sed -i s/CASEnhtfrq/-1/ $outfile
+sed -i s/FORCINGPROVIDER/"Haipeng Zhang"/ $outfile
+
+################################
+# EPCAPE 2023-05-15
+################################
+
+set casename = EPCAPE_2023-05-15
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"EPCAPE 2023-05-15"/ $outfile
+sed -i s/CASElat/32.68/ $outfile
+sed -i s/CASElon/242.13/ $outfile
+sed -i s/CASEsrfprop/true/ $outfile
+sed -i s/CASEstartdate/2023-05-15/ $outfile
+sed -i s/CASEstartinsec/00000/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/66/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
+sed -i s/CASEnex/5/ $outfile
+sed -i s/CASEney/5/ $outfile
+sed -i s/CASElex/50000/ $outfile
+sed -i s/CASEley/50000/ $outfile
+sed -i s/CASEtqnudge/false/ $outfile
+sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/true/ $outfile
+sed -i s/CASEdosub/true/ $outfile
+sed -i s/CASEwalltime/00:30:00/ $outfile
+sed -i s/CASEnhtfrq/-1/ $outfile
+sed -i s/FORCINGPROVIDER/"Haipeng Zhang"/ $outfile
+
+################################
+# EPCAPE 2023-07-02
+################################
+
+set casename = EPCAPE_2023-07-02
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"EPCAPE 2023-07-02"/ $outfile
+sed -i s/CASElat/32.68/ $outfile
+sed -i s/CASElon/242.13/ $outfile
+sed -i s/CASEsrfprop/true/ $outfile
+sed -i s/CASEstartdate/2023-07-02/ $outfile
+sed -i s/CASEstartinsec/00000/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/66/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
+sed -i s/CASEnex/5/ $outfile
+sed -i s/CASEney/5/ $outfile
+sed -i s/CASElex/50000/ $outfile
+sed -i s/CASEley/50000/ $outfile
+sed -i s/CASEtqnudge/false/ $outfile
+sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/true/ $outfile
+sed -i s/CASEdosub/true/ $outfile
+sed -i s/CASEwalltime/00:30:00/ $outfile
+sed -i s/CASEnhtfrq/-1/ $outfile
+sed -i s/FORCINGPROVIDER/"Haipeng Zhang"/ $outfile
+
 foreach file (*.csh)
   if ($file != run_dpxx_scream_TEMPLATE.csh && $file != generate_dpscripts.csh) then
     sed -i '/OBSERVEDAERO/d' $file
@@ -1409,3 +1499,4 @@ endif
 
 # Move CGILS scripts to their own folder
 mv run_dpxx_scream_CGILS*.csh CGILS
+mv run_dpxx_scream_EPCAPE*.csh EPCAPE
