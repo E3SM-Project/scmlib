@@ -236,12 +236,15 @@ sed -i s/CASEnex/5/ $outfile
 sed -i s/CASEney/5/ $outfile
 sed -i s/CASElex/50000/ $outfile
 sed -i s/CASEley/50000/ $outfile
-sed -i s/CASEtqnudge/false/ $outfile
+sed -i s/CASEtqnudge/true/ $outfile
 sed -i s/CASEuvnudge/false/ $outfile
 sed -i s/CASEcoriolis/false/ $outfile
 sed -i s/CASEdosub/true/ $outfile
 sed -i s/CASEwalltime/00:30:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
+sed -i s/CASEtqlow/650/ $outfile
+sed -i s/CASEtqhigh/0/ $outfile
+sed -i s/CASEtqtscale/3600/ $outfile
 
 ################################
 # GATE Idealized
@@ -1441,6 +1444,9 @@ foreach file (*.csh)
     sed -i '/RCEMSG/d' $file
     sed -i '/SSTMSG/d' $file
     sed -i '/SST2MSG/d' $file
+    sed -i '/CASEtqlow/d' $file
+    sed -i '/CASEtqhigh/d' $file
+    sed -i '/CASEtqtscale/d' $file
     sed -i s/CASEangel/180/ $file
     sed -i s/CASEswoff/false/ $file
   endif
