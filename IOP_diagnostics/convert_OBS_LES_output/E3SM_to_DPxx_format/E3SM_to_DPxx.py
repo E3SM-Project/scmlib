@@ -3,8 +3,8 @@ import numpy as np
 import os
 
 # Define input and output file paths
-input_file = "/pscratch/sd/b/bogensch/dp_screamxx_cgils/e3sm_scm_CGILS_s12_cntl.001a/run/e3sm_scm_CGILS_s12_cntl.001a.eam.h0.2003-07-15-00000.nc"
-output_file = "/pscratch/sd/b/bogensch/dp_screamxx_cgils/e3sm_scm_CGILS_s12_cntl.001a/run/e3sm_scm_CGILS_s12_cntl.001a.horiz_avg.AVERAGE.nhours_x1.2003-07-15-00000.nc"
+input_file = "/pscratch/sd/b/bogensch/dp_screamxx_cgils/e3sm_scm_CGILS_s12_cntl.001b/run/e3sm_scm_CGILS_s12_cntl.001b.eam.h0.2003-07-15-00000.nc"
+output_file = "/pscratch/sd/b/bogensch/dp_screamxx_cgils/e3sm_scm_CGILS_s12_cntl.001b/run/e3sm_scm_CGILS_s12_cntl.001b.horiz_avg.AVERAGE.nhours_x1.2003-07-15-00000.nc"
 time_offset = 0.0
 
 # Ensure the directory for the output file exists
@@ -43,7 +43,14 @@ three_d_vars = [
     ("CLDLIQ", "qc_horiz_avg", 1.0),
     ("CLDICE", "qi_horiz_avg", 1.0),
     ("RAINQM", "qr_horiz_avg", 1.0),
-    ("CLOUD", "cldfrac_tot_for_analysis_horiz_avg", 1.0)
+    ("CLOUD", "cldfrac_tot_for_analysis_horiz_avg", 1.0),
+    ("WPTHLP_CLUBB", "wthl_sec_horiz_avg", 1./1004./1.2),
+    ("WPRTP_CLUBB", "wqw_sec_horiz_avg", 1./(2.5*10**6)/1.2),
+    ("WP2_CLUBB", "w_variance_horiz_avg", 1.0),
+    ("WP3_CLUBB", "w3_horiz_avg", 1.0),
+    ("WPTHVP_CLUBB", "sgs_buoy_flux_horiz_avg", 1./1004./1.2),
+    ("THLP2_CLUBB", "thl_sec_horiz_avg", 1.0),
+    ("RTP2_CLUBB", "qw_sec_horiz_avg", 1.0/1000./1000.)
 ]
 
 two_d_vars = [
@@ -64,8 +71,16 @@ two_d_vars = [
 for var_in, var_out, factor in three_d_vars:
     if var_in in ds_in:
         data_val = np.squeeze(ds_in[var_in].values)
-        print(np.shape(data_val))
-        ds_out[var_out] = xr.DataArray(data_val, dims=["time", "lev"]) * factor
+        # Get dimension names of the variable
+        dims_in = ds_in[var_in].dims
+
+        # Determine if second dimension is 'lev' or 'ilev'
+        if len(dims_in) >= 2 and dims_in[1] == 'ilev':
+            dims_out = ["time", "ilev"]
+        else:
+            dims_out = ["time", "lev"]
+
+        ds_out[var_out] = xr.DataArray(data_val, dims=dims_out) * factor
     else:
         print(f"Warning: Variable '{var_in}' not found in input dataset. Skipping.")
 
