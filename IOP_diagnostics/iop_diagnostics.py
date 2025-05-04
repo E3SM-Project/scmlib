@@ -170,6 +170,9 @@ def run_diagnostics(
     time_series_time_e,
     time_height_time_s,
     time_height_time_e,
+    do_diurnal_composites=False,
+    diurnal_start_day=0,
+    diurnal_end_day=9999,
     usercmap="viridis_r",
     line_colors=None,
     line_styles=None,
@@ -290,6 +293,9 @@ def run_diagnostics(
                     profile_plots.append((plot_filename, window_idx+1))
                 else:
                     print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
+
+    #############################################################################################################
+    # Plot time series
 
     for var_name in all_vars:
         if (
@@ -518,9 +524,94 @@ def run_diagnostics(
             else:
                 print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
 
+    #############################################################################################################
+    # Diurnal Composite diagnostics
+
+    if do_diurnal_composites:
+        print("Generating diurnal composite diagnostics...")
+
+        diurnal_plots = []
+        for var_name in all_vars:
+            # Initialize figure
+            plt.figure(figsize=(10, 5))
+            valid_plot = False
+            prect_treatment = False
+
+            for idx, (ds, short_id) in enumerate(zip(datasets, short_ids)):
+                if var_name not in ds:
+                    continue
+
+                # Ensure 'time' is a dimension of the variable
+                if 'time' not in ds[var_name].dims:
+                    continue
+
+                times = ds['time'].values
+                time_vals = times - time_offset[idx]
+                time_res = float(time_vals[1] - time_vals[0])
+                steps_per_day = int(round(1.0 / time_res))
+
+                total_days = len(time_vals) / steps_per_day
+                if steps_per_day < 4:
+                    print(f"Skipping {var_name}: fewer than 4 time steps/day.")
+                    continue
+                if total_days < 3:
+                    print(f"Skipping {var_name}: fewer than 3 days in dataset.")
+                    continue
+
+                stime = diurnal_start_day
+                etime = min(diurnal_end_day, time_vals[-1])
+                valid_idx = np.where((time_vals >= stime) & (time_vals <= etime))[0]
+                if len(valid_idx) == 0:
+                    continue
+
+                data = ds[var_name].isel(time=valid_idx)
+                if 'ncol' in data.dims:
+                    data = data.mean(dim='ncol')
+
+                hour_bins = np.linspace(0, 24, steps_per_day+1)
+                hour_labels = (hour_bins[:-1] + hour_bins[1:]) / 2
+
+                daily_data = []
+                for i in range(0, len(data), steps_per_day):
+                    if i + steps_per_day > len(data):
+                        break
+                    daily_data.append(data[i:i+steps_per_day])
+
+                composite = np.mean(daily_data, axis=0)
+
+                if data.ndim == 1:
+                    plot_kwargs = {'label': short_id, 'linewidth': linewidth}
+                    if line_colors: plot_kwargs['color'] = line_colors[idx]
+                    if line_styles: plot_kwargs['linestyle'] = line_styles[idx]
+                    plt.plot(hour_labels, composite, **plot_kwargs)
+                    valid_plot = True
+
+            if valid_plot:
+                plt.xlabel("Time (hours)", fontsize=labelsize)
+                var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
+                var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)
+                if var_long_name == "MISSING": var_long_name = var_name
+
+                plt.ylabel(var_units, fontsize=labelsize)
+                plt.title(f"{var_long_name} Diurnal Composite", fontsize=16)
+                plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
+                plt.grid(color='#95a5a6', linestyle='--', linewidth=2, alpha=0.5)
+                plt.tick_params(labelsize=ticksize)
+
+                plot_filename = os.path.join(output_subdir, f"{var_name}_diurnal.jpg")
+                plt.savefig(plot_filename, format='jpg')
+                plt.close()
+                print(f"Saved diurnal composite plot for {var_name} as {plot_filename}")
+                timeseries_plots.append(plot_filename)
+            else:
+                print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
+
     # Close datasets
     for ds in datasets:
         ds.close()
+
+    #############################################################################################################
+    # End of diagnostics generation, rest of program makes web interface
 
     # HTML Templates with different width and max-width settings
     profile_html_template = """
