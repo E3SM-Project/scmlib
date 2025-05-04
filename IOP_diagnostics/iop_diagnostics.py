@@ -214,6 +214,7 @@ def run_diagnostics(
     profile_plots = []
     timeseries_plots = []
     time_height_plots = []
+    diurnal_plots = []
 
     all_vars = set()
     for ds in datasets:
@@ -602,7 +603,7 @@ def run_diagnostics(
                 plt.savefig(plot_filename, format='jpg')
                 plt.close()
                 print(f"Saved diurnal composite plot for {var_name} as {plot_filename}")
-                timeseries_plots.append(plot_filename)
+                diurnal_plots.append(plot_filename)
             else:
                 print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
 
@@ -725,6 +726,43 @@ def run_diagnostics(
     </html>
     """
 
+    diurnal_html_template = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ title }}</title>
+        <style>
+            .grid-container {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+                padding: 10px;
+            }
+            .grid-item {
+                text-align: center;
+            }
+            img {
+                width: 100%;  /* Diurnal Composite plot width */
+                max-width: 800px;  /* Diurnal Composite plot max width */
+                height: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>{{ title }}</h1>
+        <div class="grid-container">
+        {% for img in images %}
+            <div class="grid-item">
+                <h3>{{ img }}</h3>
+                <img src="plots/{{ img }}" alt="{{ img }}">
+            </div>
+        {% endfor %}
+        </div>
+    </body>
+    </html>
+    """
+
     # Generate profile HTML files for each averaging window
     for window_idx, (start_time, end_time) in enumerate(zip(profile_time_s, profile_time_e)):
         sorted_images = sorted([os.path.basename(p[0]) for p in profile_plots if p[1] == window_idx+1],key=str.lower)
@@ -753,6 +791,15 @@ def run_diagnostics(
     )
     with open(os.path.join(output_dir, general_id, "time_height_plots.html"), "w") as f:
         f.write(time_height_html_content)
+
+    # Generate diurnal composite HTML file
+    sorted_diurnal_images = sorted([os.path.basename(t) for t in diurnal_plots],key=str.lower)
+    diurnal_html_content = Template(diurnal_html_template).render(
+        title="Diurnal Composite Plots",
+        images=sorted_diurnal_images
+    )
+    with open(os.path.join(output_dir, general_id, "diurnal_plots.html"), "w") as f:
+        f.write(diurnal_html_content)
 
     # Main HTML page with links to profile, timeseries, and time-height pages
     main_html_content = Template("""
@@ -802,6 +849,7 @@ def run_diagnostics(
             {% endfor %}
             <li><a href="timeseries_plots.html">Time Series Plots</a></li>
             <li><a href="time_height_plots.html">Time-Height Plots</a></li>
+            <li><a href="diurnal_plots.html">Diurnal Composite Plots</a></li>
         </ul>
     </body>
     </html>
@@ -821,6 +869,7 @@ def run_diagnostics(
             tar.add(os.path.join(output_dir, general_id, f"profile_plots_window{window_idx+1}.html"), arcname=f"profile_plots_window{window_idx+1}.html")
         tar.add(os.path.join(output_dir, general_id, "timeseries_plots.html"), arcname="timeseries_plots.html")
         tar.add(os.path.join(output_dir, general_id, "time_height_plots.html"), arcname="time_height_plots.html")
+        tar.add(os.path.join(output_dir, general_id, "diurnal_plots.html"), arcname="diurnal_plots.html")
         tar.add(output_subdir, arcname="plots")
 
     print(f"Created archive {tar_filename} containing all plots and HTML files.")
