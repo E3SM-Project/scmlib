@@ -378,7 +378,7 @@ def run_diagnostics(
                 if var_name in ds.data_vars:
 
                     # Convert `time` to a numeric array in days since the start
-                    time_in_days = ds['time']
+                    time_in_days = ds['time'] - time_offset[idx]
 
                     # Determine indices for the specified range
                     start_time = time_height_time_s if time_height_time_s is not None else time_in_days[0]
@@ -541,11 +541,9 @@ def run_diagnostics(
 
                 # Must include 'time', and all dims must be in the allowed list
                 if 'time' not in var_dims or not var_dims.issubset(allowed_dims):
-                    print(f"Skipping {var_name}: dimensions {ds[var_name].dims} not allowed")
                     continue
 
                 if ds[var_name].dtype.kind in {'S', 'U'}:
-                    print(f"Skipping {var_name}: string or character dtype ({ds[var_name].dtype})")
                     continue
 
                 times = ds['time'].values
@@ -590,7 +588,7 @@ def run_diagnostics(
                     valid_plot = True
 
             if valid_plot:
-                plt.xlabel("Time (hours)", fontsize=labelsize)
+                plt.xlabel("Time (hour - UTC)", fontsize=labelsize)
                 var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
                 var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)
                 if var_long_name == "MISSING": var_long_name = var_name
