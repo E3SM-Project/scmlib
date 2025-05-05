@@ -171,6 +171,7 @@ def plot_time_height_panel_grid(
     print(f"Saved plot for {var_name} as {outfile}")
     return outfile
 
+
 #############################
 
 import netCDF4
@@ -491,7 +492,7 @@ def run_diagnostics(
                     time_height_plots.append(outfile)
 
     #############################################################################################################
-    # Diurnal Composite diagnostics
+    # Diurnal Composite diagnostics 1-D
 
     if do_diurnal_composites:
         print("Generating diurnal composite diagnostics...")
@@ -557,29 +558,6 @@ def run_diagnostics(
                     if line_styles: plot_kwargs['linestyle'] = line_styles[idx]
                     plt.plot(hour_labels, composite, **plot_kwargs)
                     valid_plot = True
-                """
-                if data.ndim == 2:
-                    plotfile = plot_time_height_panel_grid(
-                        var_name,
-                        datasets,
-                        short_ids,
-                        time_offset,
-                        height_cord,
-                        output_subdir,
-                        labelsize,
-                        ticksize,
-                        usercmap,
-                        diurnal_start_day,
-                        diurnal_end_day,
-                        max_height_timeheight,
-                        is_diurnal=True,
-                        time_labels=hour_labels,
-                        title_suffix=f"(Day {diurnal_start_day} to Day {diurnal_end_day})"
-                    )
-                    if plotfile:
-                        diurnal_plots.append(plotfile)
-                        valid_plot = True
-                 """             
 
             if valid_plot and data.ndim == 1:
                 plt.xlabel("Time (hour - UTC)", fontsize=labelsize)
