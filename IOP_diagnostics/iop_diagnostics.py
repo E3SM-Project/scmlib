@@ -795,7 +795,7 @@ def run_diagnostics(
     # Generate diurnal composite HTML file
     sorted_diurnal_images = sorted([os.path.basename(t) for t in diurnal_plots],key=str.lower)
     diurnal_html_content = Template(diurnal_html_template).render(
-        title="Diurnal Composite Plots",
+        title=f"Diurnal Cycle Composite Plots: Day {diurnal_start_day} to {diurnal_end_day}",
         images=sorted_diurnal_images
     )
     with open(os.path.join(output_dir, general_id, "diurnal_plots.html"), "w") as f:
@@ -849,13 +849,15 @@ def run_diagnostics(
             {% endfor %}
             <li><a href="timeseries_plots.html">Time Series Plots</a></li>
             <li><a href="time_height_plots.html">Time-Height Plots</a></li>
-            <li><a href="diurnal_plots.html">Diurnal Composite Plots</a></li>
+            <li><a href="diurnal_plots.html">Diurnal Cycle Composite Plots (Day {{ "%.1f" | format(diurnal_start_day) }} to Day {{ "%.1f" | format(diurnal_end_day) }})</a></li>
         </ul>
     </body>
     </html>
     """).render(
         general_id=general_id,
-        profile_windows=list(enumerate(zip(profile_time_s, profile_time_e)))
+        profile_windows=list(enumerate(zip(profile_time_s, profile_time_e))),
+        diurnal_start_day=diurnal_start_day,
+        diurnal_end_day=diurnal_end_day
     )
 
     with open(os.path.join(output_dir, general_id, "index.html"), "w") as f:
