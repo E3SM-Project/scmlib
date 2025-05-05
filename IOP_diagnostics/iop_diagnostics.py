@@ -848,8 +848,12 @@ def run_diagnostics(
             </li>
             {% endfor %}
             <li><a href="timeseries_plots.html">Time Series Plots</a></li>
+	    {% if do_timeheight %}
             <li><a href="time_height_plots.html">Time-Height Plots</a></li>
+	    {% endif %}
+	    {% if do_diurnal_composites %}
             <li><a href="diurnal_plots.html">Diurnal Cycle Composite Plots (Day {{ "%.1f" | format(diurnal_start_day) }} to Day {{ "%.1f" | format(diurnal_end_day) }})</a></li>
+	    {% endif %}
         </ul>
     </body>
     </html>
@@ -857,7 +861,9 @@ def run_diagnostics(
         general_id=general_id,
         profile_windows=list(enumerate(zip(profile_time_s, profile_time_e))),
         diurnal_start_day=diurnal_start_day,
-        diurnal_end_day=diurnal_end_day
+        diurnal_end_day=diurnal_end_day,
+        do_timeheight=bool(do_timeheight),
+	do_diurnal_composites=bool(do_diurnal_composites)
     )
 
     with open(os.path.join(output_dir, general_id, "index.html"), "w") as f:
