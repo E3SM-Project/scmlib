@@ -542,8 +542,16 @@ def run_diagnostics(
                 if var_name not in ds:
                     continue
 
-                # Ensure 'time' is a dimension of the variable
-                if 'time' not in ds[var_name].dims:
+                allowed_dims = {'time', 'ncol', 'lev', 'ilev'}
+                var_dims = set(ds[var_name].dims)
+
+                # Must include 'time', and all dims must be in the allowed list
+                if 'time' not in var_dims or not var_dims.issubset(allowed_dims):
+                    print(f"Skipping {var_name}: dimensions {ds[var_name].dims} not allowed")
+                    continue
+
+                if ds[var_name].dtype.kind in {'S', 'U'}:
+                    print(f"Skipping {var_name}: string or character dtype ({ds[var_name].dtype})")
                     continue
 
                 times = ds['time'].values
