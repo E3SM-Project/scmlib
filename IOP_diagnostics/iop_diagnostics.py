@@ -171,6 +171,51 @@ def plot_time_height_panel_grid(
     print(f"Saved plot for {var_name} as {outfile}")
     return outfile
 
+def compute_diurnal_composite(ds, var_name, idx, time_offset, diurnal_start_day, diurnal_end_day):
+    """
+    Compute the diurnal composite for a given variable in a dataset.
+    Returns:
+        composite (np.ndarray), hour_labels (np.ndarray), success (bool), ndim (int)
+    """
+    try:
+        times = ds['time'].values
+        time_vals = times - time_offset[idx]
+        time_res = float(time_vals[1] - time_vals[0])
+        steps_per_day = int(round(1.0 / time_res))
+
+        total_days = len(time_vals) / steps_per_day
+        if steps_per_day < 4:
+            print(f"Skipping {var_name}: fewer than 4 time steps/day.")
+            return None, None, False, None
+        if total_days < 3:
+            print(f"Skipping {var_name}: fewer than 3 days in dataset.")
+            return None, None, False, None
+
+        stime = diurnal_start_day
+        etime = min(diurnal_end_day, time_vals[-1])
+        valid_idx = np.where((time_vals >= stime) & (time_vals <= etime))[0]
+        if len(valid_idx) == 0:
+            return None, None, False, None
+
+        data = ds[var_name].isel(time=valid_idx)
+        if 'ncol' in data.dims:
+            data = data.mean(dim='ncol')
+
+        hour_bins = np.linspace(0, 24, steps_per_day + 1)
+        hour_labels = (hour_bins[:-1] + hour_bins[1:]) / 2
+
+        daily_data = []
+        for i in range(0, len(data), steps_per_day):
+            if i + steps_per_day > len(data):
+                break
+            daily_data.append(data[i:i + steps_per_day])
+
+        composite = np.mean(daily_data, axis=0)
+
+        return composite, hour_labels, True, data.ndim
+    except Exception as e:
+        print(f"Error computing diurnal composite for {var_name}: {e}")
+        return None, None, False, None
 
 #############################
 
@@ -322,7 +367,7 @@ def run_diagnostics(
     profile_plots = []
     timeseries_plots = []
     time_height_plots = []
-    diurnal_plots = []
+    diurnal1d_plots = []
 
     all_vars = set()
     for ds in datasets:
@@ -497,7 +542,7 @@ def run_diagnostics(
     if do_diurnal_composites:
         print("Generating diurnal composite diagnostics...")
 
-        diurnal_plots = []
+        diurnal1d_plots = []
         for var_name in all_vars:
             # Initialize figure
             plt.figure(figsize=(10, 5))
@@ -518,48 +563,18 @@ def run_diagnostics(
                 if ds[var_name].dtype.kind in {'S', 'U'}:
                     continue
 
-                times = ds['time'].values
-                time_vals = times - time_offset[idx]
-                time_res = float(time_vals[1] - time_vals[0])
-                steps_per_day = int(round(1.0 / time_res))
-
-                total_days = len(time_vals) / steps_per_day
-                if steps_per_day < 4:
-                    print(f"Skipping {var_name}: fewer than 4 time steps/day.")
-                    continue
-                if total_days < 3:
-                    print(f"Skipping {var_name}: fewer than 3 days in dataset.")
+                composite, hour_labels, success, ndim = compute_diurnal_composite(
+                    ds, var_name, idx, time_offset, diurnal_start_day, diurnal_end_day)
+                if not success or ndim !=1:
                     continue
 
-                stime = diurnal_start_day
-                etime = min(diurnal_end_day, time_vals[-1])
-                valid_idx = np.where((time_vals >= stime) & (time_vals <= etime))[0]
-                if len(valid_idx) == 0:
-                    continue
+                plot_kwargs = {'label': short_id, 'linewidth': linewidth}
+                if line_colors: plot_kwargs['color'] = line_colors[idx]
+                if line_styles: plot_kwargs['linestyle'] = line_styles[idx]
+                plt.plot(hour_labels, composite, **plot_kwargs)
+                valid_plot = True
 
-                data = ds[var_name].isel(time=valid_idx)
-                if 'ncol' in data.dims:
-                    data = data.mean(dim='ncol')
-
-                hour_bins = np.linspace(0, 24, steps_per_day+1)
-                hour_labels = (hour_bins[:-1] + hour_bins[1:]) / 2
-
-                daily_data = []
-                for i in range(0, len(data), steps_per_day):
-                    if i + steps_per_day > len(data):
-                        break
-                    daily_data.append(data[i:i+steps_per_day])
-
-                composite = np.mean(daily_data, axis=0)
-
-                if data.ndim == 1:
-                    plot_kwargs = {'label': short_id, 'linewidth': linewidth}
-                    if line_colors: plot_kwargs['color'] = line_colors[idx]
-                    if line_styles: plot_kwargs['linestyle'] = line_styles[idx]
-                    plt.plot(hour_labels, composite, **plot_kwargs)
-                    valid_plot = True
-
-            if valid_plot and data.ndim == 1:
+            if valid_plot:
                 plt.xlabel("Time (hour - UTC)", fontsize=labelsize)
                 var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
                 var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)
@@ -571,14 +586,14 @@ def run_diagnostics(
                 plt.grid(color='#95a5a6', linestyle='--', linewidth=2, alpha=0.5)
                 plt.tick_params(labelsize=ticksize)
 
-                plot_filename = os.path.join(output_subdir, f"{var_name}_diurnal.jpg")
+                plot_filename = os.path.join(output_subdir, f"{var_name}_diurnal1d.jpg")
                 plt.savefig(plot_filename, format='jpg')
                 plt.close()
                 print(f"Saved diurnal composite plot for {var_name} as {plot_filename}")
-                diurnal_plots.append(plot_filename)
+                diurnal1d_plots.append(plot_filename)
 
             if not valid_plot:
-                print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
+                print(f"Warning: Variable '{var_name}' not a 1D variable, skipping for 1D composite diagnostics.")
 
     # Close datasets
     for ds in datasets:
@@ -699,7 +714,7 @@ def run_diagnostics(
     </html>
     """
 
-    diurnal_html_template = """
+    diurnal1d_html_template = """
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -766,13 +781,13 @@ def run_diagnostics(
         f.write(time_height_html_content)
 
     # Generate diurnal composite HTML file
-    sorted_diurnal_images = sorted([os.path.basename(t) for t in diurnal_plots],key=str.lower)
-    diurnal_html_content = Template(diurnal_html_template).render(
-        title=f"Diurnal Cycle Composite Plots: Day {diurnal_start_day} to {diurnal_end_day}",
-        images=sorted_diurnal_images
+    sorted_diurnal1d_images = sorted([os.path.basename(t) for t in diurnal1d_plots],key=str.lower)
+    diurnal1d_html_content = Template(diurnal1d_html_template).render(
+        title=f"Diurnal Cycle 1D Composite Plots: Day {diurnal_start_day} to {diurnal_end_day}",
+        images=sorted_diurnal1d_images
     )
-    with open(os.path.join(output_dir, general_id, "diurnal_plots.html"), "w") as f:
-        f.write(diurnal_html_content)
+    with open(os.path.join(output_dir, general_id, "diurnal1d_plots.html"), "w") as f:
+        f.write(diurnal1d_html_content)
 
     # Main HTML page with links to profile, timeseries, and time-height pages
     main_html_content = Template("""
@@ -825,7 +840,7 @@ def run_diagnostics(
             <li><a href="time_height_plots.html">Time-Height Plots</a></li>
 	    {% endif %}
 	    {% if do_diurnal_composites %}
-            <li><a href="diurnal_plots.html">Diurnal Cycle Composite Plots (Day {{ "%.1f" | format(diurnal_start_day) }} to Day {{ "%.1f" | format(diurnal_end_day) }})</a></li>
+            <li><a href="diurnal1d_plots.html">Diurnal Cycle 1D Composite Plots (Day {{ "%.1f" | format(diurnal_start_day) }} to Day {{ "%.1f" | format(diurnal_end_day) }})</a></li>
 	    {% endif %}
         </ul>
     </body>
@@ -850,7 +865,7 @@ def run_diagnostics(
             tar.add(os.path.join(output_dir, general_id, f"profile_plots_window{window_idx+1}.html"), arcname=f"profile_plots_window{window_idx+1}.html")
         tar.add(os.path.join(output_dir, general_id, "timeseries_plots.html"), arcname="timeseries_plots.html")
         tar.add(os.path.join(output_dir, general_id, "time_height_plots.html"), arcname="time_height_plots.html")
-        tar.add(os.path.join(output_dir, general_id, "diurnal_plots.html"), arcname="diurnal_plots.html")
+        tar.add(os.path.join(output_dir, general_id, "diurnal1d_plots.html"), arcname="diurnal1d_plots.html")
         tar.add(output_subdir, arcname="plots")
 
     print(f"Created archive {tar_filename} containing all plots and HTML files.")
