@@ -100,26 +100,58 @@ def plot_time_height_panel_grid(
         if var_name not in ds:
             continue
 
-        time_vals = ds['time'].values - time_offset[idx]
-        time_indices = np.where((time_vals >= start_time) & (time_vals <= end_time))[0]
-        if len(time_indices) == 0:
-            continue
+        if is_diurnal:
+            composite, hour_labels, success, ndim = compute_diurnal_composite(
+                ds, var_name, idx, time_offset, start_time, end_time)
+            if not success or ndim != 2:
+                continue
+            time_vals = hour_labels
+            time_indices = np.where((time_vals >= 0) & (time_vals <= 24))[0]
+            data = composite
+            # height levels should come from lev or ilev (assumes consistent across time)
+            if 'lev' in ds[var_name].dims:
+                lev_dim = 'lev'
+            elif 'ilev' in ds[var_name].dims:
+                lev_dim = 'ilev'
+            else:
+                continue
 
-        y_coord = compute_y_coord(ds, time_indices, height_cord, var_name)
-        y_min, y_max = (0, max_height) if height_cord == "z" else (max_height, y_coord.max())
-        valid_lev_idx = np.where((y_coord >= y_min) & (y_coord <= y_max))[0]
+            timecords = np.where((time_vals >= start_time) & (time_vals <= end_time))[0]
+            y_coord = compute_y_coord(ds, timecords, height_cord, var_name)
+            y_min, y_max = (0, max_height) if height_cord == "z" else (max_height, y_coord.max())
+            valid_lev_idx = np.where((y_coord >= y_min) & (y_coord <= y_max))[0]
 
-        data = ds[var_name].isel(time=time_indices)
-        if "lev" in ds[var_name].dims:
-            data = data.isel(lev=valid_lev_idx)
-        elif "ilev" in ds[var_name].dims:
-            data = data.isel(ilev=valid_lev_idx)
-        if 'ncol' in data.dims:
-            data = data.mean(dim="ncol")
+            if max_height is not None:
+                if height_cord == "z":
+                    valid_idx = np.where(y_coord <= max_height)[0]
+                else:
+                    valid_idx = np.where(y_coord >= max_height)[0]
+                data = data[:, valid_lev_idx]
 
-        global_min = min(global_min, float(data.min().values))
-        global_max = max(global_max, float(data.max().values))
-        valid_datasets.append((idx, time_indices, data, y_coord[valid_lev_idx]))
+            global_min = min(global_min, float(data.min()))
+            global_max = max(global_max, float(data.max()))
+            valid_datasets.append((idx, time_indices, data, y_coord[valid_lev_idx]))
+
+        else:
+            time_vals = ds['time'].values - time_offset[idx]
+            time_indices = np.where((time_vals >= start_time) & (time_vals <= end_time))[0]
+            if len(time_indices) == 0:
+                continue
+            y_coord = compute_y_coord(ds, time_indices, height_cord, var_name)
+            y_min, y_max = (0, max_height) if height_cord == "z" else (max_height, y_coord.max())
+            valid_lev_idx = np.where((y_coord >= y_min) & (y_coord <= y_max))[0]
+
+            data = ds[var_name].isel(time=time_indices)
+            if "lev" in ds[var_name].dims:
+                data = data.isel(lev=valid_lev_idx)
+            elif "ilev" in ds[var_name].dims:
+                data = data.isel(ilev=valid_lev_idx)
+            if 'ncol' in data.dims:
+                data = data.mean(dim="ncol")
+
+            global_min = min(global_min, float(data.min().values))
+            global_max = max(global_max, float(data.max().values))
+            valid_datasets.append((idx, time_indices, data, y_coord[valid_lev_idx]))
 
     if not valid_datasets:
         print(f"Warning: No valid data found for {var_name}. Skipping.")
@@ -137,10 +169,9 @@ def plot_time_height_panel_grid(
 
     contours = []
     for ax, (idx, time_indices, data, y_coord) in zip(axes.flat, valid_datasets):
-        time_vals = datasets[idx]['time'].values - time_offset[idx]
-        time_vals = time_vals[time_indices]
-        if is_diurnal and time_labels is not None:
-            time_vals = time_labels
+        if not is_diurnal:
+            time_vals = datasets[idx]['time'].values - time_offset[idx]
+            time_vals = time_vals[time_indices]
 
         contour = ax.contourf(time_vals, y_coord, data.T, levels=levels, cmap=usercmap)
         contours.append(contour)
@@ -164,7 +195,7 @@ def plot_time_height_panel_grid(
         long_name = var_name
     plt.suptitle(f"{long_name} {'Diurnal Composite' if is_diurnal else 'Time-Height'} {title_suffix}", fontsize=18)
 
-    outname = f"{var_name}_{'diurnal' if is_diurnal else 'time_height'}.jpg"
+    outname = f"{var_name}_{'diurnal2d' if is_diurnal else 'time_height'}.jpg"
     outfile = os.path.join(output_subdir, outname)
     plt.savefig(outfile, format='jpg')
     plt.close()
@@ -368,6 +399,7 @@ def run_diagnostics(
     timeseries_plots = []
     time_height_plots = []
     diurnal1d_plots = []
+    diurnal2d_plots = []
 
     all_vars = set()
     for ds in datasets:
@@ -594,6 +626,35 @@ def run_diagnostics(
 
             if not valid_plot:
                 print(f"Warning: Variable '{var_name}' not a 1D variable, skipping for 1D composite diagnostics.")
+
+    #############################################################################################################
+    # 2D diurnal composite plots (two or three dimensions: time, ncol, lev or ilev)
+    if do_diurnal_composites:
+        for var_name in all_vars:
+            if any(
+                var_name in ds.data_vars and
+                ds[var_name].ndim in [2, 3] and
+                any(dim in ['lev', 'ilev'] for dim in ds[var_name].dims) and
+                'time' in ds[var_name].dims
+                for ds in datasets
+            ):
+                outfile = plot_time_height_panel_grid(
+                    var_name,
+                    datasets,
+                    short_ids,
+                    time_offset,
+                    height_cord,
+                    output_subdir,
+                    labelsize,
+                    ticksize,
+                    usercmap,
+                    diurnal_start_day,
+                    diurnal_end_day,
+                    max_height_timeheight,
+                    is_diurnal=True
+                )
+                if outfile:
+                    diurnal2d_plots.append(outfile)
 
     # Close datasets
     for ds in datasets:
