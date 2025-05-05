@@ -194,6 +194,14 @@ def run_diagnostics(
 
     for fp in file_paths:
         ds = xr.open_dataset(fp, decode_times=False)
+
+        # Treatement of PRECT for E3SM
+        if 'PRECC' in ds.data_vars and 'PRECL' in ds.data_vars:
+            ds['PRECT'] = ds['PRECC'] + ds['PRECL']
+            # Add metadata
+            ds['PRECT'].attrs['long_name'] = 'Total Surface Precipitation Rate'
+            ds['PRECT'].attrs['units'] = ds['PRECC'].attrs.get('units', 'm/s')
+
         datasets.append(ds)
 
     if les_file is not None:
@@ -219,8 +227,6 @@ def run_diagnostics(
     all_vars = set()
     for ds in datasets:
         all_vars.update(ds.data_vars.keys())
-        if 'PRECC' in ds.data_vars and 'PRECL' in ds.data_vars:
-            all_vars.add('PRECT')
 
     start_date_base, start_seconds_base = extract_time_info(datasets[0])
     print(start_date_base, start_seconds_base)
@@ -295,40 +301,31 @@ def run_diagnostics(
                 else:
                     print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
 
-    #############################################################################################################
+    # =================================================================
     # Plot time series
+    # =================================================================
 
     for var_name in all_vars:
-        if (
-            any(
-                var_name in ds.data_vars and
-                ds[var_name].ndim in [1, 2] and
-                'time' in ds[var_name].dims and
-                not any(dim in ['lev', 'ilev'] for dim in ds[var_name].dims)
-                for ds in datasets
-            )
-            or (var_name == 'PRECT')
+        if any(
+            var_name in ds.data_vars and
+            ds[var_name].ndim in [1, 2] and
+            'time' in ds[var_name].dims and
+            not any(dim in ['lev', 'ilev'] for dim in ds[var_name].dims)
+            for ds in datasets
         ):
             plt.figure(figsize=(10, 5))
             valid_plot = False
-            prect_treatment = False
 
             for idx, (ds, short_id) in enumerate(zip(datasets, short_ids)):
                 if var_name not in ds.data_vars:
-                    if var_name == 'PRECT' and 'PRECC' in ds.data_vars and 'PRECL' in ds.data_vars:
-                        prect_treatment = True
-                    else:
-                        continue
+                    continue
 
                 time_in_days = ds['time'] - time_offset[idx]
                 stime = time_series_time_s if time_series_time_s is not None else time_in_days[0]
                 etime = time_series_time_e if time_series_time_e is not None else time_in_days[-1]
                 time_indices = np.where((time_in_days >= stime) & (time_in_days <= etime))[0]
 
-                if prect_treatment:
-                    variable_data = ds['PRECC'].isel(time=time_indices)[:, 0] + ds['PRECL'].isel(time=time_indices)[:, 0]
-                    prect_treatment = False
-                elif ds[var_name].ndim == 2 and 'ncol' in ds[var_name].dims:
+                if ds[var_name].ndim == 2 and 'ncol' in ds[var_name].dims:
                     variable_data = ds[var_name].isel(time=time_indices)[:, 0]
                 elif ds[var_name].ndim == 1 and 'time' in ds[var_name].dims:
                     variable_data = ds[var_name].isel(time=time_indices)
@@ -343,15 +340,12 @@ def run_diagnostics(
                 valid_plot = True
 
             if valid_plot:
-                plt.xlabel("Time (days)", fontsize=labelsize)
-                if var_name == 'PRECT':
-                    var_units = 'm/s'
-                    var_long_name = 'Total Surface Precipitation Rate'
-                else:
-                    var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
-                    var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)
-                    if var_long_name == "MISSING": var_long_name = var_name
+                var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
+                var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)
+                if var_long_name == "MISSING":
+                    var_long_name = var_name
 
+                plt.xlabel("Time (days)", fontsize=labelsize)
                 plt.ylabel(var_units, fontsize=labelsize)
                 plt.title(f"{var_long_name} Time Series", fontsize=16)
                 plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
