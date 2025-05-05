@@ -72,6 +72,105 @@ def compute_y_coord(ds, time_indices, height_cord, var_name):
 
     return y_coord
 
+def plot_time_height_panel_grid(
+    var_name,
+    datasets,
+    short_ids,
+    time_offset,
+    height_cord,
+    output_subdir,
+    labelsize,
+    ticksize,
+    usercmap,
+    start_time,
+    end_time,
+    max_height,
+    is_diurnal=False,
+    time_labels=None,
+    title_suffix=""
+):
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import os
+
+    global_min, global_max = float('inf'), float('-inf')
+    valid_datasets = []
+
+    for idx, ds in enumerate(datasets):
+        if var_name not in ds:
+            continue
+
+        time_vals = ds['time'].values - time_offset[idx]
+        time_indices = np.where((time_vals >= start_time) & (time_vals <= end_time))[0]
+        if len(time_indices) == 0:
+            continue
+
+        y_coord = compute_y_coord(ds, time_indices, height_cord, var_name)
+        y_min, y_max = (0, max_height) if height_cord == "z" else (max_height, y_coord.max())
+        valid_lev_idx = np.where((y_coord >= y_min) & (y_coord <= y_max))[0]
+
+        data = ds[var_name].isel(time=time_indices)
+        if "lev" in ds[var_name].dims:
+            data = data.isel(lev=valid_lev_idx)
+        elif "ilev" in ds[var_name].dims:
+            data = data.isel(ilev=valid_lev_idx)
+        if 'ncol' in data.dims:
+            data = data.mean(dim="ncol")
+
+        global_min = min(global_min, float(data.min().values))
+        global_max = max(global_max, float(data.max().values))
+        valid_datasets.append((idx, time_indices, data, y_coord[valid_lev_idx]))
+
+    if not valid_datasets:
+        print(f"Warning: No valid data found for {var_name}. Skipping.")
+        return None
+
+    if global_min == global_max:
+        global_min -= 0.01 * abs(global_min) if global_min != 0 else 0.01
+        global_max += 0.01 * abs(global_max) if global_max != 0 else 0.01
+
+    levels = np.linspace(global_min, global_max, 20)
+    n_cols = 2
+    n_rows = -(-len(valid_datasets) // n_cols)
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=(15, n_rows * 6), sharey=True, constrained_layout=True)
+    axes = np.atleast_2d(axes)
+
+    contours = []
+    for ax, (idx, time_indices, data, y_coord) in zip(axes.flat, valid_datasets):
+        time_vals = datasets[idx]['time'].values - time_offset[idx]
+        time_vals = time_vals[time_indices]
+        if is_diurnal and time_labels is not None:
+            time_vals = time_labels
+
+        contour = ax.contourf(time_vals, y_coord, data.T, levels=levels, cmap=usercmap)
+        contours.append(contour)
+
+        ax.set_title(short_ids[idx], fontsize=16)
+        ax.set_xlabel("Hour" if is_diurnal else "Time (days)", fontsize=labelsize)
+        ax.set_ylabel("Height (m)" if height_cord == "z" else "Pressure (hPa)", fontsize=labelsize)
+        if height_cord == "p":
+            ax.invert_yaxis()
+        ax.tick_params(axis='both', labelsize=ticksize)
+
+    for ax in axes.flat[len(valid_datasets):]:
+        ax.set_visible(False)
+
+    cbar = fig.colorbar(contours[0], ax=axes, orientation='vertical', aspect=30, shrink=0.8, pad=0.02)
+    cbar.set_label(next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds), 'Value'), fontsize=14)
+    cbar.ax.tick_params(labelsize=12)
+
+    long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds), var_name)
+    if long_name == "MISSING":
+        long_name = var_name
+    plt.suptitle(f"{long_name} {'Diurnal Composite' if is_diurnal else 'Time-Height'} {title_suffix}", fontsize=18)
+
+    outname = f"{var_name}_{'diurnal' if is_diurnal else 'time_height'}.jpg"
+    outfile = os.path.join(output_subdir, outname)
+    plt.savefig(outfile, format='jpg')
+    plt.close()
+    print(f"Saved plot for {var_name} as {outfile}")
+    return outfile
+
 #############################
 
 import netCDF4
@@ -364,160 +463,32 @@ def run_diagnostics(
 
     #############################################################################################################
     # Plot time-height variables (two or three dimensions: time, ncol, lev or ilev)
-    for var_name in all_vars:
-        # Determine if the variable qualifies for a time-height plot
-        if do_timeheight and any(var_name in ds.data_vars and
-            ds[var_name].ndim in [2, 3] and
-            any(dim in ['lev', 'ilev'] for dim in ds[var_name].dims) and
-            'time' in ds[var_name].dims for ds in datasets):
-
-            # Find global min and max values for consistent color scale across cases
-            global_min, global_max = float('inf'), float('-inf')
-            num_plots = 0
-            for idx, ds in enumerate(datasets):
-                if var_name in ds.data_vars:
-
-                    # Convert `time` to a numeric array in days since the start
-                    time_in_days = ds['time'] - time_offset[idx]
-
-                    # Determine indices for the specified range
-                    start_time = time_height_time_s if time_height_time_s is not None else time_in_days[0]
-                    end_time = time_height_time_e if time_height_time_e is not None else time_in_days[-1]
-                    time_indices = np.where((time_in_days >= start_time) & (time_in_days <= end_time))[0]
-
-                    # Compute vertical coordinate
-                    y_coord = compute_y_coord(ds, time_indices, height_cord, var_name)
-
-                    # Filter y_coord and data to include only levels within the y-axis limits
-                    if height_cord == "z":
-                        y_min, y_max = (0, max_height_timeheight) if max_height_timeheight is not None else (y_coord.min(), y_coord.max())
-                    elif height_cord == "p":
-                        y_min, y_max = (max_height_timeheight, y_coord.max()) if max_height_timeheight is not None else (y_coord.min(), y_coord.max())
-
-                    valid_indices = np.where((y_coord >= y_min) & (y_coord <= y_max))[0]
-
-                    filtered_y_coord = y_coord[valid_indices]
-                    filtered_data = ds[var_name].isel(lev=valid_indices) if "lev" in ds[var_name].dims else ds[var_name].isel(ilev=valid_indices)
-
-                    # Handle cases where 'ncol' exists
-                    if 'ncol' in filtered_data.dims:
-                        filtered_data = filtered_data.mean(dim="ncol")
-
-                    # Update global min and max
-                    global_min = min(global_min, filtered_data.min().values)
-                    global_max = max(global_max, filtered_data.max().values)
-                    num_plots = num_plots+1
-
-            # Handle case where global_min == global_max
-            if global_min == global_max:
-                print(f"Warning: Variable '{var_name}' has constant value {global_min}. Adjusting color scale.")
-                global_min -= 0.01 * abs(global_min) if global_min != 0 else 0.01
-                global_max += 0.01 * abs(global_max) if global_max != 0 else 0.01
-
-            levels = np.linspace(global_min, global_max, 20)  # Define consistent levels
-
-            # Determine the number of rows and columns for the layout
-            n_cols = 2
-            n_rows = -(-num_plots // n_cols)  # Ceiling division to determine rows needed
-
-            # Create the subplots
-            fig, axes = plt.subplots(
-                n_rows, n_cols,
-                figsize=(15, n_rows * 6),
-                sharey=True,
-                constrained_layout=True
-            )
-
-            # Ensure `axes` is always a 2D array
-            axes = np.atleast_2d(axes)
-
-            valid_plot = False  # Track if any data was valid for this variable
-            contours = []  # Store contour objects for shared colorbar
-
-            # Iterate over datasets and plot in each subplot
-            for idx, (ax, (ds, short_id)) in enumerate(zip(axes.flat, zip(datasets, short_ids))):
-                if var_name not in ds.data_vars:
-                    print(f"Warning: Variable '{var_name}' not found in case '{short_id}'. Skipping for this case.")
-                    ax.set_visible(False)  # Hide this subplot
-                    continue  # Skip this case if variable is missing
-
-                valid_plot = True  # At least one dataset has the variable
-
-                # Convert `time` to a numeric array in days since the start
-                time_in_days = ds['time']
-
-                # Determine indices for the specified range
-                start_time = time_height_time_s if time_height_time_s is not None else time_in_days[0]
-                end_time = time_height_time_e if time_height_time_e is not None else time_in_days[-1]
-                time_indices = np.where((time_in_days >= start_time) & (time_in_days <= end_time))[0]
-
-                # Extract data within the filtered time range
-                if 'ncol' in ds[var_name].dims:
-                    data = ds[var_name].isel(time=time_indices).mean(dim="ncol")
-                else:
-                    data = ds[var_name].isel(time=time_indices)
-
-                time_values = time_in_days[time_indices]
-
-                # Compute vertical coordinate
-                y_coord = compute_y_coord(ds, time_indices, height_cord, var_name)
-
-                # Plot the contourf plot
-                contour = ax.contourf(time_values, np.squeeze(y_coord), data.T, levels=levels, cmap=usercmap)
-                contours.append(contour)
-
-                ax.set_title(short_id, fontsize=16)
-                ax.set_xlabel("Time (days)", fontsize=labelsize)
-                if idx % n_cols == 0:  # Add ylabel only for the first column
-                    ylabel = 'Height (m)' if height_cord == "z" else 'Pressure (hPa)'
-                    ax.set_ylabel(ylabel, fontsize=labelsize)
-
-                # Set y-axis limit if specified
-                if height_cord == "z":
-                    if max_height_profile is not None:
-                        ax.set_ylim([0, max_height_profile])
-                elif height_cord == "p":
-                    if max_height_profile is not None:
-                        ax.set_ylim([max_height_profile, y_coord.max()])  # Adjust for pressure
-                    else:
-                        ax.set_ylim([0, y_coord.max()])
-
-                # Reverse the y-axis if plotting against pressure
-                if height_cord == "p":
-                    ax.invert_yaxis()
-
-                ax.tick_params(axis='x', labelsize=14)
-                ax.tick_params(axis='y', labelsize=14)
-
-            # Hide unused axes
-            for ax in axes.flat[len(datasets):]:
-                ax.set_visible(False)  # Hide any extra subplot
-
-            if valid_plot:
-                # Get attributes for the variable from the first dataset that contains it
-                var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
-                var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)
-                if (var_long_name == "MISSING"):
-                    var_long_name = var_name
-
-                # Add a single colorbar for the entire figure
-                cbar = fig.colorbar(contours[0], ax=axes, orientation='vertical', aspect=30, shrink=0.8, pad=0.02)
-                cbar.set_label(var_units, fontsize=14)
-                cbar.ax.tick_params(labelsize=12)  # Increase tick label size for colorbar
-
-                # Make things easier to see
-                plt.tick_params(labelsize=ticksize)
-
-                # Save the plot
-                plot_filename = os.path.join(output_subdir, f"{var_name}_time_height.jpg")
-                plt.savefig(plot_filename, format='jpg')
-                plt.close()
-                print(f"Saved time-height plot for {var_name} as {plot_filename}")
-
-                # Add to time-height plots list for HTML generation
-                time_height_plots.append(plot_filename)
-            else:
-                print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
+    if do_timeheight:
+        for var_name in all_vars:
+            if any(
+                var_name in ds.data_vars and
+                ds[var_name].ndim in [2, 3] and
+                any(dim in ['lev', 'ilev'] for dim in ds[var_name].dims) and
+                'time' in ds[var_name].dims
+                for ds in datasets
+            ):
+                outfile = plot_time_height_panel_grid(
+                    var_name,
+                    datasets,
+                    short_ids,
+                    time_offset,
+                    height_cord,
+                    output_subdir,
+                    labelsize,
+                    ticksize,
+                    usercmap,
+                    time_height_time_s,
+                    time_height_time_e,
+                    max_height_timeheight,
+                    is_diurnal=False
+                )
+                if outfile:
+                    time_height_plots.append(outfile)
 
     #############################################################################################################
     # Diurnal Composite diagnostics
@@ -586,8 +557,31 @@ def run_diagnostics(
                     if line_styles: plot_kwargs['linestyle'] = line_styles[idx]
                     plt.plot(hour_labels, composite, **plot_kwargs)
                     valid_plot = True
+                """
+                if data.ndim == 2:
+                    plotfile = plot_time_height_panel_grid(
+                        var_name,
+                        datasets,
+                        short_ids,
+                        time_offset,
+                        height_cord,
+                        output_subdir,
+                        labelsize,
+                        ticksize,
+                        usercmap,
+                        diurnal_start_day,
+                        diurnal_end_day,
+                        max_height_timeheight,
+                        is_diurnal=True,
+                        time_labels=hour_labels,
+                        title_suffix=f"(Day {diurnal_start_day} to Day {diurnal_end_day})"
+                    )
+                    if plotfile:
+                        diurnal_plots.append(plotfile)
+                        valid_plot = True
+                 """             
 
-            if valid_plot:
+            if valid_plot and data.ndim == 1:
                 plt.xlabel("Time (hour - UTC)", fontsize=labelsize)
                 var_units = next((ds[var_name].attrs.get('units', 'Value') for ds in datasets if var_name in ds.data_vars), 'Value')
                 var_long_name = next((ds[var_name].attrs.get('long_name', var_name) for ds in datasets if var_name in ds.data_vars), var_name)
@@ -604,7 +598,8 @@ def run_diagnostics(
                 plt.close()
                 print(f"Saved diurnal composite plot for {var_name} as {plot_filename}")
                 diurnal_plots.append(plot_filename)
-            else:
+
+            if not valid_plot:
                 print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
 
     # Close datasets
