@@ -812,6 +812,43 @@ def run_diagnostics(
     </html>
     """
 
+    diurnal2d_html_template = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ title }}</title>
+        <style>
+            .grid-container {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 10px;
+            }
+            .grid-item {
+                text-align: center;
+            }
+            img {
+                width: 100%;  /* Time-height plot width */
+                max-width: 900px;  /* Time-height plot max width */
+                height: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>{{ title }}</h1>
+        <div class="grid-container">
+        {% for img in images %}
+            <div class="grid-item">
+                <h3>{{ img }}</h3>
+                <img src="plots/{{ img }}" alt="{{ img }}">
+            </div>
+        {% endfor %}
+        </div>
+    </body>
+    </html>
+    """
+
     # Generate profile HTML files for each averaging window
     for window_idx, (start_time, end_time) in enumerate(zip(profile_time_s, profile_time_e)):
         sorted_images = sorted([os.path.basename(p[0]) for p in profile_plots if p[1] == window_idx+1],key=str.lower)
@@ -849,6 +886,15 @@ def run_diagnostics(
     )
     with open(os.path.join(output_dir, general_id, "diurnal1d_plots.html"), "w") as f:
         f.write(diurnal1d_html_content)
+
+    # Generate diurnal composite HTML file
+    sorted_diurnal2d_images = sorted([os.path.basename(t) for t in diurnal2d_plots],key=str.lower)
+    diurnal2d_html_content = Template(diurnal2d_html_template).render(
+        title=f"Diurnal Cycle 2D Composite Plots: Day {diurnal_start_day} to {diurnal_end_day}",
+        images=sorted_diurnal2d_images
+    )
+    with open(os.path.join(output_dir, general_id, "diurnal2d_plots.html"), "w") as f:
+        f.write(diurnal2d_html_content)
 
     # Main HTML page with links to profile, timeseries, and time-height pages
     main_html_content = Template("""
@@ -903,6 +949,9 @@ def run_diagnostics(
 	    {% if do_diurnal_composites %}
             <li><a href="diurnal1d_plots.html">Diurnal Cycle 1D Composite Plots (Day {{ "%.1f" | format(diurnal_start_day) }} to Day {{ "%.1f" | format(diurnal_end_day) }})</a></li>
 	    {% endif %}
+	    {% if do_diurnal_composites %}
+            <li><a href="diurnal2d_plots.html">Diurnal Cycle 2D Composite Plots (Day {{ "%.1f" | format(diurnal_start_day) }} to Day {{ "%.1f" | format(diurnal_end_day) }})</a></li>
+	    {% endif %}
         </ul>
     </body>
     </html>
@@ -927,6 +976,7 @@ def run_diagnostics(
         tar.add(os.path.join(output_dir, general_id, "timeseries_plots.html"), arcname="timeseries_plots.html")
         tar.add(os.path.join(output_dir, general_id, "time_height_plots.html"), arcname="time_height_plots.html")
         tar.add(os.path.join(output_dir, general_id, "diurnal1d_plots.html"), arcname="diurnal1d_plots.html")
+        tar.add(os.path.join(output_dir, general_id, "diurnal2d_plots.html"), arcname="diurnal2d_plots.html")
         tar.add(output_subdir, arcname="plots")
 
     print(f"Created archive {tar_filename} containing all plots and HTML files.")
