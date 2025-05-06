@@ -401,6 +401,10 @@ def run_diagnostics(
     time_height_plots = []
     diurnal1d_plots = []
     diurnal2d_plots = []
+    
+    # Initialize some variables
+    diurnal_start_day_web=0
+    diurnal_end_day_web=0
 
     all_vars = set()
     for ds in datasets:
