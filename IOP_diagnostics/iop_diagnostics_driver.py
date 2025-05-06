@@ -92,6 +92,12 @@ time_series_time_e = None  # Ending time for time series, None for default (enti
 time_height_time_s = None  # Starting time for time-height plots, None for default (entire range)
 time_height_time_e = None  # Ending time for time-height plots, None for default (entire range)
 
+# Do Diurnal Composite Analysis?  Must have at least three days worth of data and each
+#  day must have at least 4 output time slices for this analysis to be considered.
+do_diurnal_composites = False
+diurnal_start_day = None  # Starting day for diurnal composite stats, None for default (entire range)
+diurnal_end_day = None    # Ending day for diurnal composite stats, None for default (entire range)
+
 # Define the colormap for time height contourf plots.  Default is "viridis_r".
 time_height_cmap = "viridis_r"
 
@@ -130,6 +136,9 @@ run_diagnostics(
     time_series_time_e,
     time_height_time_s,
     time_height_time_e,
+    do_diurnal_composites=do_diurnal_composites,
+    diurnal_start_day=diurnal_start_day,
+    diurnal_end_day=diurnal_end_day,
     usercmap=time_height_cmap,
     line_colors=line_colors,
     line_styles=line_styles,

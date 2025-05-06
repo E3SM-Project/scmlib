@@ -101,7 +101,7 @@ def plot_time_height_panel_grid(
             continue
 
         if is_diurnal:
-            composite, hour_labels, success, ndim = compute_diurnal_composite(
+            composite, hour_labels, success, ndim, stime, etime = compute_diurnal_composite(
                 ds, var_name, idx, time_offset, start_time, end_time)
             if not success or ndim != 2:
                 continue
@@ -116,7 +116,7 @@ def plot_time_height_panel_grid(
             else:
                 continue
 
-            timecords = np.where((time_vals >= start_time) & (time_vals <= end_time))[0]
+            timecords = np.where((time_vals >= stime) & (time_vals <= etime))[0]
             y_coord = compute_y_coord(ds, timecords, height_cord, var_name)
             y_min, y_max = (0, max_height) if height_cord == "z" else (max_height, y_coord.max())
             valid_lev_idx = np.where((y_coord >= y_min) & (y_coord <= y_max))[0]
@@ -222,8 +222,9 @@ def compute_diurnal_composite(ds, var_name, idx, time_offset, diurnal_start_day,
             print(f"Skipping {var_name}: fewer than 3 days in dataset.")
             return None, None, False, None
 
-        stime = diurnal_start_day
-        etime = min(diurnal_end_day, time_vals[-1])
+        stime = diurnal_start_day if diurnal_start_day is not None else time_vals[0]
+        etime = diurnal_end_day if diurnal_end_day is not None else time_vals[-1]
+
         valid_idx = np.where((time_vals >= stime) & (time_vals <= etime))[0]
         if len(valid_idx) == 0:
             return None, None, False, None
@@ -243,7 +244,7 @@ def compute_diurnal_composite(ds, var_name, idx, time_offset, diurnal_start_day,
 
         composite = np.mean(daily_data, axis=0)
 
-        return composite, hour_labels, True, data.ndim
+        return composite, hour_labels, True, data.ndim, stime, etime
     except Exception as e:
         print(f"Error computing diurnal composite for {var_name}: {e}")
         return None, None, False, None
@@ -595,10 +596,14 @@ def run_diagnostics(
                 if ds[var_name].dtype.kind in {'S', 'U'}:
                     continue
 
-                composite, hour_labels, success, ndim = compute_diurnal_composite(
+                composite, hour_labels, success, ndim, stime, etime = compute_diurnal_composite(
                     ds, var_name, idx, time_offset, diurnal_start_day, diurnal_end_day)
                 if not success or ndim !=1:
                     continue
+
+                if success:
+                    diurnal_start_day_web = stime
+                    diurnal_end_day_web = etime
 
                 plot_kwargs = {'label': short_id, 'linewidth': linewidth}
                 if line_colors: plot_kwargs['color'] = line_colors[idx]
@@ -881,7 +886,7 @@ def run_diagnostics(
     # Generate diurnal composite HTML file
     sorted_diurnal1d_images = sorted([os.path.basename(t) for t in diurnal1d_plots],key=str.lower)
     diurnal1d_html_content = Template(diurnal1d_html_template).render(
-        title=f"Diurnal Cycle 1D Composite Plots: Day {diurnal_start_day} to {diurnal_end_day}",
+        title=f"Diurnal Cycle 1D Composite Plots: Day {diurnal_start_day_web} to {diurnal_end_day_web}",
         images=sorted_diurnal1d_images
     )
     with open(os.path.join(output_dir, general_id, "diurnal1d_plots.html"), "w") as f:
@@ -890,7 +895,7 @@ def run_diagnostics(
     # Generate diurnal composite HTML file
     sorted_diurnal2d_images = sorted([os.path.basename(t) for t in diurnal2d_plots],key=str.lower)
     diurnal2d_html_content = Template(diurnal2d_html_template).render(
-        title=f"Diurnal Cycle 2D Composite Plots: Day {diurnal_start_day} to {diurnal_end_day}",
+        title=f"Diurnal Cycle 2D Composite Plots: Day {diurnal_start_day_web} to {diurnal_end_day_web}",
         images=sorted_diurnal2d_images
     )
     with open(os.path.join(output_dir, general_id, "diurnal2d_plots.html"), "w") as f:
@@ -947,10 +952,10 @@ def run_diagnostics(
             <li><a href="time_height_plots.html">Time-Height Plots</a></li>
 	    {% endif %}
 	    {% if do_diurnal_composites %}
-            <li><a href="diurnal1d_plots.html">Diurnal Cycle 1D Composite Plots (Day {{ "%.1f" | format(diurnal_start_day) }} to Day {{ "%.1f" | format(diurnal_end_day) }})</a></li>
+            <li><a href="diurnal1d_plots.html">Diurnal Cycle 1D Composite Plots (Day {{ "%.1f" | format(diurnal_start_day_web) }} to Day {{ "%.1f" | format(diurnal_end_day_web) }})</a></li>
 	    {% endif %}
 	    {% if do_diurnal_composites %}
-            <li><a href="diurnal2d_plots.html">Diurnal Cycle 2D Composite Plots (Day {{ "%.1f" | format(diurnal_start_day) }} to Day {{ "%.1f" | format(diurnal_end_day) }})</a></li>
+            <li><a href="diurnal2d_plots.html">Diurnal Cycle 2D Composite Plots (Day {{ "%.1f" | format(diurnal_start_day_web) }} to Day {{ "%.1f" | format(diurnal_end_day_web) }})</a></li>
 	    {% endif %}
         </ul>
     </body>
@@ -958,8 +963,8 @@ def run_diagnostics(
     """).render(
         general_id=general_id,
         profile_windows=list(enumerate(zip(profile_time_s, profile_time_e))),
-        diurnal_start_day=diurnal_start_day,
-        diurnal_end_day=diurnal_end_day,
+        diurnal_start_day_web=diurnal_start_day_web,
+        diurnal_end_day_web=diurnal_end_day_web,
         do_timeheight=bool(do_timeheight),
 	do_diurnal_composites=bool(do_diurnal_composites)
     )
