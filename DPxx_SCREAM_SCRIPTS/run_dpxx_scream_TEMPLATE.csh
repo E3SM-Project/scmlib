@@ -259,7 +259,7 @@
   ./atmchange iop_nudge_tq=$do_iop_nudge_tq
   ./atmchange iop_nudge_tq_low=CASEtqlow
   ./atmchange iop_nudge_tq_high=CASEtqhigh
-  ./atmchange iop_nudge_tq_tscale=CASEtqtscale
+  ./atmchange iop_nudge_tscale=CASEtqtscale
 
 # Allow for the computation of tendencies for output purposes
   ./atmchange physics::mac_aero_mic::shoc::compute_tendencies=T_mid,qv

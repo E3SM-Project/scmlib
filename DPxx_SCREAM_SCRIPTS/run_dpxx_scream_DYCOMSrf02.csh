@@ -240,7 +240,7 @@
   ./atmchange iop_nudge_tq=$do_iop_nudge_tq
   ./atmchange iop_nudge_tq_low=650
   ./atmchange iop_nudge_tq_high=0
-  ./atmchange iop_nudge_tq_tscale=3600
+  ./atmchange iop_nudge_tscale=3600
 
 # Allow for the computation of tendencies for output purposes
   ./atmchange physics::mac_aero_mic::shoc::compute_tendencies=T_mid,qv
