@@ -47,7 +47,8 @@ def compute_y_coord(ds, time_indices, height_cord, var_name):
 
     elif height_cord == "p":
         ps_var = 'PS' if 'PS' in ds.data_vars else 'ps' if 'ps' in ds.data_vars else 'ps_horiz_avg' if 'ps_horiz_avg' in ds.data_vars else None
-        if ps_var:
+        model = 'hyam' in ds.data_vars and 'hybm' in ds.data_vars
+        if ps_var and model:
             ps_avg = ds[ps_var].isel(time=time_indices).mean(dim="time") / 100.0  # Convert to hPa
             if "lev" in ds[var_name].dims and all(var in ds for var in ['hyam', 'hybm']):
                 hyam = ds['hyam']
