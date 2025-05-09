@@ -140,7 +140,11 @@ def plot_time_height_panel_grid(
 
         else:
             time_vals = ds['time'].values - time_offset[idx]
-            time_indices = np.where((time_vals >= start_time) & (time_vals <= end_time))[0]
+
+            stime = start_time if start_time is not None else time_vals[0]
+            etime = end_time if end_time is not None else time_vals[-1]
+
+            time_indices = np.where((time_vals >= stime) & (time_vals <= etime))[0]
             time_vals = time_vals[time_indices]
             if len(time_indices) == 0:
                 continue
