@@ -187,6 +187,17 @@ def plot_time_height_panel_grid(
         ax.set_title(short_ids[idx], fontsize=16)
         ax.set_xlabel("Hour" if is_diurnal else "Time (days)", fontsize=labelsize)
         ax.set_ylabel("Height (m)" if height_cord == "z" else "Pressure (hPa)", fontsize=labelsize)
+
+        # Set y-axis limit if specified
+        if height_cord == "z":
+            if max_height is not None:
+                ax.set_ylim([0, max_height_profile])
+        elif height_cord == "p":
+            if max_height is not None:
+                ax.set_ylim([max_height, y_coord.max()])  # Adjust for pressure
+            else:
+                ax.set_ylim([0, y_coord.max()])
+
         if height_cord == "p":
             ax.invert_yaxis()
         ax.tick_params(axis='both', labelsize=ticksize)
