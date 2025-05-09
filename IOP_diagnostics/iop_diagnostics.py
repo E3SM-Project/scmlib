@@ -186,6 +186,7 @@ def plot_time_height_panel_grid(
     contours = []
     for ax, (idx, time_vals, data, y_coord) in zip(axes.flat, valid_datasets):
 
+        y_coord = np.squeeze(y_coord)
         contour = ax.contourf(time_vals, y_coord, data.T, levels=levels, cmap=usercmap)
         contours.append(contour)
 
@@ -196,7 +197,7 @@ def plot_time_height_panel_grid(
         # Set y-axis limit if specified
         if height_cord == "z":
             if max_height is not None:
-                ax.set_ylim([0, max_height_profile])
+                ax.set_ylim([0, max_height])
         elif height_cord == "p":
             if max_height is not None:
                 ax.set_ylim([max_height, y_coord.max()])  # Adjust for pressure
