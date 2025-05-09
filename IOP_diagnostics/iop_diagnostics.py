@@ -118,7 +118,12 @@ def plot_time_height_panel_grid(
 
             timecords = np.where((time_vals >= stime) & (time_vals <= etime))[0]
             y_coord = compute_y_coord(ds, timecords, height_cord, var_name)
-            y_min, y_max = (0, max_height) if height_cord == "z" else (max_height, y_coord.max())
+
+            if height_cord == "z":
+                y_min, y_max = (0, max_height) if max_height is not None else (y_coord.min(), y_coord.max())
+            elif height_cord == "p":
+                y_min, y_max = (max_height, y_coord.max()) if max_height is not None else (y_coord.min(), y_coord.max())
+
             valid_lev_idx = np.where((y_coord >= y_min) & (y_coord <= y_max))[0]
 
             if max_height is not None:
@@ -130,15 +135,21 @@ def plot_time_height_panel_grid(
 
             global_min = min(global_min, float(data.min()))
             global_max = max(global_max, float(data.max()))
-            valid_datasets.append((idx, time_indices, data, y_coord[valid_lev_idx]))
+            valid_datasets.append((idx, time_vals, data, y_coord[valid_lev_idx]))
 
         else:
             time_vals = ds['time'].values - time_offset[idx]
             time_indices = np.where((time_vals >= start_time) & (time_vals <= end_time))[0]
+            time_vals = time_vals[time_indices]
             if len(time_indices) == 0:
                 continue
             y_coord = compute_y_coord(ds, time_indices, height_cord, var_name)
-            y_min, y_max = (0, max_height) if height_cord == "z" else (max_height, y_coord.max())
+
+            if height_cord == "z":
+                y_min, y_max = (0, max_height) if max_height is not None else (y_coord.min(), y_coord.max())
+            elif height_cord == "p":
+                y_min, y_max = (max_height, y_coord.max()) if max_height is not None else (y_coord.min(), y_coord.max())
+
             valid_lev_idx = np.where((y_coord >= y_min) & (y_coord <= y_max))[0]
 
             data = ds[var_name].isel(time=time_indices)
@@ -151,7 +162,7 @@ def plot_time_height_panel_grid(
 
             global_min = min(global_min, float(data.min().values))
             global_max = max(global_max, float(data.max().values))
-            valid_datasets.append((idx, time_indices, data, y_coord[valid_lev_idx]))
+            valid_datasets.append((idx, time_vals, data, y_coord[valid_lev_idx]))
 
     if not valid_datasets:
         print(f"Warning: No valid data found for {var_name}. Skipping.")
@@ -168,10 +179,7 @@ def plot_time_height_panel_grid(
     axes = np.atleast_2d(axes)
 
     contours = []
-    for ax, (idx, time_indices, data, y_coord) in zip(axes.flat, valid_datasets):
-        if not is_diurnal:
-            time_vals = datasets[idx]['time'].values - time_offset[idx]
-            time_vals = time_vals[time_indices]
+    for ax, (idx, time_vals, data, y_coord) in zip(axes.flat, valid_datasets):
 
         contour = ax.contourf(time_vals, y_coord, data.T, levels=levels, cmap=usercmap)
         contours.append(contour)
@@ -632,9 +640,6 @@ def run_diagnostics(
                 plt.close()
                 print(f"Saved diurnal composite plot for {var_name} as {plot_filename}")
                 diurnal1d_plots.append(plot_filename)
-
-            if not valid_plot:
-                print(f"Warning: Variable '{var_name}' not a 1D variable, skipping for 1D composite diagnostics.")
 
     #############################################################################################################
     # 2D diurnal composite plots (two or three dimensions: time, ncol, lev or ilev)
