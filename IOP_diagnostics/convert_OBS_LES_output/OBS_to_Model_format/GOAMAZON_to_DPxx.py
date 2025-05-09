@@ -26,9 +26,17 @@ time_data = ds_in["tsec"].values
 time_data = (time_data-time_data[0])/86400.
 ds_out["time"] = xr.DataArray(time_data - time_offset, dims=["time"])
 
-p_data = ds_in["lev"].values/100.
-p_mid_obs = np.tile(p_data, (len(ds_out["time"]), 1))
+# Filter lev > 1000 hPa
+lev_vals = ds_in["lev"].values / 100.0  # convert to hPa
+lev_mask = lev_vals < 1000
+lev_selected = lev_vals[lev_mask]
+
+# Apply the filtered lev to p_mid_obs
+p_mid_obs = np.tile(lev_selected, (len(ds_out["time"]), 1))
 ds_out["p_mid_obs"] = xr.DataArray(p_mid_obs, dims=["time", "lev"])
+
+# Update the lev coordinate in the output
+ds_out = ds_out.assign_coords(lev=("lev", lev_selected))
 
 # 3. Define lists for 3D and 2D variables
 three_d_vars = [
@@ -52,12 +60,11 @@ two_d_vars = [
 
 # ("", "", ),
 
-# Process 3D variables
-
+# Process 3D variables (apply lev filter)
 for var_in, var_out, factor in three_d_vars:
     if var_in in ds_in:
-        data_val = np.squeeze(ds_in[var_in].values)
-        print(np.shape(data_val))
+        data_val = np.squeeze(ds_in[var_in].values)  # shape: [time, lev]
+        data_val = data_val[:, lev_mask]  # apply the lev > 1000 filter
         ds_out[var_out] = xr.DataArray(data_val, dims=["time", "lev"]) * factor
     else:
         print(f"Warning: Variable '{var_in}' not found in input dataset. Skipping.")
