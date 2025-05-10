@@ -284,21 +284,24 @@ def compute_diurnal_composite(ds, var_name, idx, time_offset, diurnal_start_day,
 import netCDF4
 from datetime import datetime
 
-# get formatted date and time of start of dataset
 def extract_time_info(ds):
-
     try:
-        # For xarray, you can access the time variable's attributes as follows:
-        time_units = ds['time'].attrs['units']  # Expected format: "days since YYYY-MM-DD HH:MM:SS"
+        # Get time units
+        time_units = ds['time'].attrs['units']
     except (KeyError, AttributeError):
         print("Warning: 'time' variable or its 'units' attribute is not available.")
         return -999, -999
 
     try:
-        # Extract the date and time portions from the units string.
-        _, ref_str = time_units.split("since")
-        ref_str = ref_str.strip()  # "YYYY-MM-DD HH:MM:SS"
-        date_str, time_str = ref_str.split(" ")
+        # Extract the portion after "since"
+        _, ref_str = time_units.split("since", 1)
+        ref_str = ref_str.strip()
+
+        # Allow for extra descriptors like "UTC"
+        tokens = ref_str.split()
+        if len(tokens) < 2:
+            raise ValueError("Not enough components after 'since' to extract date and time.")
+        date_str, time_str = tokens[0], tokens[1]
     except ValueError:
         print("Warning: The 'time:units' attribute is not in the expected format 'days since YYYY-MM-DD HH:MM:SS'.")
         return -999, -999
@@ -315,6 +318,7 @@ def extract_time_info(ds):
         return -999, -999
 
     return formatted_date, time_in_seconds
+
 
 #############################
 
