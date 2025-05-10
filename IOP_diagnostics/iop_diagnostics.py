@@ -383,6 +383,7 @@ def run_diagnostics(
     do_diurnal_composites=False,
     diurnal_start_day=0,
     diurnal_end_day=9999,
+    run_mean_npts=0,
     usercmap="viridis_r",
     line_colors=None,
     line_styles=None,
@@ -553,11 +554,18 @@ def run_diagnostics(
                 else:
                     continue
 
+                # Apply running mean if requested
+                if run_mean_npts > 0 and variable_data.size >= run_mean_npts:
+                    variable_data = variable_data.rolling(time=run_mean_npts, center=True).mean()
+                    time_plot = time_in_days[time_indices]
+                else:
+                    time_plot = time_in_days[time_indices]
+
                 plot_kwargs = {'label': short_id, 'linewidth': linewidth}
                 if line_colors: plot_kwargs['color'] = line_colors[idx]
                 if line_styles: plot_kwargs['linestyle'] = line_styles[idx]
 
-                plt.plot(time_in_days[time_indices], variable_data, **plot_kwargs)
+                plt.plot(time_plot, variable_data, **plot_kwargs)
                 valid_plot = True
 
             if valid_plot:
@@ -579,6 +587,7 @@ def run_diagnostics(
                 timeseries_plots.append(plot_filename)
             else:
                 print(f"Warning: Variable '{var_name}' is not a valid plotting variable. Skipping this variable.")
+
 
 
     #############################################################################################################
