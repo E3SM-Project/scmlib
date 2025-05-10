@@ -62,7 +62,12 @@ def compute_y_coord(ds, time_indices, height_cord, var_name):
                 print(f"Warning: Hybrid coefficients or surface pressure data are missing. Using hybrid pressure coordinates.")
                 y_coord = ds['lev'] if "lev" in ds[var_name].dims else ds['ilev']
         elif 'p_mid_obs' in ds.data_vars:
-            y_coord = ds['p_mid_obs'].isel(time=time_indices).mean(dim="time")
+            p_mid_obs_var = ds["p_mid_obs"]
+
+            if "time" in p_mid_obs_var.dims:
+                y_coord = p_mid_obs_var.isel(time=time_indices).mean(dim="time")
+            else:
+                y_coord = p_mid_obs_var
         elif 'p_mid_les' in ds.data_vars:
             y_coord = ds['p_mid_les'].isel(time=time_indices).mean(dim="time")
         else:
