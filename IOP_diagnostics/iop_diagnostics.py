@@ -229,7 +229,6 @@ def plot_time_height_panel_grid(
     outfile = os.path.join(output_subdir, outname)
     plt.savefig(outfile, format='jpg')
     plt.close()
-    print(f"Saved plot for {var_name} as {outfile}")
     return outfile
 
 def compute_diurnal_composite(ds, var_name, idx, time_offset, diurnal_start_day, diurnal_end_day):
@@ -444,14 +443,21 @@ def run_diagnostics(
     for ds in datasets:
         all_vars.update(ds.data_vars.keys())
 
+    print("Starting IOP Diagnostics Package")
+
     start_date_base, start_seconds_base = extract_time_info(datasets[0])
-    print(start_date_base, start_seconds_base)
 
     time_offset = []
     for ds in datasets:
         test_date, test_seconds = extract_time_info(ds)
         offset = compute_date_time_difference(start_date_base, start_seconds_base, test_date, test_seconds) if test_date != -999 else 0.0
         time_offset.append(offset)
+
+    print("Datasets that will be considered:")
+    for ds in datasets:
+        print(" -", ds.encoding.get('source', 'Unknown source'))
+
+    print("Generating Profile Plots")
 
     for var_name in all_vars:
         if any(var_name in ds.data_vars and
@@ -465,7 +471,6 @@ def run_diagnostics(
 
                 for idx, (ds, short_id) in enumerate(zip(datasets, short_ids)):
                     if var_name not in ds.data_vars:
-                        print(f"Warning: Variable '{var_name}' not found in case '{short_id}'. Skipping for this case.")
                         continue
 
                     valid_plot = True
@@ -512,15 +517,15 @@ def run_diagnostics(
                     plot_filename = os.path.join(output_subdir, f"{var_name}_profile_window{window_idx+1}.jpg")
                     plt.savefig(plot_filename, format='jpg')
                     plt.close()
-                    print(f"Saved profile plot for {var_name} (Window {window_idx+1}) as {plot_filename}")
                     profile_plots.append((plot_filename, window_idx+1))
                 else:
-                    print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
+                    print(f"Warning: Variable '{var_name}' is not a valid plotting variable. Skipping this variable.")
 
     # =================================================================
     # Plot time series
     # =================================================================
 
+    print("Generating Time Series Plots")
     for var_name in all_vars:
         if any(
             var_name in ds.data_vars and
@@ -571,16 +576,15 @@ def run_diagnostics(
                 plot_filename = os.path.join(output_subdir, f"{var_name}_timeseries.jpg")
                 plt.savefig(plot_filename, format='jpg')
                 plt.close()
-                print(f"Saved time series plot for {var_name} as {plot_filename}")
                 timeseries_plots.append(plot_filename)
             else:
-                print(f"Warning: Variable '{var_name}' was not found in any dataset. Skipping this variable.")
-
+                print(f"Warning: Variable '{var_name}' is not a valid plotting variable. Skipping this variable.")
 
 
     #############################################################################################################
     # Plot time-height variables (two or three dimensions: time, ncol, lev or ilev)
     if do_timeheight:
+        print("Generating Time Time-Height Plots")
         for var_name in all_vars:
             if any(
                 var_name in ds.data_vars and
@@ -611,8 +615,7 @@ def run_diagnostics(
     # Diurnal Composite diagnostics 1-D
 
     if do_diurnal_composites:
-        print("Generating diurnal composite diagnostics...")
-
+        print("Generating 1D Diurnal Composite Plots")
         diurnal1d_plots = []
         for var_name in all_vars:
             # Initialize figure
@@ -664,12 +667,14 @@ def run_diagnostics(
                 plot_filename = os.path.join(output_subdir, f"{var_name}_diurnal1d.jpg")
                 plt.savefig(plot_filename, format='jpg')
                 plt.close()
-                print(f"Saved diurnal composite plot for {var_name} as {plot_filename}")
                 diurnal1d_plots.append(plot_filename)
+
+            plt.close()
 
     #############################################################################################################
     # 2D diurnal composite plots (two or three dimensions: time, ncol, lev or ilev)
     if do_diurnal_composites:
+        print("Generating 2D Diurnal Composite Plots")
         for var_name in all_vars:
             if any(
                 var_name in ds.data_vars and
@@ -1020,4 +1025,5 @@ def run_diagnostics(
         tar.add(output_subdir, arcname="plots")
 
     print(f"Created archive {tar_filename} containing all plots and HTML files.")
+    print("Ending IOP Diagnostics Package")
 
