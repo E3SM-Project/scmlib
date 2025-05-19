@@ -455,8 +455,8 @@ def run_diagnostics(
         time_offset.append(offset)
 
     print("Datasets that will be considered:")
-    for ds in datasets:
-        print(" -", ds.encoding.get('source', 'Unknown source'))
+    for ds, sid in zip(datasets, short_ids):
+        print(f" - {ds.encoding.get('source', 'Unknown source')} ({sid})")
 
     print("Generating Profile Plots")
 
@@ -1034,5 +1034,5 @@ def run_diagnostics(
         tar.add(output_subdir, arcname="plots")
 
     print(f"Created archive {tar_filename} containing all plots and HTML files.")
-    print("Ending IOP Diagnostics Package")
+    print("Successful completion of IOP Diagnostics Package")
 
