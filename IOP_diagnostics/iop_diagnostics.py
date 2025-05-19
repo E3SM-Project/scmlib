@@ -918,7 +918,7 @@ def run_diagnostics(
     # Generate timeseries HTML file
     sorted_timeseries_images = sorted([os.path.basename(t) for t in timeseries_plots],key=str.lower)
     timeseries_html_content = Template(timeseries_html_template).render(
-        title="Time Series Plots",
+        title="Time Series Plots (1D)",
         images=sorted_timeseries_images
     )
     with open(os.path.join(output_dir, general_id, "timeseries_plots.html"), "w") as f:
@@ -927,7 +927,7 @@ def run_diagnostics(
     # Generate time-height HTML file
     sorted_time_height_images = sorted([os.path.basename(p) for p in time_height_plots],key=str.lower)
     time_height_html_content = Template(time_height_html_template).render(
-        title="Time-Height Plots",
+        title="Time-Height Plots (2D)",
         images=sorted_time_height_images
     )
     with open(os.path.join(output_dir, general_id, "time_height_plots.html"), "w") as f:
@@ -952,7 +952,7 @@ def run_diagnostics(
         f.write(diurnal2d_html_content)
 
     # Main HTML page with links to profile, timeseries, and time-height pages
-    main_html_content = Template("""
+    main_html_template = Template("""
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -962,19 +962,28 @@ def run_diagnostics(
             .logo-container {
                 display: flex;
                 align-items: center;
-                gap: 20px; /* Adjust spacing between logos */
+                gap: 20px;
             }
             .logo-container img {
-                width: 150px; /* Adjust logo size */
+                width: 150px;
                 height: auto;
             }
             header h1 {
-                margin: 10px 0; /* Add space around the title */
+                margin: 10px 0;
             }
             header h2 {
-                margin: 5px 0; /* Add space around the subtitle */
-                font-size: 1.2em; /* Slightly smaller font size for the subtitle */
-                color: gray; /* Optional: Add color to distinguish the subtitle */
+                margin: 5px 0;
+                font-size: 1.2em;
+                color: gray;
+            }
+            .section-header {
+                font-weight: bold;
+                font-size: 1.3em;
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }
+            .indented-links {
+                padding-left: 20px;
             }
         </style>
     </head>
@@ -989,25 +998,33 @@ def run_diagnostics(
             <h1>ARM/ASR Diagnostics Package for E3SM SCM and DP-SCREAM</h1>
             <h2>Case: {{ general_id }}</h2>
         </header>
-        <ul>
+
+        <div class="section-header">Profile Plots</div>
+        <ul class="indented-links">
             {% for idx, (start_time, end_time) in profile_windows %}
             <li>
                 <a href="profile_plots_window{{ idx+1 }}.html">
-                    Profile Plots (Averaging Window: Day {{ "%.1f" | format(start_time) }} to Day {{ "%.1f" | format(end_time) }})
+                    Averaging Window: Day {{ "%.1f" | format(start_time) }} to Day {{ "%.1f" | format(end_time) }}
                 </a>
             </li>
             {% endfor %}
-            <li><a href="timeseries_plots.html">Time Series Plots</a></li>
-	    {% if do_timeheight %}
-            <li><a href="time_height_plots.html">Time-Height Plots</a></li>
-	    {% endif %}
-	    {% if do_diurnal_composites %}
-            <li><a href="diurnal1d_plots.html">Diurnal Cycle 1D Composite Plots (Day {{ "%.1f" | format(diurnal_start_day_web) }} to Day {{ "%.1f" | format(diurnal_end_day_web) }})</a></li>
-	    {% endif %}
-	    {% if do_diurnal_composites %}
-            <li><a href="diurnal2d_plots.html">Diurnal Cycle 2D Composite Plots (Day {{ "%.1f" | format(diurnal_start_day_web) }} to Day {{ "%.1f" | format(diurnal_end_day_web) }})</a></li>
-	    {% endif %}
         </ul>
+
+        <div class="section-header">Time Series Plots</div>
+        <ul class="indented-links">
+            <li><a href="timeseries_plots.html">Time Series Plots (1D)</a></li>
+            {% if do_timeheight %}
+            <li><a href="time_height_plots.html">Time-Height Plots (2D)</a></li>
+            {% endif %}
+        </ul>
+
+        {% if do_diurnal_composites %}
+        <div class="section-header">Diurnal Composite Plots</div>
+        <ul class="indented-links">
+            <li><a href="diurnal1d_plots.html">Diurnal Cycle 1D: Day {{ "%.1f" | format(diurnal_start_day_web) }} to Day {{ "%.1f" | format(diurnal_end_day_web) }}</a></li>
+            <li><a href="diurnal2d_plots.html">Diurnal Cycle 2D: Day {{ "%.1f" | format(diurnal_start_day_web) }} to Day {{ "%.1f" | format(diurnal_end_day_web) }}</a></li>
+        </ul>
+        {% endif %}
     </body>
     </html>
     """).render(
@@ -1016,11 +1033,12 @@ def run_diagnostics(
         diurnal_start_day_web=diurnal_start_day_web,
         diurnal_end_day_web=diurnal_end_day_web,
         do_timeheight=bool(do_timeheight),
-	do_diurnal_composites=bool(do_diurnal_composites)
+        do_diurnal_composites=bool(do_diurnal_composites)
     )
 
+
     with open(os.path.join(output_dir, general_id, "index.html"), "w") as f:
-        f.write(main_html_content)
+        f.write(main_html_template)
 
     # Tar all the plots and HTML files
     tar_filename = os.path.join(output_dir, f"{general_id}_diagnostics.tar")
