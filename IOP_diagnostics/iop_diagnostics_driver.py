@@ -19,7 +19,7 @@ from iop_diagnostics import run_diagnostics
 # BEGIN: MANDATORY USER DEFINED SETTINGS
 
 # Where do you want output diagnostics to be placed?  Provide path.
-output_dir = "dpxx_quickdiags"
+output_dir = "/global/cfs/cdirs/e3sm/www/bogensch/IOP_diags"
 
 # User-specified general ID for this diagnostic set
 general_id = "MAGIC_e3sm"  # Change as needed
