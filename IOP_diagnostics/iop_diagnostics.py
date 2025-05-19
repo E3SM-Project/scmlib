@@ -303,6 +303,7 @@ def extract_time_info(ds):
         date_str, time_str = tokens[0], tokens[1]
     except ValueError:
         print("Warning: The 'time:units' attribute is not in the expected format 'days since YYYY-MM-DD HH:MM:SS'.")
+        print("This could potentially mean that your model data set will be plotted offset your OBS and/or LES data.")
         return -999, -999
 
     # Format the date to "yyyymmdd"
