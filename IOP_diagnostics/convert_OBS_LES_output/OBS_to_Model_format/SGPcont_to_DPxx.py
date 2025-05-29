@@ -26,8 +26,11 @@ time_data = ds_in["tsec"].values
 time_data = (time_data-time_data[0])/86400.
 ds_out["time"] = xr.DataArray(time_data - time_offset, dims=["time"])
 
-p_data = ds_in["lev"].values/100.
-p_mid_obs = np.tile(p_data, (len(ds_out["time"]), 1))
+lev_vals = ds_in["lev"].values / 100.0  # convert to hPa
+lev_mask = lev_vals < 1000
+lev_selected = lev_vals[lev_mask]
+
+p_mid_obs = np.tile(lev_selected, (len(ds_out["time"]), 1))
 ds_out["p_mid_obs"] = xr.DataArray(p_mid_obs, dims=["time", "lev"])
 
 # 3. Define lists for 3D and 2D variables
@@ -40,11 +43,11 @@ three_d_vars = [
 
 two_d_vars = [
     ("prec_srf", "precip_total_surf_mass_flux_horiz_avg",2.77778e-7),
-    ("PW", "VapWaterPath_horiz_avg",0.01*1000.0),
+#    ("PW", "VapWaterPath_horiz_avg",0.01*1000.0),
     ("shflx", "surf_sens_flux_horiz_avg", 1.0),
     ("lhflx", "surf_evap_horiz_avg", 4e-7),
     ("lhflx", "surf_upward_latent_heat_flux_horiz_avg", 1.0), 
-    ("LWP", "LiqWaterPath_horiz_avg", 0.01*1000.0),
+#    ("LWP", "LiqWaterPath_horiz_avg", 0.01*1000.0),
     ("Ps", "ps_horiz_avg", 1.0),
     ("Tg", "surf_radiative_T_horiz_avg", 1.0),
     ("Tsair", "T_2m_horiz_avg", 1.0),
@@ -57,6 +60,7 @@ two_d_vars = [
 for var_in, var_out, factor in three_d_vars:
     if var_in in ds_in:
         data_val = np.squeeze(ds_in[var_in].values)
+        data_val = data_val[:, lev_mask]  # apply the lev > 1000 filter
         print(np.shape(data_val))
         ds_out[var_out] = xr.DataArray(data_val, dims=["time", "lev"]) * factor
     else:
