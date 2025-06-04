@@ -97,22 +97,25 @@ fields:
     - p3_qv_tend_horiz_avg
     - homme_T_mid_tend_horiz_avg
     - homme_qv_tend_horiz_avg
+    - iop_forcing_T_mid_tend_horiz_avg
+    - iop_forcing_qv_tend_horiz_avg    
     # Select level output
     - PotentialTemperature_at_700hPa_horiz_avg
     - PotentialTemperature_at_1000hPa_horiz_avg
     - omega_at_500hPa_horiz_avg
     - RelativeHumidity_at_700hPa_horiz_avg
+    - T_mid_at_model_bot_horiz_avg
     - SeaLevelPressure_horiz_avg
     # ADD SHOC DIAGS (must set ./atmchange extra_shoc_diags=true)
-#    - shoc_mix_horiz_avg
-#    - wthl_sec_horiz_avg
-#    - wqw_sec_horiz_avg
-#    - qw_sec_horiz_avg
-#    - thl_sec_horiz_avg
-#    - uw_sec_horiz_avg
-#    - vw_sec_horiz_avg
-#    - w3_horiz_avg
-#    - w_variance_horiz_avg    
+    - shoc_mix_horiz_avg
+    - wthl_sec_horiz_avg
+    - wqw_sec_horiz_avg
+    - qw_sec_horiz_avg
+    - thl_sec_horiz_avg
+    - uw_sec_horiz_avg
+    - vw_sec_horiz_avg
+    - w3_horiz_avg
+    - w_variance_horiz_avg    
 output_control:
   frequency: 15
   frequency_units: nmins

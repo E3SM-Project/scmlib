@@ -266,6 +266,7 @@
   ./atmchange physics::mac_aero_mic::p3::compute_tendencies=T_mid,qv
   ./atmchange physics::rrtmgp::compute_tendencies=T_mid
   ./atmchange homme::compute_tendencies=T_mid,qv
+  ./atmchange physics::iop_forcing::compute_tendencies=T_mid,qv
   
  # configure yaml output
  # See the example yaml files in the DPxx_SCREAM_SCRIPTS/yaml_file_example
