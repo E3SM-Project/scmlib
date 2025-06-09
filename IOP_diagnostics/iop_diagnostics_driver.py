@@ -1,4 +1,5 @@
 from iop_diagnostics import run_diagnostics
+import os
 
 ##########################################################
 # Quick diagnostics package for E3SM Single Column Model (SCM)
@@ -7,7 +8,7 @@ from iop_diagnostics import run_diagnostics
 #  streams that contain horizontally averaged output.
 
 # Will produce time averaged profile plots, time series plots,
-#  and time height plots.
+#  time height plots, and diurnal composites (optional).
 # Finally, will produce .tar file with plots and html viewer.
 
 # This package is currently still in development and thus is
@@ -26,34 +27,47 @@ general_id = "MAGIC_e3sm"  # Change as needed
 
 ######## Begin manage input datasets
 
-# Define each case and its associated metadata.  Please list the E3SM/SCREAM datasets
-#  and the associated metadata first, before LES/OBS.  Can have as many as you want.
+datasets=[]
+
+# Define each case and its associated metadata.
 # - REQUIRED Input:
 #   1) filename = the path and filename of the output dataset to be considered.
 #   2) short_id = ID used in the diagnostics package for legends etc.
 #   3) line_color and line_style: used for profile and 1D time series plots.
-simulation_dir = "/pscratch/sd/b/bogensch/dp_scream3"  #if it's the same for all/most cases, to reduce duplication
-caseappend = ".eam.h0.2013-07-21-19620.nc" # same as above
-datasets = [
-    {
-        "filename": simulation_dir+"/e3sm_scm_MAGIC.v2.001a/run/e3sm_scm_MAGIC.v2.001a"+caseappend,
-        "short_id": "E3SM CNTL",
-        "line_color": "blue",
-        "line_style": "-"
-    },
-    {
-	"filename": simulation_dir+"/e3sm_scm_MAGIC.v2.5m.001a/run/e3sm_scm_MAGIC.v2.5m.001a"+caseappend,
-        "short_id": "E3SM dz = 5m",
-        "line_color": "green",
-        "line_style": "--"
-    },
-    {
-	"filename": "/pscratch/sd/b/bogensch/dp_screamxx_conv/les_data/SAM_MAGIC.les.e3sm.nc",
-        "short_id": "SAM-LES",
-        "line_color": "black",
-        "line_style": ":"
-    }
-]  # Add as many datasets as you want!
+
+# below stuff useful to define if recycled by many cases, but not required as it is just used
+#  to define the filename metadata for E3SM/DP-SCREAM output (i.e. you can explicity just declare path
+#  and file for each filename if you prefer when adding each case).
+simulation_dir = "/pscratch/sd/b/bogensch/dp_scream3" # directory for model simulations
+caseappend = ".eam.h0.2013-07-21-19620.nc" # file suffix for model simulations
+
+# Add datasets (can have as many as you want, minimum of one)
+# Please list model (E3SM/SCREAM) datasets first, before LES/OBS.
+
+casename="e3sm_scm_MAGIC.v2.001a"
+datasets.append({
+"filename": os.path.join(simulation_dir, casename, "run", f"{casename}{caseappend}"),
+"short_id": "E3SM CNTL",
+"line_color": "blue",
+"line_style": "-"
+})
+
+casename="e3sm_scm_MAGIC.v2.5m.001a"
+datasets.append({
+"filename": os.path.join(simulation_dir, casename, "run", f"{casename}{caseappend}"),
+"short_id": "E3SM dz = 5 m",
+"line_color": "green",
+"line_style": "--"
+})
+
+datasets.append({
+"filename": "/pscratch/sd/b/bogensch/dp_screamxx_conv/les_data/SAM_MAGIC.les.e3sm.nc",
+"short_id": "SAM-LES",
+"line_color": "black",
+"line_style": ":"
+})
+
+# End add datasets.
 
 ######## End manage input datasets
 
