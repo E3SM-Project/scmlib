@@ -57,6 +57,7 @@ datasets = [
 
 ######## End manage input datasets
 
+# PROFILE PLOT AVERAGING WINDOWS:
 # Define averaging windows for profile plots as numerical values in days.  You can have
 #  as many averaging windows as you would like.  Each index for these arrays corresponds
 #  to an averaging window.  This example does daily averaging for three days.
@@ -115,17 +116,11 @@ labelsize=14
 ##########################################################
 ##########################################################
 
-filenames = [c["filename"] for c in datasets]
-short_ids = [c["short_id"] for c in datasets]
-line_colors = [c.get("line_color") for c in datasets]
-line_styles = [c.get("line_style") for c in datasets]
-
 # Call the diagnostics function with user-defined settings
 run_diagnostics(
     output_dir,
     general_id,
-    filenames,
-    short_ids,
+    datasets,
     profile_time_s,
     profile_time_e,
     do_timeheight,
@@ -141,8 +136,6 @@ run_diagnostics(
     diurnal_start_day=diurnal_start_day,
     diurnal_end_day=diurnal_end_day,
     usercmap=time_height_cmap,
-    line_colors=line_colors,
-    line_styles=line_styles,
     ticksize=ticksize,
     labelsize=labelsize
 )
