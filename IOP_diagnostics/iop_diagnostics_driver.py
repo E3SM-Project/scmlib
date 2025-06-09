@@ -24,32 +24,38 @@ output_dir = "/global/cfs/cdirs/e3sm/www/bogensch/IOP_diags"
 # User-specified general ID for this diagnostic set
 general_id = "MAGIC_e3sm"  # Change as needed
 
-######## Begin manage simulation output
+######## Begin manage input datasets
 
-# Where are simulation case directories stored?
-#   This program assumes that all output is in the run directory for each case.
-simulation_dir = "/pscratch/sd/b/bogensch/dp_scream3"
+# Define each case and its associated metadata.  Please list the E3SM/SCREAM datasets
+#  and the associated metadata first, before LES/OBS.  Can have as many as you want.
+# - REQUIRED Input:
+#   1) filename = the path and filename of the output dataset to be considered.
+#   2) short_id = ID used in the diagnostics package for legends etc.
+#   3) line_color and line_style: used for profile and 1D time series plots.
+simulation_dir = "/pscratch/sd/b/bogensch/dp_scream3"  #if it's the same for all/most cases, to reduce duplication
+caseappend = ".eam.h0.2013-07-21-19620.nc" # same as above
+datasets = [
+    {
+        "filename": simulation_dir+"/e3sm_scm_MAGIC.v2.001a/run/e3sm_scm_MAGIC.v2.001a"+caseappend,
+        "short_id": "E3SM CNTL",
+        "line_color": "blue",
+        "line_style": "-"
+    },
+    {
+	"filename": simulation_dir+"/e3sm_scm_MAGIC.v2.5m.001a/run/e3sm_scm_MAGIC.v2.5m.001a"+caseappend,
+        "short_id": "E3SM dz = 5m",
+        "line_color": "green",
+        "line_style": "--"
+    },
+    {
+	"filename": "/pscratch/sd/b/bogensch/dp_screamxx_conv/les_data/SAM_MAGIC.les.e3sm.nc",
+        "short_id": "SAM-LES",
+        "line_color": "black",
+        "line_style": ":"
+    }
+]  # Add as many datasets as you want!
 
-# User-specified list of casenames and corresponding short IDs
-casenames = ["e3sm_scm_MAGIC.v2.001a",
-             "e3sm_scm_MAGIC.v2.5m.001a"]  # Example casenames
-
-# All cases should end with this appendix for the output stream to be considered
-caseappend = ".eam.h0.2013-07-21-19620.nc"
-
-######## End manage simulation output
-######## Begin manage LES and observation output
-
-# Directory and file for LES (large eddy simulation) data.  If none, state None
-les_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/les_data/SAM_MAGIC.les.e3sm.nc"
-
-# Directory and file for Observation data.  If none, state None
-obs_file = None
-
-######## End manage LES and observation output
-
-# short IDs used in legend; be sure to include LES and OBS if added.
-short_ids = ["CNTL","dz = 5m","SAM-LES"]
+######## End manage input datasets
 
 # Define averaging windows for profile plots as numerical values in days.  You can have
 #  as many averaging windows as you would like.  Each index for these arrays corresponds
@@ -101,12 +107,6 @@ diurnal_end_day = None    # Ending day for diurnal composite stats, None for def
 # Define the colormap for time height contourf plots.  Default is "viridis_r".
 time_height_cmap = "viridis_r"
 
-# Optional arguments to define line color and style for profile and time series plots.
-#  The number of entries MUST match the number of short_ids for each.  If None is specified
-#  then will default to python defaults.
-line_colors=None
-line_styles=None
-
 # Optional arguments to define tick size and label size for plots.  Default is 14.
 ticksize=14
 labelsize=14
@@ -115,16 +115,17 @@ labelsize=14
 ##########################################################
 ##########################################################
 
+filenames = [c["filename"] for c in datasets]
+short_ids = [c["short_id"] for c in datasets]
+line_colors = [c.get("line_color") for c in datasets]
+line_styles = [c.get("line_style") for c in datasets]
+
 # Call the diagnostics function with user-defined settings
 run_diagnostics(
     output_dir,
     general_id,
-    simulation_dir,
-    casenames,
-    les_file,
-    obs_file,
+    filenames,
     short_ids,
-    caseappend,
     profile_time_s,
     profile_time_e,
     do_timeheight,
