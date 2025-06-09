@@ -1,4 +1,5 @@
 from iop_diagnostics import run_diagnostics
+import os
 
 ##########################################################
 # Quick diagnostics package for E3SM Single Column Model (SCM)
@@ -7,7 +8,7 @@ from iop_diagnostics import run_diagnostics
 #  streams that contain horizontally averaged output.
 
 # Will produce time averaged profile plots, time series plots,
-#  and time height plots.
+#  time height plots, and diurnal composites (optional).
 # Finally, will produce .tar file with plots and html viewer.
 
 # This package is currently still in development and thus is
@@ -24,33 +25,53 @@ output_dir = "/global/cfs/cdirs/e3sm/www/bogensch/IOP_diags"
 # User-specified general ID for this diagnostic set
 general_id = "MAGIC_e3sm"  # Change as needed
 
-######## Begin manage simulation output
+######## Begin manage input datasets
 
-# Where are simulation case directories stored?
-#   This program assumes that all output is in the run directory for each case.
-simulation_dir = "/pscratch/sd/b/bogensch/dp_scream3"
+datasets=[]
 
-# User-specified list of casenames and corresponding short IDs
-casenames = ["e3sm_scm_MAGIC.v2.001a",
-             "e3sm_scm_MAGIC.v2.5m.001a"]  # Example casenames
+# Define each case and its associated metadata.
+# - REQUIRED Input:
+#   1) filename = the path and filename of the output dataset to be considered.
+#   2) short_id = ID used in the diagnostics package for legends etc.
+#   3) line_color and line_style: used for profile and 1D time series plots.
 
-# All cases should end with this appendix for the output stream to be considered
-caseappend = ".eam.h0.2013-07-21-19620.nc"
+# below stuff useful to define if recycled by many cases, but not required as it is just used
+#  to define the filename metadata for E3SM/DP-SCREAM output (i.e. you can explicity just declare path
+#  and file for each filename if you prefer when adding each case).
+simulation_dir = "/pscratch/sd/b/bogensch/dp_scream3" # directory for model simulations
+caseappend = ".eam.h0.2013-07-21-19620.nc" # file suffix for model simulations
 
-######## End manage simulation output
-######## Begin manage LES and observation output
+# Add datasets (can have as many as you want, minimum of one)
+# Please list model (E3SM/SCREAM) datasets first, before LES/OBS.
 
-# Directory and file for LES (large eddy simulation) data.  If none, state None
-les_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/les_data/SAM_MAGIC.les.e3sm.nc"
+casename="e3sm_scm_MAGIC.v2.001a"
+datasets.append({
+"filename": os.path.join(simulation_dir, casename, "run", f"{casename}{caseappend}"),
+"short_id": "E3SM CNTL",
+"line_color": "blue",
+"line_style": "-"
+})
 
-# Directory and file for Observation data.  If none, state None
-obs_file = None
+casename="e3sm_scm_MAGIC.v2.5m.001a"
+datasets.append({
+"filename": os.path.join(simulation_dir, casename, "run", f"{casename}{caseappend}"),
+"short_id": "E3SM dz = 5 m",
+"line_color": "green",
+"line_style": "--"
+})
 
-######## End manage LES and observation output
+datasets.append({
+"filename": "/pscratch/sd/b/bogensch/dp_screamxx_conv/les_data/SAM_MAGIC.les.e3sm.nc",
+"short_id": "SAM-LES",
+"line_color": "black",
+"line_style": ":"
+})
 
-# short IDs used in legend; be sure to include LES and OBS if added.
-short_ids = ["CNTL","dz = 5m","SAM-LES"]
+# End add datasets.
 
+######## End manage input datasets
+
+# PROFILE PLOT AVERAGING WINDOWS:
 # Define averaging windows for profile plots as numerical values in days.  You can have
 #  as many averaging windows as you would like.  Each index for these arrays corresponds
 #  to an averaging window.  This example does daily averaging for three days.
@@ -101,12 +122,6 @@ diurnal_end_day = None    # Ending day for diurnal composite stats, None for def
 # Define the colormap for time height contourf plots.  Default is "viridis_r".
 time_height_cmap = "viridis_r"
 
-# Optional arguments to define line color and style for profile and time series plots.
-#  The number of entries MUST match the number of short_ids for each.  If None is specified
-#  then will default to python defaults.
-line_colors=None
-line_styles=None
-
 # Optional arguments to define tick size and label size for plots.  Default is 14.
 ticksize=14
 labelsize=14
@@ -119,12 +134,7 @@ labelsize=14
 run_diagnostics(
     output_dir,
     general_id,
-    simulation_dir,
-    casenames,
-    les_file,
-    obs_file,
-    short_ids,
-    caseappend,
+    datasets,
     profile_time_s,
     profile_time_e,
     do_timeheight,
@@ -140,8 +150,6 @@ run_diagnostics(
     diurnal_start_day=diurnal_start_day,
     diurnal_end_day=diurnal_end_day,
     usercmap=time_height_cmap,
-    line_colors=line_colors,
-    line_styles=line_styles,
     ticksize=ticksize,
     labelsize=labelsize
 )

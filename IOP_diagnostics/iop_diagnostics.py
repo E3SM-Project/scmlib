@@ -364,12 +364,7 @@ def compute_date_time_difference(date1, time1_seconds, date2, time2_seconds):
 def run_diagnostics(
     output_dir,
     general_id,
-    base_dir,
-    casenames,
-    les_file,
-    obs_file,
-    short_ids,
-    caseappend,
+    datasets,
     profile_time_s,
     profile_time_e,
     do_timeheight,
@@ -386,8 +381,6 @@ def run_diagnostics(
     diurnal_end_day=9999,
     run_mean_npts=0,
     usercmap="viridis_r",
-    line_colors=None,
-    line_styles=None,
     ticksize=14,
     labelsize=14
 ):
@@ -401,7 +394,13 @@ def run_diagnostics(
     os.system('cp logos/arm_logo.png ' + output_subdir)
     os.system('cp logos/e3sm_logo.png ' + output_subdir)
 
-    file_paths = [os.path.join(base_dir, case, "run", f"{case}{caseappend}") for case in casenames]
+    # Extract information from the input datasets
+    filenames = [c["filename"] for c in datasets]
+    short_ids = [c["short_id"] for c in datasets]
+    line_colors = [c.get("line_color") for c in datasets]
+    line_styles = [c.get("line_style") for c in datasets]
+
+    file_paths = filenames
     datasets = []
 
     for fp in file_paths:
@@ -414,14 +413,6 @@ def run_diagnostics(
             ds['PRECT'].attrs['long_name'] = 'Total Surface Precipitation Rate'
             ds['PRECT'].attrs['units'] = ds['PRECC'].attrs.get('units', 'm/s')
 
-        datasets.append(ds)
-
-    if les_file is not None:
-        ds = xr.open_dataset(les_file, decode_times=False)
-        datasets.append(ds)
-
-    if obs_file is not None:
-        ds = xr.open_dataset(obs_file, decode_times=False)
         datasets.append(ds)
 
     if len(datasets) != len(short_ids):
