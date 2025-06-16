@@ -23,48 +23,75 @@ import os
 output_dir = "/global/cfs/cdirs/e3sm/www/bogensch/IOP_diags"
 
 # User-specified general ID for this diagnostic set
-general_id = "MAGIC_e3sm"  # Change as needed
+general_id = "MAGIC_dpxx_bug_fix"  # Change as needed
 
 ######## Begin manage input datasets
 
 datasets=[]
 
-# Define each case and its associated metadata.
+# Define each dataset and its associated metadata.
 # - REQUIRED Input:
 #   1) filename = the path and filename of the output dataset to be considered.
 #   2) short_id = ID used in the diagnostics package for legends etc.
 #   3) line_color and line_style: used for profile and 1D time series plots.
 
-# below stuff useful to define if recycled by many cases, but not required as it is just used
+# below stuff useful to define if recycled by many datasets, but not required as it is just used
 #  to define the filename metadata for E3SM/DP-SCREAM output (i.e. you can explicity just declare path
 #  and file for each filename if you prefer when adding each case).
-simulation_dir = "/pscratch/sd/b/bogensch/dp_scream3" # directory for model simulations
-caseappend = ".eam.h0.2013-07-21-19620.nc" # file suffix for model simulations
+simulation_dir = "/pscratch/sd/b/bogensch/dp_screamxx" # directory for model simulations
+caseappend = ".horiz_avg.AVERAGE.nmins_x15.2013-07-21-19620.nc" # file suffix for model simulations
 
 # Add datasets (can have as many as you want, minimum of one)
 # Please list model (E3SM/SCREAM) datasets first, before LES/OBS.
 
-casename="e3sm_scm_MAGIC.v2.001a"
+# SCREAM control simulation
+casename="scream_dpxx_MAGIC.prefix.001a"
 datasets.append({
 "filename": os.path.join(simulation_dir, casename, "run", f"{casename}{caseappend}"),
-"short_id": "E3SM CNTL",
+"short_id": "CNTL",
 "line_color": "blue",
 "line_style": "-"
 })
 
-casename="e3sm_scm_MAGIC.v2.5m.001a"
+# SCREAM simulation with a bug fix
+casename="scream_dpxx_MAGIC.fix.001a"
 datasets.append({
 "filename": os.path.join(simulation_dir, casename, "run", f"{casename}{caseappend}"),
-"short_id": "E3SM dz = 5 m",
+"short_id": "Bug Fix",
 "line_color": "green",
 "line_style": "--"
 })
 
+# SAM LES
 datasets.append({
-"filename": "/pscratch/sd/b/bogensch/dp_screamxx_conv/les_data/SAM_MAGIC.les.e3sm.nc",
+"filename": "/pscratch/sd/b/bogensch/dp_screamxx_conv/les_data/SAM_MAGIC.les.dpxx.nc",
 "short_id": "SAM-LES",
 "line_color": "black",
-"line_style": ":"
+"line_style": "-"
+})
+
+# 1D observation dataset
+datasets.append({
+"filename": "/pscratch/sd/b/bogensch/dp_screamxx_conv/obs_data/MAGIC_1d_OBS.dpxx.nc",
+"short_id": "OBS",
+"line_color": "gray",
+"line_style": "--"
+})
+
+# Sounding observation dataset
+datasets.append({
+"filename": "/pscratch/sd/b/bogensch/dp_screamxx_conv/obs_data/MAGIC_snd_OBS.dpxx.nc",
+"short_id": "OBS",
+"line_color": "gray",
+"line_style": "--"
+})
+
+# KAZR observation dataset
+datasets.append({
+"filename": "/pscratch/sd/b/bogensch/dp_screamxx_conv/obs_data/MAGIC_kazr_OBS.dpxx.nc",
+"short_id": "OBS-Kazr",
+"line_color": "gray",
+"line_style": "--"
 })
 
 # End add datasets.
@@ -107,11 +134,11 @@ linewidth = 4
 
 # Optional: Time range for time series plots in days
 time_series_time_s = 0  # Starting time for time series, None for default (entire range)
-time_series_time_e = None  # Ending time for time series, None for default (entire range)
+time_series_time_e = 3.25  # Ending time for time series, None for default (entire range)
 
 # Optional: Time range for time-height plots in days
-time_height_time_s = None  # Starting time for time-height plots, None for default (entire range)
-time_height_time_e = None  # Ending time for time-height plots, None for default (entire range)
+time_height_time_s = 0  # Starting time for time-height plots, None for default (entire range)
+time_height_time_e = 3.25  # Ending time for time-height plots, None for default (entire range)
 
 # Do Diurnal Composite Analysis?  Must have at least three days worth of data and each
 #  day must have at least 4 output time slices for this analysis to be considered.
