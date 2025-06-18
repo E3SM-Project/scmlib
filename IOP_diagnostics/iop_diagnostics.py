@@ -122,8 +122,7 @@ def plot_time_height_panel_grid(
             else:
                 continue
 
-            timecords = np.where((time_vals >= stime) & (time_vals <= etime))[0]
-            y_coord = compute_y_coord(ds, timecords, height_cord, var_name)
+            y_coord = compute_y_coord(ds, time_indices, height_cord, var_name)
 
             if height_cord == "z":
                 y_min, y_max = (0, max_height) if max_height is not None else (y_coord.min(), y_coord.max())
