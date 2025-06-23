@@ -49,13 +49,11 @@
   set lat = CASELONGlat
   set lon = CASELONGlon
 
-  # What version of E3SM? (v1, v2, or master)
+  # What version of E3SM? (v1, v2, v3, or master)
   #  Select "v1" if you are running with E3SMv1 RELEASE code
   #  Select "v2" if you are running with E3SMv2 RELEASE code
-  #  Select "master" if you are running with the master development branch of E3SM
-  #  As of this writing (April 24, 2024) this is what you run if you want to run v3.
-  #  (If you are running with non-up-to-date master code then you may need to modify
-  #    aspects of this script to get it to compile.)
+  #  If you want to run "v3" then select "master".
+  #    This will work with official release v3 codes or for E3SM master branch.
 
   setenv e3sm_version master
 
@@ -275,12 +273,10 @@ cat <<EOF >> user_nl_${atm_mod}
  scmlon = $lon
 EOF
 
-#  Settings shared by v1 and v2
+# Shared settings for all versions
 cat <<EOF >> user_nl_${atm_mod}
  use_hetfrz_classnuc = .true.
- micro_mg_dcs_tdep = .true.
  microp_aero_wsub_scheme = 1
- sscav_tuning = .true.
  convproc_do_aer = .true.
  demott_ice_nuc = .true.
  liqcf_fix = .true.
@@ -289,20 +285,13 @@ cat <<EOF >> user_nl_${atm_mod}
  mam_amicphys_optaa = 1
  fix_g1_err_ndrop = .true.
  ssalt_tuning = .true.
- relvar_fix = .true.
- mg_prc_coeff_fix = .true.
- rrtmg_temp_fix = .true.
- mam_amicphys_optaa = 1
- fix_g1_err_ndrop = .true.
- ssalt_tuning = .true.
  use_rad_dt_cosz = .true.
- ice_sed_ai = 500.0
  do_tms = .false.
  n_so4_monolayers_pcage = 8.0D0
  se_ftype = 2
 EOF
 
-# Set v1 parameters if running EAMv1
+# Version-specific settings
 if ($e3sm_version == v1) then
 cat <<EOF >> user_nl_${atm_mod}
  cldfrc_dp1 = 0.045D0
@@ -336,69 +325,96 @@ cat <<EOF >> user_nl_${atm_mod}
  prc_coef1 = 30500.0D0
  prc_exp = 3.19D0
  prc_exp1 = -1.2D0
- se_ftype = 2
  clubb_C14 = 1.3D0
+ rrtmg_temp_fix = .true.
+ mg_prc_coeff_fix = .true.
+ micro_mg_dcs_tdep = .true.
+ ice_sed_ai = 500.0
+ sscav_tuning = .true.
 EOF
 
 else
-
-# V2 tunings.  WARNING: may not be final yet
+# v2 and master share many parameters
 cat <<EOF >> user_nl_${atm_mod}
  zmconv_trigdcape_ull = .true.
- cld_sed   = 1.0D0
- effgw_beres  = 0.35
- gw_convect_hcf  = 12.5
- effgw_oro  = 0.375
- dust_emis_fact =  1.50D0
+ effgw_beres = 0.35
+ effgw_oro = 0.375
  linoz_psc_T = 197.5
- clubb_tk1 = 253.15D0
- clubb_c1               = 2.4
- clubb_c11              = 0.70
- clubb_c11b             = 0.20
- clubb_c11c             = 0.85
- clubb_c14              = 2.5D0
- clubb_c1b              = 2.8
- clubb_c1c              = 0.75
- clubb_c6rtb            = 7.50
- clubb_c6rtc            = 0.50
- clubb_c6thlb           = 7.50
- clubb_c6thlc           = 0.50
- clubb_c8               = 5.2
- clubb_c_k10            = 0.35
- clubb_c_k10h           = 0.35
- clubb_gamma_coef       = 0.12D0
- clubb_gamma_coefb      = 0.28D0
- clubb_gamma_coefc      = 1.2
- clubb_mu               = 0.0005
- clubb_wpxp_l_thresh    = 100.0D0
- clubb_ice_deep         = 14.e-6
- clubb_ice_sh           = 50.e-6
- clubb_liq_deep         = 8.e-6
- clubb_liq_sh           = 10.e-6
- clubb_C2rt             = 1.75D0
- clubb_use_sgv          = .true.
- seasalt_emis_scale     = 0.6
- zmconv_dmpdz  = -0.7e-3
- zmconv_c0_lnd          = 0.0020
- zmconv_c0_ocn          = 0.0020
- zmconv_ke              = 5.0E-6
- zmconv_alfa            = 0.14D0
- zmconv_tp_fac          = 2.0D0
- zmconv_tiedke_add      = 0.8D0
- zmconv_cape_cin        = 1
- zmconv_mx_bot_lyr_adj  = 1
- prc_coef1               = 30500.0D0
- prc_exp                 = 3.19D0
- prc_exp1                = -1.40D0
- micro_mg_accre_enhan_fac = 1.75D0
- microp_aero_wsubmin     = 0.001D0
- so4_sz_thresh_icenuc    = 0.080e-6
- micro_mg_berg_eff_factor = 0.7D0
- cldfrc_dp1              = 0.018D0
- cldfrc2m_rhmaxi         = 1.05D0
- taubgnd                 = 2.5D-3
- raytau0                 = 5.0D0
+ clubb_c1 = 2.4
+ clubb_c11 = 0.70
+ clubb_c11b = 0.20
+ clubb_c11c = 0.85
+ clubb_c14 = 2.5D0
+ clubb_c1b = 2.8
+ clubb_c1c = 0.75
+ clubb_c6rtb = 7.50
+ clubb_c6rtc = 0.50
+ clubb_c6thlb = 7.50
+ clubb_c6thlc = 0.50
+ clubb_c8 = 5.2
+ clubb_c_k10 = 0.35
+ clubb_c_k10h = 0.35
+ clubb_gamma_coef = 0.12D0
+ clubb_gamma_coefb = 0.28D0
+ clubb_gamma_coefc = 1.2
+ clubb_mu = 0.0005
+ clubb_ice_deep = 14.e-6
+ clubb_ice_sh = 50.e-6
+ clubb_liq_deep = 8.e-6
+ clubb_liq_sh = 10.e-6
+ clubb_C2rt = 1.75D0
+ clubb_wpxp_l_thresh = 100.0D0
+ clubb_use_sgv = .true.
+ zmconv_dmpdz = -0.7e-3
+ zmconv_c0_lnd = 0.0020
+ zmconv_c0_ocn = 0.0020
+ zmconv_ke = 5.0E-6
+ zmconv_alfa = 0.14D0
+ zmconv_tp_fac = 2.0D0
+ zmconv_tiedke_add = 0.8D0
+ zmconv_cape_cin = 1
+ zmconv_mx_bot_lyr_adj = 1
+ microp_aero_wsubmin = 0.001D0
+ so4_sz_thresh_icenuc = 0.080e-6
+ cldfrc_dp1 = 0.018D0
+ cldfrc2m_rhmaxi = 1.05D0
+ taubgnd = 2.5D-3
+ raytau0 = 5.0D0
 EOF
+
+if ($e3sm_version == v2) then
+cat <<EOF >> user_nl_${atm_mod}
+ cld_sed = 1.0D0
+ prc_coef1 = 30500.0D0
+ prc_exp = 3.19D0
+ prc_exp1 = -1.40D0
+ rrtmg_temp_fix = .true.
+ micro_mg_accre_enhan_fac = 1.75D0
+ mg_prc_coeff_fix = .true.
+ micro_mg_berg_eff_factor = 0.7D0
+ micro_mg_dcs_tdep = .true.
+ ice_sed_ai = 500.0
+ gw_convect_hcf = 12.5
+ dust_emis_fact = 1.50D0
+ clubb_tk1 = 253.15D0
+ sscav_tuning = .true.
+ seasalt_emis_scale = 0.6D0
+EOF
+
+else if ($e3sm_version == master) then
+cat <<EOF >> user_nl_${atm_mod}
+ zmconv_ke = 2.5E-6
+ resus_fix = .true.
+ gw_convect_hcf = 10.0
+ dust_emis_fact = 13.8D0
+ clubb_tk1 = 268.15D0
+ sscav_tuning = .false.
+ seasalt_emis_scale = 0.55D0
+ sol_factb_interstitial = 0.1D0
+ sol_facti_cloud_borne = 1.0D0
+ sol_factic_interstitial = 0.4D0
+EOF
+endif
 
 endif
 
