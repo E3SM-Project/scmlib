@@ -14,14 +14,15 @@ import sys
 site='GOAMAZON'
 
 # Enter Date Timestamp to be extracted (yyyy-dd-mm-ttttt)
-date='2015-08-26-43200'
+date='2014-10-05-43200'
 
 # These geometry parameters should match what you plan to use in your DPxx simulation
 num_ne_x=267
 num_ne_y=267
 
 # Define the file where your ELM restart file resides that you want to extract from
-input_file = '/pscratch/sd/b/bogensch/E3SM_simulations/land_initial_conditions_dpxx/SGP_GOAMAZON_2013-2015'
+#input_file = '/pscratch/sd/b/bogensch/E3SM_simulations/land_initial_conditions_dpxx/SGP_GOAMAZON_2013-2015'
+input_file = '/pscratch/sd/b/bogensch/E3SM_simulations/IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.003a/run'
 # Case name of run used to spin up ELM files
 input_case = 'IELM.ne30pg2_ne30pg2.ERA5_GoAmazon.003a'
 
