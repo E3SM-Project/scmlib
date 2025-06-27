@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 """
+
+NOTE: This script is now obsolete as there is a much EASIER way to get horizontally averaged
+output in DPxx.  That is to append any variable name in your YAML file with "_horiz_avg".
+Will retain this script for legacy purposes and because there could be some edge use cases
+where this script is still handy.
+
 Will generate a mapping file to produce horizontally averaged output
 during runtime for DPxx simulations. NOTE that these simple mapping files
 will ONLY work for online DPxx remapping and not offline. The eamxx online
@@ -30,10 +36,10 @@ from datetime import datetime
 ###### Start user input
 
 # These geometry parameters should match what you plan to use in your simulation
-num_ne_x=20
-num_ne_y=20
-domain_size_x=200000
-domain_size_y=200000
+num_ne_x=166
+num_ne_y=12
+domain_size_x=6000000
+domain_size_y=432000
 
 # Supply path where mapping file will be placed
 outputpath="/global/homes/b/bogensch/dp_scream_scripts_xx/remap_files/"
