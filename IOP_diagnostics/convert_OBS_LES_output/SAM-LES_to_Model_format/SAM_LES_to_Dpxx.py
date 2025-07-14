@@ -60,7 +60,7 @@ three_d_vars = [
 two_d_vars = [
     ("SHF", "surf_sens_flux_horiz_avg", 1.0),
     ("LHF", "surf_evap_horiz_avg", 4e-7),
-    ("LHF", "surf_upward_latent_heat_flux_horiz_avg", 1.0),
+    ("LHF", "surface_upward_latent_heat_flux_horiz_avg", 1.0),
     ("CWP", "LiqWaterPath_horiz_avg", 1.0 / 1000.0),
     ("IWP", "IceWaterPath_horiz_avg", 1.0 / 1000.0),
     ("PW", "WaterVaporPath_horiz_avg", 1.0 / 10.0),
