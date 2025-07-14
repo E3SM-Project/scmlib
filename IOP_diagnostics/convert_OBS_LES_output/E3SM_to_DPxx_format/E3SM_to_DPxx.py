@@ -3,8 +3,8 @@ import numpy as np
 import os
 
 # Define input and output file paths
-input_file = "/pscratch/sd/b/bogensch/dp_screamxx_cgils/e3sm_scm_CGILS_s12_cntl.001b/run/e3sm_scm_CGILS_s12_cntl.001b.eam.h0.2003-07-15-00000.nc"
-output_file = "/pscratch/sd/b/bogensch/dp_screamxx_cgils/e3sm_scm_CGILS_s12_cntl.001b/run/e3sm_scm_CGILS_s12_cntl.001b.horiz_avg.AVERAGE.nhours_x1.2003-07-15-00000.nc"
+input_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/e3sm_scm_GOAMAZON.intland.2014-01-01.002a/run/e3sm_scm_GOAMAZON.intland.2014-01-01.002a.horiz_avg.AVERAGE.nhours_x1.2014-01-01-00000.nc"
+output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/e3sm_scm_GOAMAZON.intland.2014-01-01.002a/run/e3sm_scm_dpxxformat_GOAMAZON.intland.2014-01-01.002a.horiz_avg.AVERAGE.nhours_x1.2014-01-01-00000.nc"
 time_offset = 0.0
 
 # Ensure the directory for the output file exists
@@ -27,10 +27,14 @@ ds_out["time"] = xr.DataArray(time_data - time_offset, dims=["time"])
 
 ds_out["lev"] = ds_in["lev"].values
 ds_out["ilev"] = ds_in["ilev"].values
-ds_out["hyam"] = ds_in["hyam"].values
-ds_out["hybm"] = ds_in["hybm"].values
-ds_out["hyai"] = ds_in["hyam"].values
-ds_out["hybi"] = ds_in["hybi"].values
+
+ds_out["hyam"] = xr.DataArray(ds_in["hyam"].values, dims=["lev"])
+ds_out["hybm"] = xr.DataArray(ds_in["hybm"].values, dims=["lev"])
+ds_out["hyai"] = xr.DataArray(ds_in["hyai"].values, dims=["ilev"])
+ds_out["hybi"] = xr.DataArray(ds_in["hybi"].values, dims=["ilev"])
+
+for var in ["hyam", "hybm", "hyai", "hybi"]:
+    ds_out[var].attrs = ds_in[var].attrs
 
 # 3. Define lists for 3D and 2D variables
 three_d_vars = [
@@ -62,6 +66,8 @@ two_d_vars = [
     ("TGCLDIWP", "IceWaterPath_horiz_avg", 1.0),
     ("SWCF", "ShortwaveCloudForcing_horiz_avg", 1.0),
     ("LWCF", "LongwaveCloudForcing_horiz_avg", 1.0),
+    ("TREFHT", "T_2m_horiz_avg", 1.0),
+    ("PS", "ps_horiz_avg", 1.0)
 ]
 
 # ("", "", ),
