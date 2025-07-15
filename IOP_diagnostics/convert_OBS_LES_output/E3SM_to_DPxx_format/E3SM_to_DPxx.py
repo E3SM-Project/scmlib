@@ -3,8 +3,8 @@ import numpy as np
 import os
 
 # Define input and output file paths
-input_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/e3sm_scm_GOAMAZON.intland.2014-01-01.002a/run/e3sm_scm_GOAMAZON.intland.2014-01-01.002a.horiz_avg.AVERAGE.nhours_x1.2014-01-01-00000.nc"
-output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/e3sm_scm_GOAMAZON.intland.2014-01-01.002a/run/e3sm_scm_dpxxformat_GOAMAZON.intland.2014-01-01.002a.horiz_avg.AVERAGE.nhours_x1.2014-01-01-00000.nc"
+input_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/e3sm_scm_GOAMAZON.cntl.2014-01-01.002a/run/e3sm_scm_GOAMAZON.cntl.2014-01-01.002a.horiz_avg.AVERAGE.nhours_x1.2014-01-01-00000.nc"
+output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/e3sm_scm_GOAMAZON.cntl.2014-01-01.002a/run/e3sm_scm_dpxxformat_GOAMAZON.cntl.2014-01-01.002a.horiz_avg.AVERAGE.nhours_x1.2014-01-01-00000.nc"
 time_offset = 0.0
 
 # Ensure the directory for the output file exists
@@ -33,7 +33,7 @@ ds_out["hybm"] = xr.DataArray(ds_in["hybm"].values, dims=["lev"])
 ds_out["hyai"] = xr.DataArray(ds_in["hyai"].values, dims=["ilev"])
 ds_out["hybi"] = xr.DataArray(ds_in["hybi"].values, dims=["ilev"])
 
-for var in ["hyam", "hybm", "hyai", "hybi"]:
+for var in ["hyam", "hybm", "hyai", "hybi", "time"]:
     ds_out[var].attrs = ds_in[var].attrs
 
 # 3. Define lists for 3D and 2D variables
@@ -59,7 +59,7 @@ three_d_vars = [
 
 two_d_vars = [
     ("SHFLX", "surf_sens_flux_horiz_avg", 1.0),
-    ("LHFLX", "surf_upward_latent_heat_flux_horiz_avg",1.0),
+    ("LHFLX", "surface_upward_latent_heat_flux_horiz_avg",1.0),
     ("PS", "ps_horiz_avg",1.0),
     ("TMQ", "VapWaterPath_horiz_avg", 1.0),
     ("TGCLDLWP", "LiqWaterPath_horiz_avg", 1.0),
@@ -87,6 +87,7 @@ for var_in, var_out, factor in three_d_vars:
             dims_out = ["time", "lev"]
 
         ds_out[var_out] = xr.DataArray(data_val, dims=dims_out) * factor
+        ds_out[var_out].attrs = ds_in[var_in].attrs
     else:
         print(f"Warning: Variable '{var_in}' not found in input dataset. Skipping.")
 
@@ -94,14 +95,21 @@ for var_in, var_out, factor in three_d_vars:
 for var_in, var_out, factor in two_d_vars:
     if var_in in ds_in:
         ds_out[var_out] = xr.DataArray(np.squeeze(ds_in[var_in].values), dims=["time"]) * factor
+        ds_out[var_out].attrs = ds_in[var_in].attrs
     else:
         print(f"Warning: Variable '{var_in}' not found in input dataset. Skipping.")
+
+# Handle Precipitation Specially
+ds_out['precip_total_surf_mass_flux_horiz_avg']=xr.DataArray(np.squeeze(ds_in['PRECL'].values)+np.squeeze(ds_in['PRECC'].values), dims=["time"])
+
+ds_out['precip_large_surf_mass_flux_horiz_avg']=xr.DataArray(np.squeeze(ds_in['PRECL'].values), dims=["time"])
+ds_out['precip_conv_surf_mass_flux_horiz_avg']=xr.DataArray(np.squeeze(ds_in['PRECC'].values), dims=["time"])
 
 # Copy attributes from the input dataset to the output dataset
 ds_out.attrs = ds_in.attrs
 
 # Add the units attribute
-ds_out["time"].attrs["units"] = "days since 2003-07-15 00:00:00"
+#ds_out["time"].attrs["units"] = "days since 2003-07-15 00:00:00"
 
 # Save the new dataset to a NetCDF file
 ds_out.to_netcdf(output_file)
