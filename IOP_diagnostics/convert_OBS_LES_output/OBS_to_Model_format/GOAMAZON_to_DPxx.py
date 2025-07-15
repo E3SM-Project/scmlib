@@ -51,7 +51,7 @@ two_d_vars = [
     ("PW", "VapWaterPath_horiz_avg",0.01*1000.0),
     ("shflx", "surf_sens_flux_horiz_avg", 1.0),
     ("lhflx", "surf_evap_horiz_avg", 4e-7),
-    ("lhflx", "surf_upward_latent_heat_flux_horiz_avg", 1.0), 
+    ("lhflx", "surface_upward_latent_heat_flux_horiz_avg", 1.0), 
     ("LWP", "LiqWaterPath_horiz_avg", 0.01*1000.0),
     ("Ps", "ps_horiz_avg", 1.0),
     ("Tg", "surf_radiative_T_horiz_avg", 1.0),
