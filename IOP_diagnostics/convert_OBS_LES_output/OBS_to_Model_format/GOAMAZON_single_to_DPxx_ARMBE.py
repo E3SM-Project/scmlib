@@ -3,9 +3,9 @@ import numpy as np
 import os
 
 # Define input and output file paths
-input_file = "/global/homes/b/bogensch/THREAD/MAGIC_analysis/15A_Obs_diag_v2.nc"
-output_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/MAGIC.obs.kazr.dpxx_format.nc"
-time_offset = 1.25
+input_file = "/global/homes/b/bogensch/THREAD/GOAMAZON_analysis/ARM_obs/maoarmbecldradM1.c1.20140101.003000.nc"
+output_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/GOAMAZON_singlepulse.obs.ARMBE.dpxx_format.nc"
+time_offset = 278.5
 
 # Ensure the directory for the output file exists
 output_dir = os.path.dirname(output_file)
@@ -22,18 +22,32 @@ ds_in = xr.open_dataset(input_file,decode_times=False)
 ds_out = xr.Dataset()
 
 # 1. Transfer and adjust the "time" variable
-time_data = ds_in["time_kazr"].values
-ds_out["time"] = xr.DataArray(time_data - time_offset, dims=["time"])
+time_data = ds_in["time"].values
+# convert time from seconds to days
+#ds_out["time"] = xr.DataArray(time_data/86400. - time_offset, dims=["time"])
+
+# Convert time from seconds to days
+time_days = time_data / 86400.0 - time_offset
+
+# Filter for time values between day 0 and 0.5
+time_filtered = (time_days >= 0.0) & (time_days <= 0.5)
+
+# Apply filtering to input dataset
+ds_in = ds_in.isel(time=time_filtered)
+
+# Assign filtered time to output dataset
+ds_out["time"] = xr.DataArray(time_days[time_filtered], dims=["time"])
+
 
 # This file will only have 1d data, make up vertical coordinates to satisfy diagnostics package requirements.
 
-z_data = ds_in["z_kazr"].values[::-1] # just a dummy variable
+z_data = ds_in["height"].values[::-1] # just a dummy variable
 z_mid = np.tile(z_data, (len(ds_out["time"]), 1))
 ds_out["z_mid_horiz_avg"] = xr.DataArray(z_mid, dims=["time", "lev"])
 
 # Define lists for variables
 three_d_vars = [
-    ("cf_kazr", "cldfrac_tot_for_analysis_horiz_avg", 1.0),
+    ("cld_frac", "cldfrac_tot_for_analysis_horiz_avg", 1.0),
 ]
 
 # Process 3D variables
@@ -56,7 +70,7 @@ for var_name in ds_out.data_vars:
 ds_out.attrs = ds_in.attrs
 
 # Add the units attribute
-ds_out["time"].attrs["units"] = "days since 2013-07-21 05:27:00"
+ds_out["time"].attrs["units"] = "days since 2014-10-05 12:00:00"
 
 # Save the new dataset to a NetCDF file
 ds_out.to_netcdf(output_file)

@@ -4,7 +4,7 @@ import os
 
 # Define input and output file paths
 input_file = "/global/homes/b/bogensch/THREAD/MAGIC_analysis/15A_Obs_diag_v2.nc"
-output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/obs_data/MAGIC_snd_OBS.dpxx.nc"
+output_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/MAGIC.obs.sounding.dpxx_format.nc"
 time_offset = 1.25
 
 # Ensure the directory for the output file exists
