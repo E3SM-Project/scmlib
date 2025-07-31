@@ -1,24 +1,12 @@
 import xarray as xr
 import numpy as np
+import pandas as pd
 import os
 import csv
 
-def csv_read_in(filename):
-
-    file=open(filename)
-    csvreader=csv.reader(file)
-
-    data=[]
-    for row in csvreader:
-        data.append(row)
-
-    floatdata=np.float_(data)
-    return floatdata
-
 # Define input and output file paths
-input_file = "/global/homes/b/bogensch/THREAD/GOAMAZON_analysis/278_obs/GOAMAZON_day278.csv"
-output_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/GOAMAZON_singlepulse.obs.radar_precip.dpxx_format.nc"
-time_offset = 278.5
+input_file = "/global/homes/b/bogensch/THREAD/COMBLE_obs/maclwp_dat.csv"
+output_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/COMBLE.obs.maclwp.dpxx_format.nc"
 
 # Ensure the directory for the output file exists
 output_dir = os.path.dirname(output_file)
@@ -28,20 +16,25 @@ if not os.path.exists(output_dir):
 else:
     print(f"Directory '{output_dir}' already exists.")
 
-# Read in dataset
-prect_in=csv_read_in(input_file)
+data = pd.read_csv(input_file)
 
-# time stored in prect_in[:,0]
-# precip values stored in prect_in[:,1]
+maclwp_time = data['time'].values / 3600. + 2.  # unit: hr
+maclwp = data['lwp_bu'].values
 
-prect_in[:,0]=(prect_in[:,0]-8.0)/24.
+# Sort by time
+sorted_indices = np.argsort(maclwp_time)
+maclwp_time = maclwp_time[sorted_indices]
+maclwp = maclwp[sorted_indices]
+
+maclwp_time = maclwp_time/24.
+
+print(np.shape(maclwp))
 
 # Create a new dataset for the output
 ds_out = xr.Dataset()
 
 # Assign filtered time to output dataset
-ds_out["time"] = xr.DataArray(prect_in[:,0], dims=["time"])
-
+ds_out["time"] = xr.DataArray(maclwp_time, dims=["time"])
 
 # This file will only have 1d data, make up vertical coordinates to satisfy diagnostics package requirements.
 
@@ -51,14 +44,14 @@ ds_out["z_mid_horiz_avg"] = xr.DataArray(z_mid, dims=["time", "lev"])
 
 # Define lists for variables
 two_d_vars = [
-    ("cld_frac", "precip_total_surf_mass_flux_horiz_avg", 0.001/3600.0),
+    ("dummy", "LiqWaterPath_horiz_avg", 1.0),
 ]
 
 # Process 2D variables
 
 # Process 2D variables
 for var_in, var_out, factor in two_d_vars:
-    ds_out[var_out] = xr.DataArray(np.squeeze(prect_in[:,1]), dims=["time"]) * factor
+    ds_out[var_out] = xr.DataArray(np.squeeze(maclwp), dims=["time"]) * factor
 
 # Clip all variables in ds_out to ensure no values are below zero
 for var_name in ds_out.data_vars:
@@ -67,8 +60,8 @@ for var_name in ds_out.data_vars:
         ds_out[var_name] = da.clip(min=0)
 
 # Add the units attribute
-ds_out["precip_total_surf_mass_flux_horiz_avg"].attrs["units"]="m/s"
-ds_out["time"].attrs["units"] = "days since 2014-10-05 12:00:00"
+ds_out["LiqWaterPath_horiz_avg"].attrs["units"]="kg/m2"
+ds_out["time"].attrs["units"] = "days since 2020-03-12 22:00:00"
 
 # Save the new dataset to a NetCDF file
 ds_out.to_netcdf(output_file)

@@ -45,7 +45,7 @@ ds_out["time"] = xr.DataArray(prect_in[:,0], dims=["time"])
 
 # This file will only have 1d data, make up vertical coordinates to satisfy diagnostics package requirements.
 
-z_data = [10,20]
+z_data = [10.0,20.0]
 z_mid = np.tile(z_data, (len(ds_out["time"]), 1))
 ds_out["z_mid_horiz_avg"] = xr.DataArray(z_mid, dims=["time", "lev"])
 

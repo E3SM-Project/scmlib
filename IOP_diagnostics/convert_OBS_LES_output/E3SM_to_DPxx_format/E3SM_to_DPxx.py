@@ -3,8 +3,8 @@ import numpy as np
 import os
 
 # Define input and output file paths
-input_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/e3sm_scm_GOAMAZON.cntl.2014-01-01.002a/run/e3sm_scm_GOAMAZON.cntl.2014-01-01.002a.horiz_avg.AVERAGE.nhours_x1.2014-01-01-00000.nc"
-output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/e3sm_scm_GOAMAZON.cntl.2014-01-01.002a/run/e3sm_scm_dpxxformat_GOAMAZON.cntl.2014-01-01.002a.horiz_avg.AVERAGE.nhours_x1.2014-01-01-00000.nc"
+input_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/e3sm_scm_GOAMAZON.intland.2014-01-01.002a/run/e3sm_scm_GOAMAZON.intland.2014-01-01.002a.horiz_avg.AVERAGE.nhours_x1.2014-01-01-00000.nc"
+output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/e3sm_scm_GOAMAZON.intland.2014-01-01.002a/run/e3sm_scm_dpxxformat_GOAMAZON.intland.2014-01-01.002a.horiz_avg.AVERAGE.nhours_x1.2014-01-01-00000.nc"
 time_offset = 0.0
 
 # Ensure the directory for the output file exists
@@ -85,6 +85,11 @@ for var_in, var_out, factor in three_d_vars:
             dims_out = ["time", "ilev"]
         else:
             dims_out = ["time", "lev"]
+
+        # Special case for Z3: subtract surface elevation
+        if var_in == "Z3":
+            surface_elev = data_val[:, -1][:, np.newaxis] -10  # shape (time, 1)
+            data_val = data_val - surface_elev
 
         ds_out[var_out] = xr.DataArray(data_val, dims=dims_out) * factor
         ds_out[var_out].attrs = ds_in[var_in].attrs

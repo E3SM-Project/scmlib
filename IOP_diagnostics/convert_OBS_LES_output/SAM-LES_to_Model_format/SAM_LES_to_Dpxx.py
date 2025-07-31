@@ -8,33 +8,38 @@ outpath = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/D
 # Define all cases in a list of dictionaries
 cases = [
     {
+        "input_file": "/global/homes/b/bogensch/mk_iop_forcing/make_lafe/lafe_0823/thick_512x512x156_50m_50m_1s.nc",
+        "output_file": outpath + "LAFE.les.SAM.dpxx_format",
+        "time_offset": 235.4807,
+    },
+    {
         "input_file": "/global/homes/b/bogensch/THREAD/CASS_LES/thick_512x512x156_50m_50m_1s.nc",
-        "output_file": outpath + "CASS.les.SAM_dpxx_format",
+        "output_file": outpath + "CASS.les.SAM.dpxx_format",
         "time_offset": 205.5017,
     },
     {
         "input_file": "/global/homes/b/bogensch/THREAD/SAM_LES/GATE_IDEAL_S_2048x2048x256_100m_2s.nc",
-        "output_file": outpath + "GATEIDEAL.les.SAM_dpxx_format",
+        "output_file": outpath + "GATEIDEAL.les.SAM.dpxx_format",
         "time_offset": 0.0,
     },
     {
         "input_file": "/global/homes/b/bogensch/THREAD/SAM_LES/MAG3D.15A.20130720.1729_105h_128x128x460_LES.nc",
-        "output_file": outpath + "MAGIC.les.dpxx.SAM_dpxx_format",
+        "output_file": outpath + "MAGIC.les.dpxx.SAM.dpxx_format",
         "time_offset": 201.25,
     },
     {
         "input_file": "/global/homes/b/bogensch/THREAD/GOAMAZON_analysis/LESfiles/GOAMAZON_goamazon_278_test1.nc",
-        "output_file": outpath + "GOAMAZON_singlepulse.les.SAM_dpxx_format",
+        "output_file": outpath + "GOAMAZON_singlepulse.les.SAM.dpxx_format",
         "time_offset": 278.5042,
     },
     {
         "input_file": "/global/homes/b/bogensch/THREAD/GOAMAZON_analysis/LESfiles/GOAMAZON_goamazon_603_test3.nc",
-        "output_file": outpath + "GOAMAZON_doublepulse.les.SAM_dpxx_format",
+        "output_file": outpath + "GOAMAZON_doublepulse.les.SAM.dpxx_format",
         "time_offset": 603.5021,
     },
     {
         "input_file": "/global/homes/b/bogensch/THREAD/SAM_LES/COMBLE_MIP_V2.4_with_ice_vm.nc",
-        "output_file": outpath + "COMBLE.les.SAM_dpxx_format.nc",
+        "output_file": outpath + "COMBLE.les.SAM.dpxx_format.nc",
         "time_offset": 71.92007,
     },
 ]

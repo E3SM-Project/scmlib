@@ -3,13 +3,13 @@ import numpy as np
 import os
 
 # Output path
-outpath = "/pscratch/sd/b/bogensch/dp_screamxx_conv/les_data/"
+outpath = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/"
 
 # Define all cases in a list of dictionaries
 cases = [
     {
         "input_file": "/global/homes/b/bogensch/dp_scream_paper/first_submission_scripts/rico_data/RICO_les_MF_ensavg.nc",
-        "output_file": outpath + "RICO.les.dpxx.nc",
+        "output_file": outpath + "RICO.les.intercomparison_ensavg.profiles.dpxx_format.nc",
         "time_offset": 86400.0,
     },
 ]
@@ -21,6 +21,7 @@ three_d_vars = [
     ("qr", "qr_horiz_avg", 0.001),
     ("thetal", "LiqPotentialTemperature_horiz_avg", 1.0),
     ("qt", "qv_horiz_avg", 1.0 / 1000.0),
+    ("tot_wqt", "wqw_sec_horiz_avg", 1.0),
 ]
 
 #two_d_vars = [
