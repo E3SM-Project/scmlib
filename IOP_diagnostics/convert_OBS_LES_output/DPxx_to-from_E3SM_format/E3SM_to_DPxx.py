@@ -4,8 +4,7 @@ import os
 
 # Define input and output file paths
 input_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/pre_files/ARM97.obs.e3sm_format.nc"
-output_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/pre_files/ARM97.obs.dpxx_format.nc"
-time_offset = 0.0
+output_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/ARM97.obs.dpxx_format.nc"
 
 # Ensure the directory for the output file exists
 output_dir = os.path.dirname(output_file)
@@ -23,7 +22,7 @@ ds_out = xr.Dataset()
 
 # 1. Transfer and adjust the "time" variable
 time_data = ds_in["time"].values
-ds_out["time"] = xr.DataArray(time_data - time_offset, dims=["time"])
+ds_out["time"] = xr.DataArray(time_data, dims=["time"])
 ds_out["time"].attrs["units"] = ds_in["time"].attrs["units"]
 
 ds_out["lev"] = ds_in["lev"].values
