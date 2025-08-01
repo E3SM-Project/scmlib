@@ -3,8 +3,8 @@ import numpy as np
 import os
 
 # Define input and output file paths
-input_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/e3sm_scm_GOAMAZON.intland.2014-01-01.002a/run/e3sm_scm_GOAMAZON.intland.2014-01-01.002a.horiz_avg.AVERAGE.nhours_x1.2014-01-01-00000.nc"
-output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/e3sm_scm_GOAMAZON.intland.2014-01-01.002a/run/e3sm_scm_dpxxformat_GOAMAZON.intland.2014-01-01.002a.horiz_avg.AVERAGE.nhours_x1.2014-01-01-00000.nc"
+input_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/pre_files/ARM97.obs.e3sm_format.nc"
+output_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/pre_files/ARM97.obs.dpxx_format.nc"
 time_offset = 0.0
 
 # Ensure the directory for the output file exists
@@ -24,17 +24,28 @@ ds_out = xr.Dataset()
 # 1. Transfer and adjust the "time" variable
 time_data = ds_in["time"].values
 ds_out["time"] = xr.DataArray(time_data - time_offset, dims=["time"])
+ds_out["time"].attrs["units"] = ds_in["time"].attrs["units"]
 
 ds_out["lev"] = ds_in["lev"].values
-ds_out["ilev"] = ds_in["ilev"].values
+ds_out["lev"].attrs = ds_in["lev"].attrs
 
-ds_out["hyam"] = xr.DataArray(ds_in["hyam"].values, dims=["lev"])
-ds_out["hybm"] = xr.DataArray(ds_in["hybm"].values, dims=["lev"])
-ds_out["hyai"] = xr.DataArray(ds_in["hyai"].values, dims=["ilev"])
-ds_out["hybi"] = xr.DataArray(ds_in["hybi"].values, dims=["ilev"])
+if "ilev" in ds_in:
+    ds_out["ilev"] = ds_in["ilev"].values
+    ds_out["ilev"].attrs = ds_in["ilev"].attrs
 
-for var in ["hyam", "hybm", "hyai", "hybi", "time"]:
-    ds_out[var].attrs = ds_in[var].attrs
+if "hyam" in ds_in:
+    ds_out["hyam"] = ds_in["hyam"].values
+    ds_out["hyam"].attrs = ds_in["hyam"].attrs
+    ds_out["hybm"] = ds_in["hybm"].values
+    ds_out["hybm"].attrs = ds_in["hybm"].attrs
+    ds_out["hyai"] = ds_in["hyai"].values
+    ds_out["hyai"].attrs = ds_in["hyai"].attrs
+    ds_out["hybi"] = ds_in["hybi"].values
+    ds_out["hybi"].attrs = ds_in["hybi"].attrs
+
+if "p_mid_obs" in ds_in:
+    ds_out["p_mid_obs"] = ds_in["p_mid_obs"]
+    ds_out["p_mid_obs"].attrs = ds_in["p_mid_obs"].attrs
 
 # 3. Define lists for 3D and 2D variables
 three_d_vars = [
@@ -48,13 +59,14 @@ three_d_vars = [
     ("CLDICE", "qi_horiz_avg", 1.0),
     ("RAINQM", "qr_horiz_avg", 1.0),
     ("CLOUD", "cldfrac_tot_for_analysis_horiz_avg", 1.0),
+    ("OMEGA", "omega_horiz_avg", 1.0),
     ("WPTHLP_CLUBB", "wthl_sec_horiz_avg", 1./1004./1.2),
     ("WPRTP_CLUBB", "wqw_sec_horiz_avg", 1./(2.5*10**6)/1.2),
     ("WP2_CLUBB", "w_variance_horiz_avg", 1.0),
     ("WP3_CLUBB", "w3_horiz_avg", 1.0),
     ("WPTHVP_CLUBB", "sgs_buoy_flux_horiz_avg", 1./1004./1.2),
     ("THLP2_CLUBB", "thl_sec_horiz_avg", 1.0),
-    ("RTP2_CLUBB", "qw_sec_horiz_avg", 1.0/1000./1000.)
+    ("RTP2_CLUBB", "qw_sec_horiz_avg", 1.0/1000./1000.)    
 ]
 
 two_d_vars = [
@@ -66,11 +78,30 @@ two_d_vars = [
     ("TGCLDIWP", "IceWaterPath_horiz_avg", 1.0),
     ("SWCF", "ShortwaveCloudForcing_horiz_avg", 1.0),
     ("LWCF", "LongwaveCloudForcing_horiz_avg", 1.0),
+    ("TS", "surf_radiative_T_horiz_avg", 1.0),
     ("TREFHT", "T_2m_horiz_avg", 1.0),
-    ("PS", "ps_horiz_avg", 1.0),
-    ("FSDS","SW_flux_dn_at_model_bot_horiz_avg", 1.0),
-    ("FLDS","LW_flux_dn_at_model_bot_horiz_avg", 1.0)
+    ("QREFHT", "qv_2m_horiz_avg", 1.0),
+    ("PRECT", "precip_total_surf_mass_flux_horiz_avg", 1.0),
+    ("CLDHGH", "cldhgh_int_horiz_avg", 1.0),
+    ("CLDMED", "cldmed_int_horiz_avg", 1.0),
+    ("CLDLOW", "cldlow_int_horiz_avg", 1.0),
+    ("CLDTOT", "cldtot_int_horiz_avg", 1.0),
+    ("OMEGA500", "omega_at_500hPa_horiz_avg", 1.0),
+    ("FLDS", "LW_flux_dn_at_model_bot_horiz_avg", 1.0),
+    ("FSDS", "SW_flux_dn_at_model_bot_horiz_avg", 1.0),
+    ("FSNS", "sfc_flux_sw_net_horiz_avg", 1.0),
+    ("FLNS", "sfc_flux_lw_dn_horiz_avg", 1.0),
+    ("FSNTOA", "model_top_flux_sw_net_horiz_avg", 1.0),
+    ("FLNT", "model_top_flux_lw_net_horiz_avg", 1.0)
 ]
+
+
+#
+#    ("UU", "ZonalUMomentumFlux_horiz_avg", 1.0),
+#    ("VQ", "MeridionalVapFlux_horiz_avg", 1.0),
+#    ("VT", "MeridionalTFlux_horiz_avg", 1.0),
+#    ("VU", "MeridionalUMomentumFlux_horiz_avg", 1.0),
+#    ("VV", "MeridionalVMomentumFlux_horiz_avg", 1.0)
 
 # ("", "", ),
 
@@ -87,7 +118,7 @@ for var_in, var_out, factor in three_d_vars:
             dims_out = ["time", "ilev"]
         else:
             dims_out = ["time", "lev"]
-
+	    
         # Special case for Z3: subtract surface elevation
         if var_in == "Z3":
             surface_elev = data_val[:, -1][:, np.newaxis] -10  # shape (time, 1)
@@ -106,17 +137,16 @@ for var_in, var_out, factor in two_d_vars:
     else:
         print(f"Warning: Variable '{var_in}' not found in input dataset. Skipping.")
 
-# Handle Precipitation Specially
-ds_out['precip_total_surf_mass_flux_horiz_avg']=xr.DataArray(np.squeeze(ds_in['PRECL'].values)+np.squeeze(ds_in['PRECC'].values), dims=["time"])
-
-ds_out['precip_large_surf_mass_flux_horiz_avg']=xr.DataArray(np.squeeze(ds_in['PRECL'].values), dims=["time"])
-ds_out['precip_conv_surf_mass_flux_horiz_avg']=xr.DataArray(np.squeeze(ds_in['PRECC'].values), dims=["time"])
+# Handle Precipitation Specially for model runs
+if "PRECL" and "PRECC" in ds_in:
+    ds_out['precip_total_surf_mass_flux_horiz_avg']=xr.DataArray(np.squeeze(ds_in['PRECL'].values)+np.squeeze(ds_in['PRECC'].values), dims=["time"])
+    ds_out['precip_large_surf_mass_flux_horiz_avg']=xr.DataArray(np.squeeze(ds_in['PRECL'].values), dims=["time"])
+    ds_out['precip_large_surf_mass_flux_horiz_avg'].attrs=ds_in['PRECL'].attrs
+    ds_out['precip_conv_surf_mass_flux_horiz_avg']=xr.DataArray(np.squeeze(ds_in['PRECC'].values), dims=["time"])
+    ds_out['precip_conv_surf_mass_flux_horiz_avg'].attrs=ds_in['PRECC'].attrs
 
 # Copy attributes from the input dataset to the output dataset
 ds_out.attrs = ds_in.attrs
-
-# Add the units attribute
-#ds_out["time"].attrs["units"] = "days since 2003-07-15 00:00:00"
 
 # Save the new dataset to a NetCDF file
 ds_out.to_netcdf(output_file)
