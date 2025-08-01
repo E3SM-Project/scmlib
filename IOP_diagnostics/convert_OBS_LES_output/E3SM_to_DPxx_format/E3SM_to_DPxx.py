@@ -67,7 +67,9 @@ two_d_vars = [
     ("SWCF", "ShortwaveCloudForcing_horiz_avg", 1.0),
     ("LWCF", "LongwaveCloudForcing_horiz_avg", 1.0),
     ("TREFHT", "T_2m_horiz_avg", 1.0),
-    ("PS", "ps_horiz_avg", 1.0)
+    ("PS", "ps_horiz_avg", 1.0),
+    ("FSDS","SW_flux_dn_at_model_bot_horiz_avg", 1.0),
+    ("FLDS","LW_flux_dn_at_model_bot_horiz_avg", 1.0)
 ]
 
 # ("", "", ),
