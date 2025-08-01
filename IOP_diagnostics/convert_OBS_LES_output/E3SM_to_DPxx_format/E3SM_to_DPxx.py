@@ -95,16 +95,6 @@ two_d_vars = [
     ("FLNT", "model_top_flux_lw_net_horiz_avg", 1.0)
 ]
 
-
-#
-#    ("UU", "ZonalUMomentumFlux_horiz_avg", 1.0),
-#    ("VQ", "MeridionalVapFlux_horiz_avg", 1.0),
-#    ("VT", "MeridionalTFlux_horiz_avg", 1.0),
-#    ("VU", "MeridionalUMomentumFlux_horiz_avg", 1.0),
-#    ("VV", "MeridionalVMomentumFlux_horiz_avg", 1.0)
-
-# ("", "", ),
-
 # Process 3D variables
 
 for var_in, var_out, factor in three_d_vars:
