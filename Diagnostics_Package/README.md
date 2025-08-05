@@ -19,10 +19,39 @@ The new user script can then be executed after loading the suitable environment 
   - [Valid DP-EAMxx Input Data](#valid-dp-eamxx-input-data)
   - [Adding Datasets](#adding-datasets)
   - [User Specifications](#user-specifications)
-  - [Observation and LES Files](#observation-and-les-files)
+  - [Observation and LES Datasets](#observation-and-les-datasets)
   - [Development Plans](#development-plans)
 
 --------------------------------------------------------------------------------
 
 ### Package Overview
+
+--------------------------------------------------------------------------------
+
+### Setup Notes
+
+--------------------------------------------------------------------------------
+
+### Valid E3SM SCM Input Data
+
+--------------------------------------------------------------------------------
+
+### Valid DP-EAMxx Input Data
+
+--------------------------------------------------------------------------------
+
+### Adding Datasets
+
+--------------------------------------------------------------------------------
+
+### User Specifications
+
+--------------------------------------------------------------------------------
+
+### Observation and LES Files
+
+--------------------------------------------------------------------------------
+
+### Development Plans
+
 
