@@ -985,7 +985,7 @@ def run_diagnostics(
                 <img src="plots/arm_logo.png" alt="Logo 2">
                 <img src="plots/e3sm_logo.png" alt="Logo 3">
             </div>
-            <h1>ARM/ASR Diagnostics Package for E3SM SCM and DP-SCREAM</h1>
+            <h1>ARM/ASR Diagnostics Package for E3SM SCM and DP-EAMxx</h1>
             <h2>Case: {{ general_id }}</h2>
         </header>
 
