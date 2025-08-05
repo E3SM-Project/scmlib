@@ -23,7 +23,7 @@ import os
 output_dir = "/global/cfs/cdirs/e3sm/www/bogensch/IOP_diags"
 
 # User-specified general ID for this diagnostic set
-general_id = "MAGIC_dpxx_bug_fix"  # Change as needed
+general_id = "MAGIC_dpxx_bug_fix_new"  # Change as needed
 
 ######## Begin manage input datasets
 
@@ -64,7 +64,7 @@ datasets.append({
 
 # SAM LES
 datasets.append({
-"filename": "/pscratch/sd/b/bogensch/dp_screamxx_conv/les_data/SAM_MAGIC.les.dpxx.nc",
+"filename": "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/MAGIC.les.dpxx.SAM.dpxx_format.nc",
 "short_id": "SAM-LES",
 "line_color": "black",
 "line_style": "-"
@@ -72,7 +72,7 @@ datasets.append({
 
 # 1D observation dataset
 datasets.append({
-"filename": "/pscratch/sd/b/bogensch/dp_screamxx_conv/obs_data/MAGIC_1d_OBS.dpxx.nc",
+"filename": "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/MAGIC.obs.1dvars.dpxx_format.nc",
 "short_id": "OBS",
 "line_color": "gray",
 "line_style": "--"
@@ -80,7 +80,7 @@ datasets.append({
 
 # Sounding observation dataset
 datasets.append({
-"filename": "/pscratch/sd/b/bogensch/dp_screamxx_conv/obs_data/MAGIC_snd_OBS.dpxx.nc",
+"filename": "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/MAGIC.obs.sounding.dpxx_format.nc",
 "short_id": "OBS",
 "line_color": "gray",
 "line_style": "--"
@@ -88,7 +88,7 @@ datasets.append({
 
 # KAZR observation dataset
 datasets.append({
-"filename": "/pscratch/sd/b/bogensch/dp_screamxx_conv/obs_data/MAGIC_kazr_OBS.dpxx.nc",
+"filename": "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/MAGIC.obs.kazr.dpxx_format.nc",
 "short_id": "OBS-Kazr",
 "line_color": "gray",
 "line_style": "--"

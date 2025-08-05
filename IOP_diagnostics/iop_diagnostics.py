@@ -502,7 +502,7 @@ def run_diagnostics(
                     ylabel = 'Height (m)' if height_cord == "z" else 'Pressure (hPa)'
                     plt.ylabel(ylabel, fontsize=labelsize)
                     plt.title(f"{var_long_name} Profile (Day {start_time} to Day {end_time})", fontsize=16)
-                    plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
+                    plt.legend(fontsize=14)
                     plt.grid(color='#95a5a6', linestyle='--', linewidth=2, alpha=0.5)
                     plt.tick_params(labelsize=ticksize)
 
@@ -568,7 +568,7 @@ def run_diagnostics(
                 plt.xlabel("Time (days)", fontsize=labelsize)
                 plt.ylabel(var_units, fontsize=labelsize)
                 plt.title(f"{var_long_name} Time Series", fontsize=16)
-                plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
+                plt.legend(fontsize=14)
                 plt.grid(color='#95a5a6', linestyle='--', linewidth=2, alpha=0.5)
                 plt.tick_params(labelsize=ticksize)
 
@@ -660,7 +660,7 @@ def run_diagnostics(
 
                 plt.ylabel(var_units, fontsize=labelsize)
                 plt.title(f"{var_long_name} Diurnal Composite", fontsize=16)
-                plt.legend(title="Simulations", fontsize=12, title_fontsize=14)
+                plt.legend(fontsize=14)
                 plt.grid(color='#95a5a6', linestyle='--', linewidth=2, alpha=0.5)
                 plt.tick_params(labelsize=ticksize)
 
