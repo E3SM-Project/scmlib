@@ -18,7 +18,7 @@ cases = [
 two_d_vars = [
     ("lwp", "LiqWaterPath_horiz_avg", 1.0 / 1000.0),
     ("rwp", "RainWaterPath_horiz_avg", 1.0 / 1000.0),
-    ("prec_srf", "precip_total_surf_mass_flux_horiz_avg", 1.15741e-8),
+    ("prec_srf", "precip_total_surf_mass_flux_horiz_avg", 1.0 / 1000.0),
 ]
 
 # Process each case
