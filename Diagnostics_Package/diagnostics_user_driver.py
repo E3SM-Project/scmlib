@@ -2,18 +2,17 @@ from diagnostics import run_diagnostics
 import os
 
 ##########################################################
-# Quick diagnostics package for E3SM Single Column Model (SCM)
+# ARM/ASR diagnostics package for E3SM Single Column Model (SCM)
 #  or doubly-periodic EAMxx (DP-EAMxx).
-# NOTE that for DP-EAMxx this program only works on output
-#  streams that contain horizontally averaged output.
 
-# Will produce time averaged profile plots, time series plots,
-#  time height plots, and diurnal composites (optional).
-# Finally, will produce .tar file with plots and html viewer.
+# Please make a copy of this driver file and modify it for your case/needs.
 
-# This package is currently still in development and thus is
-#  considered to be in beta testing mode.  At this point there
-#  is limited to no documentation and comes with no warranty.
+# This driver file should provide sufficient documentation on user
+#  defined settings, but more details exist in the README.md file.
+
+# For detailed documentation on input data requirements and how to
+#  add supported observational/LES data sets please see the documentation
+# (to be released very soon).
 
 ##########################################################
 ##########################################################
