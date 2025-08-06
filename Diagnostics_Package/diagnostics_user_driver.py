@@ -1,4 +1,4 @@
-from iop_diagnostics import run_diagnostics
+from diagnostics import run_diagnostics
 import os
 
 ##########################################################
