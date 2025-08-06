@@ -19,9 +19,9 @@ Development of this diagnostics package was primarily supported by the Atmospher
   - [Setup Notes](#setup-notes)
   - [Valid E3SM SCM Input Data](#valid-e3sm-scm-input-data)
   - [Valid DP-EAMxx Input Data](#valid-dp-eamxx-input-data)
+  - [Observation and LES Datasets](#observation-and-les-datasets)
   - [Adding Datasets](#adding-datasets)
   - [User Specifications](#user-specifications)
-  - [Observation and LES Datasets](#observation-and-les-datasets)
   - [Development Plans](#development-plans)
 
 --------------------------------------------------------------------------------
@@ -29,6 +29,8 @@ Development of this diagnostics package was primarily supported by the Atmospher
 ### Package Overview
 
 This diagnostics package is designed to provide users with a simple, user-friendly interface for quickly evaluating process-level simulations using the E3SM SCM and DP-EAMxx configurations. It also facilitates straightforward comparisons with ARM observations and large eddy simulation (LES) results, where available. The package is not intended for generating publication quality figures or performing advanced analysis. Rather, it offers a basic suite of plots to help users assess the fidelity of their simulations and identify areas for more detailed investigation. 
+
+(Link to an example of a completed diagnostics package run)
 
 --------------------------------------------------------------------------------
 
@@ -72,17 +74,48 @@ For vertical coordinates, please ensure you are outputting the variables `zmid_h
 
 Doing averaging offline on a DP-EAMxx output stream and supplying that dataset may work with the package but comes with no warranty of working at this time.  
 
+### Observation and LES Files
+
+
 --------------------------------------------------------------------------------
 
 ### Adding Datasets
 
+You can include as many datasets as you'd like—whether they are model simulations, observational datasets, or LES output. To add a dataset, edit the appropriate section of your `diagnostics_user_driver.py` file, where example entries are provided. For each dataset, please supply the following information:
+
+```
+# SCREAM control simulation
+datasets.append({
+"filename": "{path_to_your_dataset}/run/scream_dpxx_MAGIC.control.001a.horiz_avg.AVERAGE.nmins_x15.2013-07-21-19620.nc"),
+"short_id": "Control",
+"line_color": "blue",
+"line_style": "-"
+})
+```
+You must provide the filepath, a short id (to be used for legends in the plots), and a line color and corresponding line style to be used for all profile and time series plots.  [Please see list of valid python colors](https://matplotlib.org/stable/gallery/color/named_colors.html).
+
+You would add observational/LES datasets in a similar manner.  Please see the section above on where to obtain supported observation/LES files.
+
+```
+# Sounding observation dataset
+datasets.append({
+"filename": "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/MAGIC.obs.sounding.dpxx_format.nc",
+"short_id": "OBS",
+"line_color": "gray",
+"line_style": "--"
+})
+```
+Note that in this example, since we are analyzing a DP-EAMxx simulation, the observation file must be in the appropriate format (i.e. must end in `*dpxx_format.nc`).
+
+It IS possible to run the diagnostic package with mixed E3SM SCM and DP-EAMxx simulations.  However, if you want variables to coincide with each other then you must pick one format for all datasets.  This will result in you converting your DP-EAMxx simulations to E3SM SCM format or vice versa.  Scripts are provided in this package to do this:
+
+[Script to convert DP-EAMxx model output format to E3SM SCM format](https://github.com/E3SM-Project/scmlib/blob/master/Diagnostics_Package/convert_OBS_LES_output/DPxx_to-from_E3SM_format/DPxx_to_E3SM.py)
+
+[Script to convert E3SM SCM model output to DP-EAMxx format](https://github.com/E3SM-Project/scmlib/blob/master/Diagnostics_Package/convert_OBS_LES_output/DPxx_to-from_E3SM_format/E3SM_to_DPxx.py)
+
 --------------------------------------------------------------------------------
 
 ### User Specifications
-
---------------------------------------------------------------------------------
-
-### Observation and LES Files
 
 --------------------------------------------------------------------------------
 
