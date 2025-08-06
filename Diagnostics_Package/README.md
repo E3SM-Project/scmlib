@@ -74,8 +74,9 @@ For vertical coordinates, please ensure you are outputting the variables `zmid_h
 
 Doing averaging offline on a DP-EAMxx output stream and supplying that dataset may work with the package but comes with no warranty of working at this time.  
 
-## Observation and LES Files
+## Observation and LES Datasets
 
+We have created a database of Observation and LES datasets that can be directly compared to E3SM SCM and DP-EAMxx simulations. A user simply needs to point to the correct file for their case for it to be included into the package.  This database includes ARM observations, ERA5 analysis, and results from various LES.  No processing of this data is needed and is ready to compare with E3SM SCM and DP-EAMxx simulations.
 
 --------------------------------------------------------------------------------
 
