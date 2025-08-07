@@ -79,6 +79,32 @@ Doing averaging offline on a DP-EAMxx output stream and supplying that dataset m
 
 We have created a database of Observation and LES datasets that can be directly compared to E3SM SCM and DP-EAMxx simulations. A user simply needs to point to the correct file for their case for it to be included into the package.  This database includes ARM observations, ERA5 analysis, and results from various LES.  No processing of this data is needed and is ready to compare with E3SM SCM and DP-EAMxx simulations.
 
+The database is officially stored on the E3SM data server at:
+
+```
+https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Atm/scm_dpxx_datasets/
+```
+
+which is world readable with no restrictions.  Users may download the required datasets to their personal directories.  Alternatively, the data is installed on Perlmutter (NERSC) at:
+
+```
+/global/cfs/cdirs/e3sm/diagnostics/observations/Atm/scm_dpxx_datasets/
+```
+
+and will be kept up-to-date as changes/additions are made to the datasets.  We plan to install the data on other commonly used E3SM machines in the near future.
+
+The `scm_dpxx_datasets` folder has two folders, one for `E3SM_SCM` and the other for `DP_EAMxx`.  Each folder contains the exact same datasets and data, the only differnce being the format of the data for the respective model configuration.  Please point to the dataset that corresponds to your case and model configuration.  
+
+An example file format: `<CASE>.<data_type>.<source>.<format>`  
+
+```
+Example: CASS.les.SAM.dpxx_format.nc
+Case = CASS (should match the SCM/DP-EAMxx case that you ran)
+data_type = les (large eddy simulation)
+source = SAM (System for Atmospheric Modeling)
+format = dpxx_format (processed for  DP-EAMxx)
+```
+
 --------------------------------------------------------------------------------
 
 ## Adding Datasets
@@ -101,7 +127,7 @@ You would add observational/LES datasets in a similar manner.  Please see the se
 ```
 # Sounding observation dataset
 datasets.append({
-"filename": "{path_to_obs_output}/iopdiags_OBS_and_LES_files/DP_EAMxx/MAGIC.obs.sounding.dpxx_format.nc",
+"filename": "{path_to_obs_output}/DP_EAMxx/MAGIC.obs.sounding.dpxx_format.nc",
 "short_id": "Sounding Obs.",
 "line_color": "gray",
 "line_style": "--"
