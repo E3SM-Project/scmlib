@@ -104,6 +104,7 @@ data_type = les (large eddy simulation)
 source = SAM (System for Atmospheric Modeling)
 format = dpxx_format (processed for  DP-EAMxx)
 ```
+We anticipate that this dataset will grow rapidly over the coming months, with near term plans to add ARM Best Estimate (BE) datasets for several sites.
 
 --------------------------------------------------------------------------------
 
