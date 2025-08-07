@@ -1,4 +1,4 @@
-## ARM/ASR Diagnostics Package for E3SM SCM and DP-EAMxx
+## Documentation: ARM/ASR Diagnostics Package for E3SM SCM and DP-EAMxx
 
 This is a diagnostics package for the E3SM SCM and Doubly-Periodic Configuration of EAMxx (DP-EAMxx).
 
