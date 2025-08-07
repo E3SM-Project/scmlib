@@ -19,10 +19,10 @@ import os
 # BEGIN: MANDATORY USER DEFINED SETTINGS
 
 # Where do you want output diagnostics to be placed?  Provide path.
-output_dir = "/global/cfs/cdirs/e3sm/www/bogensch/IOP_diags"
+output_dir = "/global/cfs/cdirs/e3sm/www/bogensch/Official_Example_Diags"
 
 # User-specified general ID for this diagnostic set
-general_id = "MAGIC_dpxx_bug_fix_new"  # Change as needed
+general_id = "MAGIC_dpxx_bug_fix"  # Change as needed
 
 ######## Begin manage input datasets
 
@@ -40,6 +40,9 @@ datasets=[]
 simulation_dir = "/pscratch/sd/b/bogensch/dp_screamxx" # directory for model simulations
 caseappend = ".horiz_avg.AVERAGE.nmins_x15.2013-07-21-19620.nc" # file suffix for model simulations
 
+# Path to observational datasets
+obs_dir = "/global/cfs/cdirs/e3sm/diagnostics/observations/Atm/scm_dpxx_datasets/DP_EAMxx"
+
 # Add datasets (can have as many as you want, minimum of one)
 # Please list model (E3SM/SCREAM) datasets first, before LES/OBS.
 
@@ -47,7 +50,7 @@ caseappend = ".horiz_avg.AVERAGE.nmins_x15.2013-07-21-19620.nc" # file suffix fo
 casename="scream_dpxx_MAGIC.prefix.001a"
 datasets.append({
 "filename": os.path.join(simulation_dir, casename, "run", f"{casename}{caseappend}"),
-"short_id": "CNTL",
+"short_id": "EAMxx 3 km Control",
 "line_color": "blue",
 "line_style": "-"
 })
@@ -56,14 +59,14 @@ datasets.append({
 casename="scream_dpxx_MAGIC.fix.001a"
 datasets.append({
 "filename": os.path.join(simulation_dir, casename, "run", f"{casename}{caseappend}"),
-"short_id": "Bug Fix",
+"short_id": "EAMxx 3 km Bug Fix",
 "line_color": "green",
 "line_style": "--"
 })
 
 # SAM LES
 datasets.append({
-"filename": "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/MAGIC.les.dpxx.SAM.dpxx_format.nc",
+"filename": os.path.join(obs_dir,"MAGIC.les.dpxx.SAM.dpxx_format.nc"),
 "short_id": "SAM-LES",
 "line_color": "black",
 "line_style": "-"
@@ -71,7 +74,7 @@ datasets.append({
 
 # 1D observation dataset
 datasets.append({
-"filename": "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/MAGIC.obs.1dvars.dpxx_format.nc",
+"filename": os.path.join(obs_dir,"MAGIC.obs.1dvars.dpxx_format.nc"),
 "short_id": "OBS",
 "line_color": "gray",
 "line_style": "--"
@@ -79,7 +82,7 @@ datasets.append({
 
 # Sounding observation dataset
 datasets.append({
-"filename": "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/MAGIC.obs.sounding.dpxx_format.nc",
+"filename": os.path.join(obs_dir,"MAGIC.obs.sounding.dpxx_format.nc"),
 "short_id": "OBS",
 "line_color": "gray",
 "line_style": "--"
@@ -87,7 +90,7 @@ datasets.append({
 
 # KAZR observation dataset
 datasets.append({
-"filename": "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/MAGIC.obs.kazr.dpxx_format.nc",
+"filename": os.path.join(obs_dir,"MAGIC.obs.kazr.dpxx_format.nc"),
 "short_id": "OBS-Kazr",
 "line_color": "gray",
 "line_style": "--"
@@ -141,9 +144,9 @@ time_height_time_e = 3.25  # Ending time for time-height plots, None for default
 
 # Do Diurnal Composite Analysis?  Must have at least three days worth of data and each
 #  day must have at least 4 output time slices for this analysis to be considered.
-do_diurnal_composites = False
-diurnal_start_day = None  # Starting day for diurnal composite stats, None for default (entire range)
-diurnal_end_day = None    # Ending day for diurnal composite stats, None for default (entire range)
+do_diurnal_composites = True
+diurnal_start_day = 0  # Starting day for diurnal composite stats, None for default (entire range)
+diurnal_end_day = 3.0    # Ending day for diurnal composite stats, None for default (entire range)
 
 # Define the colormap for time height contourf plots.  Default is "viridis_r".
 time_height_cmap = "viridis_r"
