@@ -24,7 +24,7 @@ cases = [
     },
     {
         "input_file": "/global/homes/b/bogensch/THREAD/SAM_LES/MAG3D.15A.20130720.1729_105h_128x128x460_LES.nc",
-        "output_file": outpath + "MAGIC.les.dpxx.SAM.dpxx_format.nc",
+        "output_file": outpath + "MAGIC.les.SAM.dpxx_format.nc",
         "time_offset": 201.25,
     },
     {

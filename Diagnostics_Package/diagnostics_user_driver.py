@@ -66,7 +66,7 @@ datasets.append({
 
 # SAM LES
 datasets.append({
-"filename": os.path.join(obs_dir,"MAGIC.les.dpxx.SAM.dpxx_format.nc"),
+"filename": os.path.join(obs_dir,"MAGIC.les.SAM.dpxx_format.nc"),
 "short_id": "SAM-LES",
 "line_color": "black",
 "line_style": "-"
