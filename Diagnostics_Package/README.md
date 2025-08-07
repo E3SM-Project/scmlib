@@ -30,7 +30,8 @@ Development of this diagnostics package was primarily supported by the Atmospher
 
 This diagnostics package is designed to provide users with a simple, user-friendly interface for quickly evaluating process-level simulations using the E3SM SCM and DP-EAMxx configurations. It also facilitates straightforward comparisons with ARM observations and large eddy simulation (LES) results, where available. The package is not intended for generating publication quality figures or performing advanced analysis. Rather, it offers a basic suite of plots to help users assess the fidelity of their simulations and identify areas for more detailed investigation. 
 
-(Link to an example of a completed diagnostics package run)
+Example:
+The existing [example driver file](https://github.com/E3SM-Project/scmlib/blob/master/Diagnostics_Package/diagnostics_user_driver.py), will produce the following [diagnostic output](https://portal.nersc.gov/cfs/e3sm/bogensch/Official_Example_Diags/MAGIC_dpxx_bug_fix/). 
 
 --------------------------------------------------------------------------------
 
