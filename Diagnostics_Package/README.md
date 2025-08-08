@@ -160,7 +160,7 @@ Users can choose to plot in pressure or height coordinates.  See the input data 
 height_cord = "z"  # p = pressure; z = height
 ```
 
-Note that some observational/LES datasets ONLY have eithe `p` or `z`.  Thus if you want to compare against a particular dataset, ensure that dataset as the appropriate coordinates and select accordingly.
+Note that some observational/LES datasets ONLY have eithe `p` or `z`.  Thus if you want to compare against a particular dataset, ensure that dataset as the appropriate coordinates and select accordingly.  Note that we are aware that it is not obvious what coordiantes exist in each reference dataset without doing an ncdump.  We will document this better in the near future.
 
 #### Profile Averaging Windows
 
