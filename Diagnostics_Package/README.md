@@ -95,7 +95,7 @@ and will be kept up-to-date as changes/additions are made to the datasets.  We p
 
 The `scm_dpxx_datasets` folder has two folders, one for `E3SM_SCM` and the other for `DP_EAMxx`.  Each folder contains the exact same datasets and data, the only differnce being the format of the data for the respective model configuration.  Please point to the dataset that corresponds to your case and model configuration.  
 
-An example file format: `<CASE>.<data_type>.<source>.<format>`  
+An example file format: `<CASE>.<data_type>.<source>.<format>.nc`  
 
 ```
 Example: CASS.les.SAM.dpxx_format.nc
