@@ -328,7 +328,6 @@ EOF
 else
 # v2 and master share many parameters
 cat <<EOF >> user_nl_${atm_mod}
- zmconv_trigdcape_ull = .true.
  effgw_beres = 0.35
  effgw_oro = 0.375
  linoz_psc_T = 197.5
@@ -376,6 +375,7 @@ EOF
 
 if ($e3sm_version == v2) then
 cat <<EOF >> user_nl_${atm_mod}
+ zmconv_trigdcape_ull = .true.
  cld_sed = 1.0D0
  prc_coef1 = 30500.0D0
  prc_exp = 3.19D0
@@ -395,6 +395,8 @@ EOF
 
 else if ($e3sm_version == master) then
 cat <<EOF >> user_nl_${atm_mod}
+ zmconv_trig_dcape = .true.
+ zmconv_trig_ull = .true.
  zmconv_ke = 2.5E-6
  resus_fix = .true.
  gw_convect_hcf = 10.0

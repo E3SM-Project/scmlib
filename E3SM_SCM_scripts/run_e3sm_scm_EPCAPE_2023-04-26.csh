@@ -3,17 +3,17 @@
 #######################################################################
 #######################################################################
 #######  Script to run E3SM in SCM for
-#######  THECASENAME
-#######  THECASEDESCRIPTION
+#######  EPCAPE_2023-04-26
+#######  EPCAPE 2023-04-06
 #######
 #######  Script Author: P. Bogenschutz (bogenschutz1@llnl.gov)
-#######  Forcing provided by: FORCINGPROVIDER
+#######  Forcing provided by: Haipeng Zhang
 
 #######################################################
 #######  BEGIN USER DEFINED SETTINGS
 
   # Set the name of your case here
-  setenv casename e3sm_scm_THECASENAME
+  setenv casename e3sm_scm_EPCAPE_2023-04-26
 
   # Set the case directory here
   setenv casedirectory $PSCRATCH/SCM_runs
@@ -36,18 +36,8 @@
   #                   to a constant)
   #  2) prescribed (uses climatologically prescribed aerosol
   #                 concentration)
-  #  3) OBSERVEDAERO (uses observed aerosol concentration from IOP file)
-  setenv init_aero_type AEROTYPE
+  setenv init_aero_type prescribed
 
-  # LENGTHNOTE This is a long case! Consider selecting a subset timeperiod to run on
-  # LENGTHNOTE2
-  set startdate = CASELONGstartdate
-  set stop_option = CASELONGstopoption
-  set stop_n = CASELONGstopn
-  set start_in_sec = CASELONGstartinsec
-  set iop_file = THECASELONGNAME_iopfile_4scam.nc
-  set lat = CASELONGlat
-  set lon = CASELONGlon
 
   # What version of E3SM? (v1, v2, v3, or master)
   #  Select "v1" if you are running with E3SMv1 RELEASE code
@@ -79,20 +69,20 @@
 ###########################################################################
 
 # Case specific information kept here
-  set lat = CASElat # latitude
-  set lon = CASElon # longitude
-  set do_iop_srf_prop = CASEsrfprop # Use surface fluxes in IOP file?
-  set do_scm_relaxation = CASErelax # Relax case to observations?
-  set do_turnoff_swrad = CASEswoff # Turn off SW calculation
-  set do_turnoff_lwrad = CASElwoff # Turn off LW calculation
-  set do_turnoff_precip = CASEprecipoff # Turn off precipitation
-  set micro_nccons_val = CASEnccons # cons_droplet value for liquid
-  set micro_nicons_val = CASEnicons # cons_droplet value for ice
-  set startdate = CASEstartdate # Start date in IOP file
-  set start_in_sec = CASEstartinsec # start time in seconds in IOP file
-  set stop_option = CASEstopoption
-  set stop_n = CASEstopn
-  set iop_file = THECASENAME_iopfile_4scam.nc #IOP file name
+  set lat = 32.68 # latitude
+  set lon = 242.13 # longitude
+  set do_iop_srf_prop = .true. # Use surface fluxes in IOP file?
+  set do_scm_relaxation = .false. # Relax case to observations?
+  set do_turnoff_swrad = .false. # Turn off SW calculation
+  set do_turnoff_lwrad = .false. # Turn off LW calculation
+  set do_turnoff_precip = .false. # Turn off precipitation
+  set micro_nccons_val = 100.0D6 # cons_droplet value for liquid
+  set micro_nicons_val = 0.0001D6 # cons_droplet value for ice
+  set startdate = 2023-04-26 # Start date in IOP file
+  set start_in_sec = 00000 # start time in seconds in IOP file
+  set stop_option = nhours
+  set stop_n = 66
+  set iop_file = EPCAPE_2023-04-26_iopfile_4scam.nc #IOP file name
 # End Case specific stuff here
 
   # Location of IOP file
@@ -489,12 +479,7 @@ endif
 # Modify the latitude and longitude for the particular case
   ./xmlchange PTS_MODE="TRUE",PTS_LAT="$lat",PTS_LON="$lon"
   ./xmlchange MASK_GRID="USGS"
-  ./xmlchange CALENDAR="CASEcaltype"
 
-  ./xmlchange SSTICE_DATA_FILENAME="$input_data_dir/ocn/docn7/SSTDATA/CASESSTdata"
-  ./xmlchange SSTICE_YEAR_ALIGN=CASESSTyearalign
-  ./xmlchange SSTICE_YEAR_START=CASESSTyearstart
-  ./xmlchange SSTICE_YEAR_END=CASESSTyearend
 
   ./case.setup
 
