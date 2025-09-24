@@ -68,7 +68,7 @@ two_d_vars = [
     ("LHF", "surface_upward_latent_heat_flux_horiz_avg", 1.0),
     ("CWP", "LiqWaterPath_horiz_avg", 1.0 / 1000.0),
     ("IWP", "IceWaterPath_horiz_avg", 1.0 / 1000.0),
-    ("PW", "WaterVaporPath_horiz_avg", 1.0 / 10.0),
+    ("PW", "VapWaterPath_horiz_avg", 1.0 / 1.0),
     ("RWP", "RainWaterPath_horiz_avg", 1.0 / 1000.0),
     ("PREC", "precip_total_surf_mass_flux_horiz_avg", 1.15741e-8),
 ]

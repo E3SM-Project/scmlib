@@ -113,7 +113,7 @@ if use_batch_mode:
         convert_file(input_file, output_file)
 else:
     # Manual mode
-    input_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/ARM97.obs.dpxx_format.nc"
-    output_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/E3SM_SCM/ARM97.obs.e3sm_format.nc"
+    input_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/GOAMAZON.obs.ARMBE.dpxx_format.nc"
+    output_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/E3SM_SCM/GOAMAZON.obs.ARMBE.e3sm_format.nc"
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     convert_file(input_file, output_file)

@@ -113,7 +113,7 @@ def convert_file(input_file, output_file):
     print(f"File saved to {output_file}\n")
 
 # === MAIN BLOCK ===
-use_batch_mode = True  # Set to False to run manually
+use_batch_mode = False  # Set to False to run manually
 
 if use_batch_mode:
     input_dir = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/pre_files/"
@@ -127,7 +127,7 @@ if use_batch_mode:
         convert_file(input_file, output_file)
 else:
     # Manual mode
-    input_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/pre_files/ARM97.obs.e3sm_format.nc"
-    output_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/ARM97.obs.dpxx_format.nc"
+    input_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/pre_files/maoarmbe_iopfile_4scam_arm_diags_2014to2015.nc"
+    output_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/GOAMAZON.obs.ARMBE.dpxx_format.nc"
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     convert_file(input_file, output_file)

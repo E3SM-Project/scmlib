@@ -3,9 +3,9 @@ import numpy as np
 import os
 
 # Define input and output file paths
-input_file = "/global/homes/b/bogensch/THREAD/GOAMAZON_analysis/ARM_obs/maoarmbecldradM1.c1.20140101.003000.nc"
-output_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/GOAMAZON_singlepulse.obs.ARMBE.dpxx_format.nc"
-time_offset = 278.5
+input_file = "/global/homes/b/bogensch/THREAD/GOAMAZON_analysis/ARM_obs/maoarmbecldradM1.c1.20150101.003000.nc"
+output_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/GOAMAZON_doublepulse.obs.ARMCMBE.dpxx_format.nc"
+time_offset = 168.5
 
 # Ensure the directory for the output file exists
 output_dir = os.path.dirname(output_file)
@@ -47,7 +47,7 @@ ds_out["z_mid_horiz_avg"] = xr.DataArray(z_mid, dims=["time", "lev"])
 
 # Define lists for variables
 three_d_vars = [
-    ("cld_frac", "cldfrac_tot_for_analysis_horiz_avg", 1.0),
+    ("cld_frac", "cldfrac_tot_for_analysis_horiz_avg", 1.0/100.0),
 ]
 
 # Process 3D variables
@@ -70,7 +70,7 @@ for var_name in ds_out.data_vars:
 ds_out.attrs = ds_in.attrs
 
 # Add the units attribute
-ds_out["time"].attrs["units"] = "days since 2014-10-05 12:00:00"
+ds_out["time"].attrs["units"] = "days since 2015-08-26 12:00:00"
 
 # Save the new dataset to a NetCDF file
 ds_out.to_netcdf(output_file)
