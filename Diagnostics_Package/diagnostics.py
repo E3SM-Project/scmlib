@@ -33,8 +33,8 @@ def compute_y_coord(ds, time_indices, height_cord, var_name):
                 raise ValueError("Cannot determine height coordinates ('z_mid', 'z_mid_horiz_avg', or 'Z3').")
 
             # Compute y_coord and subtract surface elevation
-            y_coord = ds[height_var].isel(time=time_indices).mean(dim="time").squeeze()
-            surface_elevation = ds[height_var].isel(lev=-1).mean(dim="time").squeeze() - 10.  # Surface elevation from highest index level
+            y_coord = ds[height_var].isel(time=time_indices).mean(dim="time",skipna=True).squeeze()
+            surface_elevation = ds[height_var].isel(lev=-1).mean(dim="time",skipna=True).squeeze() - 10.  # Surface elevation from highest index level
             y_coord -= surface_elevation
 
         # If variable has dimensions of ilev then we need to interpolate the height coordinate to the ilev grid
@@ -49,7 +49,7 @@ def compute_y_coord(ds, time_indices, height_cord, var_name):
         ps_var = 'PS' if 'PS' in ds.data_vars else 'ps' if 'ps' in ds.data_vars else 'ps_horiz_avg' if 'ps_horiz_avg' in ds.data_vars else None
         model = 'hyam' in ds.data_vars and 'hybm' in ds.data_vars
         if ps_var and model:
-            ps_avg = ds[ps_var].isel(time=time_indices).mean(dim="time") / 100.0  # Convert to hPa
+            ps_avg = ds[ps_var].isel(time=time_indices).mean(dim="time",skipna=True) / 100.0  # Convert to hPa
             if "lev" in ds[var_name].dims and all(var in ds for var in ['hyam', 'hybm']):
                 hyam = ds['hyam']
                 hybm = ds['hybm']
@@ -65,11 +65,11 @@ def compute_y_coord(ds, time_indices, height_cord, var_name):
             p_mid_obs_var = ds["p_mid_obs"]
 
             if "time" in p_mid_obs_var.dims:
-                y_coord = p_mid_obs_var.isel(time=time_indices).mean(dim="time")
+                y_coord = p_mid_obs_var.isel(time=time_indices).mean(dim="time",skipna=True)
             else:
                 y_coord = p_mid_obs_var
         elif 'p_mid_les' in ds.data_vars:
-            y_coord = ds['p_mid_les'].isel(time=time_indices).mean(dim="time")
+            y_coord = ds['p_mid_les'].isel(time=time_indices).mean(dim="time",skipna=True)
         else:
             print(f"Warning: 'PS' or 'ps' is missing. Using hybrid pressure coordinates.")
             y_coord = ds['lev'] if "lev" in ds[var_name].dims else ds['ilev']
@@ -167,7 +167,7 @@ def plot_time_height_panel_grid(
             elif "ilev" in ds[var_name].dims:
                 data = data.isel(ilev=valid_lev_idx)
             if 'ncol' in data.dims:
-                data = data.mean(dim="ncol")
+                data = data.mean(dim="ncol",skipna=True)
 
             global_min = min(global_min, float(data.min().values))
             global_max = max(global_max, float(data.max().values))
@@ -259,7 +259,7 @@ def compute_diurnal_composite(ds, var_name, idx, time_offset, diurnal_start_day,
 
         data = ds[var_name].isel(time=valid_idx)
         if 'ncol' in data.dims:
-            data = data.mean(dim='ncol')
+            data = data.mean(dim='ncol',skipna=True)
 
         hour_bins = np.linspace(0, 24, steps_per_day + 1)
         hour_labels = (hour_bins[:-1] + hour_bins[1:]) / 2
@@ -270,7 +270,7 @@ def compute_diurnal_composite(ds, var_name, idx, time_offset, diurnal_start_day,
                 break
             daily_data.append(data[i:i + steps_per_day])
 
-        composite = np.mean(daily_data, axis=0)
+        composite = np.nanmean(daily_data, axis=0)
 
         return composite, hour_labels, True, data.ndim, stime, etime
     except Exception as e:
@@ -471,7 +471,7 @@ def run_diagnostics(
                     etime = end_time if end_time != "end" else time_in_days[-1]
                     time_indices = np.where((time_in_days >= stime) & (time_in_days <= etime))[0]
 
-                    time_filtered_data = ds[var_name].isel(time=time_indices).mean(dim="time")
+                    time_filtered_data = ds[var_name].isel(time=time_indices).mean(dim="time",skipna=True)
                     y_coord = compute_y_coord(ds, time_indices, height_cord, var_name)
 
                     if height_cord == "z":
@@ -547,7 +547,7 @@ def run_diagnostics(
 
                 # Apply running mean if requested
                 if run_mean_npts > 0 and variable_data.size >= run_mean_npts:
-                    variable_data = variable_data.rolling(time=run_mean_npts, center=True).mean()
+                    variable_data = variable_data.rolling(time=run_mean_npts, center=True).mean(skipna=True)
                     time_plot = time_in_days[time_indices]
                 else:
                     time_plot = time_in_days[time_indices]
