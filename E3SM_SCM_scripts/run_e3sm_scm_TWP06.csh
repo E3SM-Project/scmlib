@@ -69,8 +69,8 @@
 ###########################################################################
 
 # Case specific information kept here
-  set lat = -12.43 # latitude
-  set lon = 130.89 # longitude
+  set lat = -12.425 # latitude
+  set lon = 130.891 # longitude
   set do_iop_srf_prop = .true. # Use surface fluxes in IOP file?
   set do_scm_relaxation = .false. # Relax case to observations?
   set do_turnoff_swrad = .false. # Turn off SW calculation

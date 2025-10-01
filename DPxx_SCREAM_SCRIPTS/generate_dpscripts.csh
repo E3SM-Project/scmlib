@@ -987,8 +987,8 @@ set outfile = run_dpxx_scream_$casename.csh
 cp -r run_dpxx_scream_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"TWP-ICE deep convection in the warm pool"/ $outfile
-sed -i s/CASElat/-12.43/ $outfile
-sed -i s/CASElon/130.89/ $outfile
+sed -i s/CASElat/-12.425/ $outfile
+sed -i s/CASElon/130.891/ $outfile
 sed -i s/CASEsrfprop/true/ $outfile
 sed -i s/CASEstartdate/2006-01-17/ $outfile
 sed -i s/CASEstartinsec/10800/ $outfile

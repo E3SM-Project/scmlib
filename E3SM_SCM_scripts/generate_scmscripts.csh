@@ -874,8 +874,8 @@ cp -r run_e3sm_scm_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"TWP-ICE deep convection in the warm pool"/ $outfile
 sed -i s/AEROTYPE/prescribed/ $outfile
-sed -i s/CASElat/-12.43/ $outfile
-sed -i s/CASElon/130.89/ $outfile
+sed -i s/CASElat/-12.425/ $outfile
+sed -i s/CASElon/130.891/ $outfile
 sed -i s/CASEsrfprop/.true./ $outfile
 sed -i s/CASErelax/.false./ $outfile
 sed -i s/CASEswoff/.false./ $outfile
