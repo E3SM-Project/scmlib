@@ -16,9 +16,12 @@ if not os.path.exists(output_dir):
 else:
     print(f"Directory '{output_dir}' already exists.")
 
+# ----------------------------------------------------------------------
+# Load and prepare input data
+# ----------------------------------------------------------------------
 data = pd.read_csv(input_file)
 
-maclwp_time = data['time'].values / 3600. + 2.  # unit: hr
+maclwp_time = data['time'].values / 3600.0 + 2.0  # hours
 maclwp = data['lwp_bu'].values
 
 # Sort by time
@@ -26,45 +29,55 @@ sorted_indices = np.argsort(maclwp_time)
 maclwp_time = maclwp_time[sorted_indices]
 maclwp = maclwp[sorted_indices]
 
-maclwp_time = maclwp_time/24.
+# Convert hours -> days
+maclwp_time = maclwp_time / 24.0
 
 print(np.shape(maclwp))
 
-# Create a new dataset for the output
+# ----------------------------------------------------------------------
+# Build output dataset
+# ----------------------------------------------------------------------
 ds_out = xr.Dataset()
 
-# Assign filtered time to output dataset
-ds_out["time"] = xr.DataArray(maclwp_time, dims=["time"])
+# 1) Prepend a new time=0 without overwriting existing first value
+#    (shift all original times to the next index)
+time_with_leading_zero = np.concatenate(([0.0], maclwp_time.astype(float)))
+ds_out["time"] = xr.DataArray(time_with_leading_zero, dims=["time"])
+ds_out["time"].attrs["units"] = "days since 2020-03-12 22:00:00"
 
-# This file will only have 1d data, make up vertical coordinates to satisfy diagnostics package requirements.
-
-z_data = [10.0,20.0]
+# 2) Minimal vertical info to satisfy diagnostics (kept numeric)
+z_data = [10.0, 20.0]
 z_mid = np.tile(z_data, (len(ds_out["time"]), 1))
 ds_out["z_mid_horiz_avg"] = xr.DataArray(z_mid, dims=["time", "lev"])
 
-# Define lists for variables
+# 3) Define and populate 1-D time series variables
 two_d_vars = [
     ("dummy", "LiqWaterPath_horiz_avg", 1.0),
 ]
 
-# Process 2D variables
-
-# Process 2D variables
 for var_in, var_out, factor in two_d_vars:
-    ds_out[var_out] = xr.DataArray(np.squeeze(maclwp), dims=["time"]) * factor
+    # Allocate with the NEW time length, set first value NaN, then copy original data
+    arr = np.empty(len(ds_out["time"]), dtype=float)
+    arr[:] = np.nan  # initialize to NaN
+    arr[1:] = np.squeeze(maclwp) * factor  # shift original data by one index
+    ds_out[var_out] = xr.DataArray(arr, dims=["time"])
 
-# Clip all variables in ds_out to ensure no values are below zero
+# 4) Clip numeric variables to be >= 0 (NaNs are preserved)
 for var_name in ds_out.data_vars:
     da = ds_out[var_name]
-    if np.issubdtype(da.dtype, np.number):  # Only apply to numeric types
+    if np.issubdtype(da.dtype, np.number):
         ds_out[var_name] = da.clip(min=0)
 
-# Add the units attribute
-ds_out["LiqWaterPath_horiz_avg"].attrs["units"]="kg/m2"
-ds_out["time"].attrs["units"] = "days since 2020-03-12 22:00:00"
+# 5) Units/attrs
+ds_out["LiqWaterPath_horiz_avg"].attrs["units"] = "kg/m2"
+
+# 6) (Safety) Ensure all 1-D time series variables have NaN at the first (new) time
+#    This covers any future additions like more *_horiz_avg time series.
+for var_name, da in ds_out.data_vars.items():
+    if ("time",) == da.dims:  # only 1-D time series
+        ds_out[var_name][0] = np.nan
 
 # Save the new dataset to a NetCDF file
 ds_out.to_netcdf(output_file)
 
 print(f"Output file created at: {output_file}")
-
