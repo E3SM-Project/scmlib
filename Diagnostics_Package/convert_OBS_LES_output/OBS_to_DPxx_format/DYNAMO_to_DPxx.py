@@ -4,7 +4,7 @@ import os
 
 # Define input and output file paths
 input_file = "/global/cfs/cdirs/e3sm/inputdata/atm/cam/scam/iop/DYNAMO_amie_iopfile_4scam.nc"
-output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/obs_data/OBS_DYNAMO_amie.dpxx.nc"
+output_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/DYNAMO_amie.varanal.various.dpxx_format.nc"
 time_offset = 0.0
 
 # Ensure the directory for the output file exists
@@ -41,7 +41,7 @@ three_d_vars = [
 two_d_vars = [
     ("shflx", "surf_sens_flux_horiz_avg", 1.0),
     ("lhflx", "surf_evap_horiz_avg", 4e-7),
-    ("lhflx", "surf_upward_latent_heat_flux_horiz_avg", 1.0),
+    ("lhflx", "surface_upward_latent_heat_flux_horiz_avg", 1.0),
     ("LWP", "LiqWaterPath_horiz_avg", 0.01*1000.0),
     ("prec_srf", "precip_total_surf_mass_flux_horiz_avg", 2.77778e-7),
     ("lw_net_toa", "LW_flux_up_at_model_top_horiz_avg", 1.0),
