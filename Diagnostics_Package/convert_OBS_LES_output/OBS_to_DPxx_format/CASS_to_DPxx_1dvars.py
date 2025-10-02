@@ -26,8 +26,8 @@ ds_in3 = xr.open_dataset(input_file3,decode_times=False)
 ds_out = xr.Dataset()
 
 # 1. Transfer and adjust the "time" variable
-time_data = ds_in1["hour"].values
-ds_out["time"] = xr.DataArray((time_data - 0.5)/24., dims=["time"])
+time_data = ds_in1["hour"].values - 6.0
+ds_out["time"] = xr.DataArray((time_data - 0.5)/24.0, dims=["time"])
 
 # This file will only have 1d data, make up vertical coordinates to satisfy diagnostics package requirements.
 
