@@ -27,7 +27,10 @@ time_data = (time_data-time_data[0])/86400.
 ds_out["time"] = xr.DataArray(time_data - time_offset, dims=["time"])
 
 p_data = ds_in["lev"].values/100.
-p_mid_obs = np.tile(p_data, (len(ds_out["time"]), 1))
+lev_mask = p_data < 1000
+
+lev_selected = p_data[lev_mask]
+p_mid_obs = np.tile(lev_selected, (len(ds_out["time"]), 1))
 ds_out["p_mid_obs"] = xr.DataArray(p_mid_obs, dims=["time", "lev"])
 
 # 3. Define lists for 3D and 2D variables
@@ -55,6 +58,7 @@ two_d_vars = [
 for var_in, var_out, factor in three_d_vars:
     if var_in in ds_in:
         data_val = np.squeeze(ds_in[var_in].values)
+        data_val = data_val[:, lev_mask]  # apply the lev > 1000 filter
         print(np.shape(data_val))
         ds_out[var_out] = xr.DataArray(data_val, dims=["time", "lev"]) * factor
     else:

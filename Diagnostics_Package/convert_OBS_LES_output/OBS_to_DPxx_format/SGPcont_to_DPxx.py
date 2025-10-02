@@ -4,7 +4,7 @@ import os
 
 # Define input and output file paths
 input_file = "/global/cfs/cdirs/e3sm/inputdata/atm/cam/scam/iop/SGP_continuous_iopfile_4scam.nc"
-output_file = "/pscratch/sd/b/bogensch/dp_screamxx_conv/obs_data/OBS_SGP_continous_full.dpxx.nc"
+output_file = "/pscratch/sd/b/bogensch/E3SM_simulations/iopdiags_OBS_and_LES_files/DP_EAMxx/SGP_continous.varanal.various.dpxx_format.nc"
 time_offset = 0.0
 
 # Ensure the directory for the output file exists
