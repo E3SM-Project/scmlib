@@ -237,6 +237,7 @@
   ./atmchange iop_dosubsidence=$do_iop_subsidence
   ./atmchange iop_coriolis=$do_iop_nudge_coriolis
   ./atmchange extra_shoc_diags=true
+  ./atmchange set_cld_frac_r_to_one=true
   ./atmchange iop_nudge_uv=$do_iop_nudge_uv
   ./atmchange iop_nudge_tq=$do_iop_nudge_tq
 

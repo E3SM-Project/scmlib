@@ -3,11 +3,11 @@
 #######################################################################
 #######################################################################
 #######  Script to run SCREAMv1 in doubly periodic (DP) mode (DP-EAMxx)
-#######  CASS
-#######  Continental Active Surface-forced Shallow-cumulus (CASS)
+#######  EPCAPE_2023-05-15
+#######  EPCAPE 2023-05-15
 #######
 #######  Script Author: P. Bogenschutz (bogenschutz1@llnl.gov)
-#######  Forcing provided by: Yunyan Zhang
+#######  Forcing provided by: Haipeng Zhang
 #######
 #######  IMPORTANT:
 #######    - You should now be using E3SM master.  The SCREAM and E3SM repos
@@ -24,7 +24,7 @@
 #######  of the scmlib repo to get you started.
 
   # Set the name of your case here
-  setenv casename scream_dpxx_CASS
+  setenv casename scream_dpxx_EPCAPE_2023-05-15
 
   # Set the case directory here
   setenv casedirectory /pscratch/sd/b/bogensch/dp_screamxx
@@ -118,18 +118,18 @@
 ###########################################################################
 
 # Case specific information kept here
-  set lat = 36.605 # latitude
-  set lon = 262.515 # longitude
+  set lat = 32.68 # latitude
+  set lon = 242.13 # longitude
   set do_iop_srf_prop = true # Use surface fluxes in IOP file?
   set do_iop_nudge_tq = false # Relax T&Q to observations?
-  set do_iop_nudge_uv = true # Relax U&V to observations?
-  set do_iop_nudge_coriolis = false # Nudge to geostrophic winds?
+  set do_iop_nudge_uv = false # Relax U&V to observations?
+  set do_iop_nudge_coriolis = true # Nudge to geostrophic winds?
   set do_iop_subsidence = true # compute LS vertical transport?
-  set startdate = 2000-07-24 # Start date in IOP file
-  set start_in_sec = 43200 # start time in seconds in IOP file
+  set startdate = 2023-05-15 # Start date in IOP file
+  set start_in_sec = 00000 # start time in seconds in IOP file
   set stop_option = nhours
-  set stop_n = 14
-  set iop_file = CASS_iopfile_4scam.nc #IOP file name
+  set stop_n = 66
+  set iop_file = EPCAPE_2023-05-15_iopfile_4scam.nc #IOP file name
   set do_turnoff_swrad = false # Turn off SW calculation (if false, keep false)
 # End Case specific stuff here
 
