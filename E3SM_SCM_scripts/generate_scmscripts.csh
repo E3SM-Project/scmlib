@@ -17,6 +17,32 @@ setenv setupfor general
 # edison /project/projectdirs/e3sm/inputdata
 
 ################################
+# TRACER 
+################################
+
+set casename = TRACER
+set outfile = run_e3sm_scm_$casename.csh 
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Convection during ARM TRACER field campaign"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/29.75/ $outfile
+sed -i s/CASElon/264.550/ $outfile
+sed -i s/CASEsrfprop/.true./ $outfile
+sed -i s/CASErelax/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEprecipoff/.false./ $outfile
+sed -i s/CASEnccons/100.0D6/ $outfile
+sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i s/CASEstartdate/2022-07-01/ $outfile
+sed -i s/CASEstartinsec/00000/ $outfile
+sed -i s/CASEstopoption/ndays/ $outfile
+sed -i s/CASEstopn/91/ $outfile
+sed -i s/CASEcaltype/GREGORIAN/ $outfile
+sed -i s/FORCINGPROVIDER/"Raymond Oware and Youtong Zheng"/ $outfile
+
+################################
 # LAFE
 ################################
 
