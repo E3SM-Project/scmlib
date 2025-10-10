@@ -261,6 +261,10 @@
   ./atmchange iop_nudge_tq_low=CASEtqlow
   ./atmchange iop_nudge_tq_high=CASEtqhigh
   ./atmchange iop_nudge_tscale=CASEtqtscale
+  
+# Set default physics process ordering (NOTE: if you add/remove a process or change ordering,
+# all DPxx runs NEED to have "iop_forcing" process in the list somewhere).
+  ./atmchange physics::atm_procs_list=iop_forcing,mac_aero_mic,rrtmgp
 
 # Allow for the computation of tendencies for output purposes
   ./atmchange physics::mac_aero_mic::shoc::compute_tendencies=T_mid,qv

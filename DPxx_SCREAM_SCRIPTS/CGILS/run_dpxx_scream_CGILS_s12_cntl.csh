@@ -244,6 +244,10 @@
   ./atmchange set_cld_frac_r_to_one=true
   ./atmchange iop_nudge_uv=$do_iop_nudge_uv
   ./atmchange iop_nudge_tq=$do_iop_nudge_tq
+  
+# Set default physics process ordering (NOTE: if you add/remove a process or change ordering,
+# all DPxx runs NEED to have "iop_forcing" process in the list somewhere).
+  ./atmchange physics::atm_procs_list=iop_forcing,mac_aero_mic,rrtmgp
 
 # Allow for the computation of tendencies for output purposes
   ./atmchange physics::mac_aero_mic::shoc::compute_tendencies=T_mid,qv
