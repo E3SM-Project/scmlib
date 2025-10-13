@@ -22,6 +22,36 @@ setenv setupfor pm
 # edison /project/projectdirs/e3sm/inputdata
 
 ################################
+# TRACER 
+################################
+
+set casename = TRACER
+set outfile = run_dpxx_scream_$casename.csh 
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"Convection during ARM TRACER field campaign"/ $outfile
+sed -i s/CASElat/29.75/ $outfile
+sed -i s/CASElon/264.550/ $outfile
+sed -i s/CASEsrfprop/true/ $outfile
+sed -i s/CASEstartdate/2022-07-01/ $outfile
+sed -i s/CASEstartinsec/00000/ $outfile
+sed -i s/CASEstopoption/ndays/ $outfile
+sed -i s/CASEstopn/91/ $outfile
+sed -i s/CASEdebug/false/ $outfile
+sed -i s/CASEnumprocs/384/ $outfile
+sed -i s/CASEnex/20/ $outfile
+sed -i s/CASEney/20/ $outfile
+sed -i s/CASElex/200000/ $outfile
+sed -i s/CASEley/200000/ $outfile
+sed -i s/CASEtqnudge/false/ $outfile
+sed -i s/CASEuvnudge/true/ $outfile
+sed -i s/CASEcoriolis/false/ $outfile
+sed -i s/CASEdosub/false/ $outfile
+sed -i s/CASEwalltime/05:00:00/ $outfile
+sed -i s/CASEnhtfrq/-24/ $outfile
+sed -i s/FORCINGPROVIDER/"Raymond Oware and Youtong Zheng"/ $outfile
+
+################################
 # MAGIC
 ################################
 
