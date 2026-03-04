@@ -10,6 +10,8 @@ Make a copy of this, which will be ignored by git.  This script then needs to be
 the relevant datasets, case specifics, observation files, and plotting styles to fit the user's needs.
 The new user script can then be executed after loading the suitable environment (see Setup Notes).
 
+It is recommended that users make a copy and maintain a separate driver script for each case they analyze.
+
 Development of this diagnostics package was primarily supported by the Atmospheric System Research program, Tying in High Resolution E3SM with ARM Data (THREAD) project (SCW1800), and partially supported by the Atmospheric Radiation Measurement (ARM) program and the Energy Exascale Earth System Model (E3SM) project, all funded by the U.S. Department of Energy (DOE), Office of Science, Office of Biological and Environmental Research.
 
 --------------------------------------------------------------------------------
