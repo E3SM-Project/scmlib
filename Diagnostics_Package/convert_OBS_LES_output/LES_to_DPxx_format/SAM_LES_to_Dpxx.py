@@ -71,6 +71,7 @@ two_d_vars = [
     ("PW", "VapWaterPath_horiz_avg", 1.0 / 1.0),
     ("RWP", "RainWaterPath_horiz_avg", 1.0 / 1000.0),
     ("PREC", "precip_total_surf_mass_flux_horiz_avg", 1.15741e-8),
+    ("SWDS", "SW_flux_dn_at_model_bot_horiz_avg", 1.0),
 ]
 
 # Process each case
