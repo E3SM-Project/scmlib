@@ -35,8 +35,8 @@ readonly MODEL_START_TYPE="initial"  # 'initial', 'continue', 'branch', 'hybrid'
 readonly START_DATE="2001-01-01"
 
 # Set paths
-readonly CODE_ROOT="/p/lustre1/bogensch/codes/${CHECKOUT}"
-readonly CASE_ROOT="/p/lustre1/bogensch/EAIsland_sims/${CASE_NAME}"
+readonly CODE_ROOT="/pscratch/sd/b/bogensch/dp_scream/codes/${CHECKOUT}"
+readonly CASE_ROOT="/pscratch/sd/b/bogensch/E3SM_simulations/${CASE_NAME}"
 
 # Sub-directories
 readonly CASE_BUILD_DIR=${CASE_ROOT}/build
@@ -60,7 +60,7 @@ echo "setting up ${run}"
 # Production simulation
 readonly CASE_SCRIPTS_DIR=${CASE_ROOT}/case_scripts
 readonly CASE_RUN_DIR=${CASE_ROOT}/run
-readonly PELAYOUT="custom-lc"
+readonly PELAYOUT="custom-perl"
 readonly WALLTIME="24:00:00"
 readonly STOP_OPTION="nyears"
 readonly STOP_N="17"
@@ -1074,6 +1074,8 @@ clmforc.ERA5.TPQWL.2023-12.nc
 
 EOF
 
+}
+
 # =====================================
 # Customize MPAS stream files if needed
 # =====================================
@@ -1095,8 +1097,8 @@ then
     echo $'\n CUSTOMIZE PROCESSOR CONFIGURATION:'
 
     # Number of cores per node (machine specific)
-    if [ "${MACHINE}" == "dane" ]; then
-        ncore=112
+    if [ "${MACHINE}" == "pm-cpu" ]; then
+        ncore=256
         hthrd=1  # hyper-threading
     else
         echo 'ERROR: MACHINE = '${MACHINE}' is not supported for current custom PE layout setting.'
@@ -1118,6 +1120,9 @@ then
     ###################################################
     # For ICASE runs
 
+    ./xmlchange MAX_MPITASKS_PER_NODE="64"
+    ./xmlchange MAX_TASKS_PER_NODE="256"
+
     ./xmlchange CPL_NTASKS=${MY_NPES}
     ./xmlchange ATM_NTASKS=${MY_NPES}
     ./xmlchange OCN_NTASKS=${MY_NPES}
@@ -1128,6 +1133,15 @@ then
     ./xmlchange ICE_NTASKS=${MY_NPES}
     ./xmlchange LND_ROOTPE=0
     ./xmlchange ROF_ROOTPE=0
+
+    ./xmlchange NTHRDS_ATM="2"
+    ./xmlchange NTHRDS_LND="2"
+    ./xmlchange NTHRDS_ICE="2"
+    ./xmlchange NTHRDS_OCN="2"
+    ./xmlchange NTHRDS_CPL="2"
+    ./xmlchange NTHRDS_GLC="1"
+    ./xmlchange NTHRDS_ROF="2"
+    ./xmlchange NTHRDS_WAV="1"
 
     popd
 
@@ -1258,8 +1272,6 @@ case_setup() {
     # Short term archiving
     ./xmlchange DOUT_S=${DO_SHORT_TERM_ARCHIVING^^}
     ./xmlchange DOUT_S_ROOT=${CASE_ARCHIVE_DIR}
-
-    ./xmlchange --id CAM_CONFIG_OPTS --append --val='-cosp'
 
     # Extracts input_data_dir in case it is needed for user edits to the namelist later
     local input_data_dir=`./xmlquery DIN_LOC_ROOT --value`
