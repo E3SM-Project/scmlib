@@ -19,7 +19,7 @@ readonly PROJECT="mp193"
 # Simulation
 readonly COMPSET="IELM"
 readonly RESOLUTION="ne30pg2_ne30pg2"
-readonly CASE_NAME="Generate_land_IC_I2000_2005-2015.001a"
+readonly CASE_NAME="Generate_land_IC_I2000.ne30pg2_ne30pg2.001a"
 # If this is part of a simulation campaign, ask your group lead about using a case_group label
 # otherwise, comment out
 #readonly CASE_GROUP="v3.LR"
@@ -1344,6 +1344,8 @@ runtime_options() {
 
     echo $'\n----- Starting runtime_options -----\n'
     pushd ${CASE_SCRIPTS_DIR}
+
+    ./xmlchange JOB_WALLCLOCK_TIME=${WALLTIME}
 
     # Set simulation start date
     ./xmlchange RUN_STARTDATE=${START_DATE}
