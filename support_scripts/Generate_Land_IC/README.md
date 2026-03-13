@@ -40,28 +40,28 @@ For SCM simulations, the appropriate ELM restart file can be referenced directly
 ### Workflow Summary
 
 ```
-   Spin-up E3SM simulation (ERA5 forcing, ≥5 years)
-                       │
-                       ▼
-         ELM restart file (spun-up land state)
-                       │
-                       ▼
-              Choose configuration
-           ┌───────────┴───────────┐
-           │                       │
-           ▼                       ▼
-        SCM run               DP-EAMxx run
-           │                       │
-           │                       │
-           │               Run preprocessing script
-           │              (map land state to DP grid)
-           │                       │
- Use ELM restart directly          │
-    in SCM run script              │
-           │                       │
-           └───────────┬───────────┘
-                       ▼
-        Run SCM / DP-EAMxx with interactive land
+                                 Spin-up E3SM simulation (ERA5 forcing, ≥5 years)
+                                                     │
+                                                     ▼
+                                       ELM restart file (spun-up land state)
+                                                     │
+                                                     ▼
+                                            Choose configuration
+                                         ┌───────────┴───────────┐
+                                         │                       │
+                                         ▼                       ▼
+                                      SCM run               DP-EAMxx run
+                                         │                       │
+                                         │                       │
+                                         │               Run preprocessing script
+                                         │              (map land state to DP grid)
+                                         │                       │
+                               Use ELM restart directly          │
+                                  in SCM run script              │
+                                         │                       │
+                                         └───────────┬───────────┘
+                                                     ▼
+                                      Run SCM / DP-EAMxx with interactive land
 ```
 
 --------------------------------------------------------------------------------
