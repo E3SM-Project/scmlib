@@ -37,6 +37,33 @@ Running SCM or DP-EAMxx with an interactive land model requires initializing the
 
 For SCM simulations, the appropriate ELM restart file can be referenced directly in the run scripts to initialize the land model. For DP-EAMxx simulations, an additional preprocessing step is required: a Python script is used to extract the relevant land grid cell from the restart file and replicate it across the doubly periodic domain so that it matches the horizontal grid of the planned simulation. The following sections describe each step of this workflow in detail.
 
+### Workflow Summary
+
+```
+   Spin-up E3SM simulation (ERA5 forcing, ≥5 years)
+                       │
+                       ▼
+         ELM restart file (spun-up land state)
+                       │
+                       ▼
+              Choose configuration
+           ┌───────────┴───────────┐
+           │                       │
+           ▼                       ▼
+        SCM run               DP-EAMxx run
+           │                       │
+           │                       │
+           │               Run preprocessing script
+           │              (map land state to DP grid)
+           │                       │
+ Use ELM restart directly          │
+    in SCM run script              │
+           │                       │
+           └───────────┬───────────┘
+                       ▼
+        Run SCM / DP-EAMxx with interactive land
+```
+
 --------------------------------------------------------------------------------
 
 ## Generate Land Initial Conditions
