@@ -68,7 +68,7 @@ For SCM simulations, the appropriate ELM restart file can be referenced directly
 
 ## Generate Land Initial Conditions
 
-Before you run E3SM to generate initial condition files, please check the HPSS library to see if a file exists that is relevant to your simulation at (provide link).  This directory contains valid monthly initial condition files for the period 2005-2016 at the ne30pg2_ne30pg2 resolution.  This directory will be updated as more files are added.
+Before you run E3SM to generate initial condition files, please check the [NERSC HPSS library](https://portal.nersc.gov/archive/home/b/bogensch/www/ELM_initial_files) to see if a file exists that is relevant to your simulation at (provide link).  This directory contains valid monthly initial condition files for the period 2005-2017 at the ne30pg2_ne30pg2 resolution.  This directory will be updated as more files are added.
 
 To generate spun-up land initial conditions for use in the SCM and DP-SCREAM configurations, the user must perform a dedicated E3SMv3 simulation using the IELM compset, in which the atmosphere is prescribed with ERA5 reanalysis forcing.  
 
