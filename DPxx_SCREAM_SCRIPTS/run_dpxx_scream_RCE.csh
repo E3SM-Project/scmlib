@@ -40,8 +40,8 @@
   # Name of machine you are running on (i.e. pm-cpu, anvil, etc)
   setenv machine pm-cpu
 
-  # Compiler (pm-cpu should use "gnu"; pm-gpu should use "gnugpu"; LC should use "intel";
-  #           frontier should use "craycray-mphipcc")
+  # Compiler (pm-cpu should use "gnu"; pm-gpu should use "gnugpu"; LC should use "oneapi-ifx", note that
+  #           codes before Feb-ish 2026 used "intel" on LC; frontier should use "craycray-mphipcc")
   #   more machine compiler defaults will be added as they are tested/validated.
   setenv compiler gnu
 
