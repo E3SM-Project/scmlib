@@ -20,15 +20,6 @@ Development of this workflow was primarily supported by the Atmospheric System R
   - [Running E3SM SCM With Interactive Land](#running-e3sm-scm-with-interactive-land)
   - [Running DP-EAMxx With Interactive Land](#running-dp-eamxx-with-interactive-land)
 
-  - [Package Overview](#package-overview)
-  - [Setup Notes](#setup-notes)
-  - [Valid E3SM SCM Input Data](#valid-e3sm-scm-input-data)
-  - [Valid DP-EAMxx Input Data](#valid-dp-eamxx-input-data)
-  - [Observation and LES Datasets](#observation-and-les-datasets)
-  - [Adding Datasets](#adding-datasets)
-  - [User Specifications](#user-specifications)
-  - [Development Plans](#development-plans)
-
 --------------------------------------------------------------------------------
 
 ## Overview of Workflow
@@ -89,6 +80,8 @@ To assist the user with this, we provide an [example script](https://github.com/
 --------------------------------------------------------------------------------
 
 ## Running E3SM SCM With Interactive Land
+
+**Temporary step**:  check out branch `bogensch/dpxx_e3sm_intland` from the most current E3SM master.  We anticipate that this branch will be merged into master soon, until that time we will keep it up-to-date.
 
 After you have generated the ELM initial condition file you need to make **two** modifications to your run script.
 
