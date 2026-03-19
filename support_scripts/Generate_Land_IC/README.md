@@ -101,6 +101,8 @@ finidat = '/pscratch/sd/b/bogensch/dp_screamxx/land_ic/sgp_hindcasts_monthly_e3s
 EOF
 ``` 
 
+Then you are ready to run your E3SM SCM with interactive land.
+
 --------------------------------------------------------------------------------
 
 ## Running DP-EAMxx With Interactive Land
