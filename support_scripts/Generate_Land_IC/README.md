@@ -100,10 +100,29 @@ Then you are ready to run your E3SM SCM with interactive land.
 
 ## Running DP-EAMxx With Interactive Land
 
+### Put ELM initial conditions on the DPxx grid ###
 DP-EAMxx uses an unstructured horizontal grid that does not align with the native ELM grid, requiring additional processing to initialize the land model. To address this, a preprocessing script identifies the ELM grid cell closest to the target domain and extracts its full land hierarchy (landunits, columns, and PFTs). These data are then replicated across the doubly periodic grid to create a consistent land initial condition file.
 
-Thus, users must use the following script to process their ELM intial condition file to 
+Thus, users must run the preprocessing script [following script](https://github.com/E3SM-Project/scmlib/blob/bogensch/interactive_land_doc/support_scripts/Generate_Land_IC/format_land_IC_for_dpxx.py) to map their ELM initial condition file onto the appropriate DPxx grid. Update the script header with your desired settings and submit the job; the processed land initial condition file will be written to the specified output directory. The most critical requirement is that the input parameters `num_ne_x` and `num_ne_y` exactly match the grid configuration used in your DPxx simulation.
 
+### Set up your DPxx simulation ###
+
+**Temporary step**:  check out branch `bogensch/dpxx_e3sm_intland` from the most current E3SM master.  We anticipate that this branch will be merged into master soon, until that time we will keep it up-to-date.
+
+After you have generated the ELM initial condition file you need to make **two** modifications to your run script.
+
+- **Deactivate prescribed surface fluxes:** If you are using the official DP-EAMxx scripts found on this repo, simply search for `set do_iop_srf_prop = .false.` and change this to `.true.`.  If you are not using the official DP-EAMxx scripts then please set the following `user_nl_eam` namelist parameter: `scm_iop_srf_prop = .true.`.
+
+- **Point to ELM Initial condition file:**  As an example:
+```
+cat <<EOF >> user_nl_elm
+finidat = '/pscratch/sd/b/bogensch/dp_screamxx/land_ic/dpxx_ic/GOAMAZON_elm_dpxx_init_nex20_ney20_2014-01-01-00000.nc'
+check_dynpft_consistency = .false.
+check_finidat_pct_consistency = .false.
+check_finidat_fsurdat_consistency = .false.
+check_finidat_year_consistency = .false.
+EOF
+``` 
 
 --------------------------------------------------------------------------------
 
