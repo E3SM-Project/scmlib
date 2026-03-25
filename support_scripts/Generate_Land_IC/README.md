@@ -100,6 +100,9 @@ Then you are ready to run your E3SM SCM with interactive land.
 
 ## Running DP-EAMxx With Interactive Land
 
+DP-EAMxx uses an unstructured horizontal grid that does not align with the native ELM grid, requiring additional processing to initialize the land model. To address this, a preprocessing script identifies the ELM grid cell closest to the target domain and extracts its full land hierarchy (landunits, columns, and PFTs). These data are then replicated across the doubly periodic grid to create a consistent land initial condition file.
+
+Thus, users must use the following script to process their ELM intial condition file to 
 
 
 --------------------------------------------------------------------------------
