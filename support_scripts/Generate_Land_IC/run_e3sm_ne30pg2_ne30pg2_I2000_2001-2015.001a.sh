@@ -67,7 +67,7 @@ readonly STOP_N="17"
 readonly REST_OPTION="nmonths"
 readonly REST_N="1"
 readonly RESUBMIT="0"
-readonly DO_SHORT_TERM_ARCHIVING=true
+readonly DO_SHORT_TERM_ARCHIVING=false
 
 # Coupler history
 readonly HIST_OPTION="nyears"
