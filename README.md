@@ -1,8 +1,8 @@
 # scmlib
-Library of IOP cases for the Single Column Model and Doubly Periodic cloud resolving model.
+Library of IOP cases for the Single Column Model and Doubly Periodic cloud resolving model. Documenation to run the [E3SM SCM and DP-EAMxx configurations can be found here](https://github.com/E3SM-Project/scmlib/wiki).
 
 Scripts to run the E3SM Single Column Model (SCM) and Doubly Periodic configuration of SCREAM (DP-SCREAM).
-Description of each case can be found at https://github.com/E3SM-Project/scmlib/wiki/E3SM-Intensive-Observation-Period-Case-Library
+Description of [each case can be found here](https://github.com/E3SM-Project/scmlib/wiki/E3SM-Intensive-Observation-Period-Case-Library).
 
 Documentation for the [E3SM SCM and DP-EAMxx diagnostics package can be found here](https://github.com/E3SM-Project/scmlib/blob/master/Diagnostics_Package/README.md).
 
