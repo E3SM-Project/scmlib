@@ -1440,6 +1440,96 @@ sed -i s/CASEwalltime/00:30:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
 sed -i s/FORCINGPROVIDER/"Haipeng Zhang"/ $outfile
 
+################################
+# LASSO SGP 2018-07-09
+################################
+
+set casename = LASSO_SGP_2018-07-09
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"LASSO SGP 2018-07-09"/ $outfile
+sed -i s/CASElat/36.61/ $outfile
+sed -i s/CASElon/262.51/ $outfile
+sed -i s/CASEsrfprop/true/ $outfile
+sed -i s/CASEstartdate/2018-07-09/ $outfile
+sed -i s/CASEstartinsec/43200/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/15/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
+sed -i s/CASEnex/5/ $outfile
+sed -i s/CASEney/5/ $outfile
+sed -i s/CASElex/50000/ $outfile
+sed -i s/CASEley/50000/ $outfile
+sed -i s/CASEtqnudge/false/ $outfile
+sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/true/ $outfile
+sed -i s/CASEdosub/true/ $outfile
+sed -i s/CASEwalltime/00:30:00/ $outfile
+sed -i s/CASEnhtfrq/-1/ $outfile
+sed -i s/FORCINGPROVIDER/"Bill Gustafson"/ $outfile
+
+################################
+# LASSO SGP 2019-05-17
+################################
+
+set casename = LASSO_SGP_2019-05-17
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"LASSO SGP 2019-05-17"/ $outfile
+sed -i s/CASElat/36.61/ $outfile
+sed -i s/CASElon/262.51/ $outfile
+sed -i s/CASEsrfprop/true/ $outfile
+sed -i s/CASEstartdate/2019-05-17/ $outfile
+sed -i s/CASEstartinsec/43200/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/15/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
+sed -i s/CASEnex/5/ $outfile
+sed -i s/CASEney/5/ $outfile
+sed -i s/CASElex/50000/ $outfile
+sed -i s/CASEley/50000/ $outfile
+sed -i s/CASEtqnudge/false/ $outfile
+sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/true/ $outfile
+sed -i s/CASEdosub/true/ $outfile
+sed -i s/CASEwalltime/00:30:00/ $outfile
+sed -i s/CASEnhtfrq/-1/ $outfile
+sed -i s/FORCINGPROVIDER/"Bill Gustafson"/ $outfile
+
+################################
+# LASSO SGP 2019-09-29
+################################
+
+set casename = LASSO_SGP_2019-09-29
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"LASSO SGP 2019-09-29"/ $outfile
+sed -i s/CASElat/36.61/ $outfile
+sed -i s/CASElon/262.51/ $outfile
+sed -i s/CASEsrfprop/true/ $outfile
+sed -i s/CASEstartdate/2019-09-29/ $outfile
+sed -i s/CASEstartinsec/43200/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/15/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
+sed -i s/CASEnex/5/ $outfile
+sed -i s/CASEney/5/ $outfile
+sed -i s/CASElex/50000/ $outfile
+sed -i s/CASEley/50000/ $outfile
+sed -i s/CASEtqnudge/false/ $outfile
+sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/true/ $outfile
+sed -i s/CASEdosub/true/ $outfile
+sed -i s/CASEwalltime/00:30:00/ $outfile
+sed -i s/CASEnhtfrq/-1/ $outfile
+sed -i s/FORCINGPROVIDER/"Bill Gustafson"/ $outfile
+
 foreach file (*.csh)
   if ($file != run_dpxx_scream_TEMPLATE.csh && $file != generate_dpscripts.csh) then
     sed -i '/OBSERVEDAERO/d' $file
@@ -1535,4 +1625,5 @@ endif
 
 # Move CGILS scripts to their own folder
 mv run_dpxx_scream_CGILS*.csh CGILS
-mv run_dpxx_scream_EPCAPE*.csh EPCAPE
+#mv run_dpxx_scream_EPCAPE*.csh EPCAPE
+mv run_dpxx_scream_LASSO_SGP*.csh LASSO_SGP
