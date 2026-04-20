@@ -1203,6 +1203,91 @@ sed -i s/CASEstopn/66/ $outfile
 sed -i s/CASEdebug/true/ $outfile
 sed -i s/FORCINGPROVIDER/"Haipeng Zhang"/ $outfile
 
+################################
+# LASSO SGP 2018-07-09
+################################
+
+set casename = LASSO_SGP_2018-07-09
+set outfile = run_e3sm_scm_$casename.csh
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"LASSO SGP 2018-07-09"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/36.61/ $outfile
+sed -i s/CASElon/262.51/ $outfile
+sed -i s/CASEsrfprop/.true./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASErelax/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEprecipoff/.false./ $outfile
+sed -i s/CASEnccons/100.0D6/ $outfile
+sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i s/CASEstartdate/2018-07-09/ $outfile
+sed -i s/CASEstartinsec/43200/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/15/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/FORCINGPROVIDER/"Bill Gustafson"/ $outfile
+
+################################
+# LASSO SGP 2019-05-17
+################################
+
+set casename = LASSO_SGP_2019-05-17
+set outfile = run_e3sm_scm_$casename.csh
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"LASSO SGP 2019-05-17"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/36.61/ $outfile
+sed -i s/CASElon/262.51/ $outfile
+sed -i s/CASEsrfprop/.true./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASErelax/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEprecipoff/.false./ $outfile
+sed -i s/CASEnccons/100.0D6/ $outfile
+sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i s/CASEstartdate/2019-05-17/ $outfile
+sed -i s/CASEstartinsec/43200/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/15/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/FORCINGPROVIDER/"Bill Gustafson"/ $outfile
+
+################################
+# LASSO SGP 2019-09-29
+################################
+
+set casename = LASSO_SGP_2019-09-29
+set outfile = run_e3sm_scm_$casename.csh
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"LASSO SGP 2019-09-29"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/36.61/ $outfile
+sed -i s/CASElon/262.51/ $outfile
+sed -i s/CASEsrfprop/.true./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASErelax/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEprecipoff/.false./ $outfile
+sed -i s/CASEnccons/100.0D6/ $outfile
+sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i s/CASEstartdate/2019-09-29/ $outfile
+sed -i s/CASEstartinsec/43200/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/15/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/FORCINGPROVIDER/"Bill Gustafson"/ $outfile
+
+
 foreach file (*.csh)
   if ($file != run_e3sm_scm_TEMPLATE.csh && $file != generate_scmscripts.csh) then
     sed -i '/OBSERVEDAERO/d' $file
@@ -1258,4 +1343,5 @@ endif
 
 # Move CGILS scripts to their own folder
 mv run_e3sm_scm_CGILS*.csh CGILS
-mv run_e3sm_scm_EPCAPE*.csh EPCAPE
+#mv run_e3sm_scm_EPCAPE*.csh EPCAPE
+mv run_e3sm_scm_LASSO*.csh LASSO_SGP

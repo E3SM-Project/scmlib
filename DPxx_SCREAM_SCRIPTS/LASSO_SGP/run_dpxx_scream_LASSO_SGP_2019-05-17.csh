@@ -227,7 +227,7 @@
   ./atmchange cubed_sphere_map=2
   ./atmchange target_latitude=$lat
   ./atmchange target_longitude=$lon
-  ./atmchange iop_file='/global/homes/b/bogensch/mk_iop_forcing/make_lasso/LASSO_SGP_2019-05-17_iopfile_4scam.nc'
+  ./atmchange iop_file=$input_data_dir/$iop_path/$iop_file
   ./atmchange nu=0.216784
   ./atmchange nu_top=$nu_top_dyn
   ./atmchange se_ftype=2
