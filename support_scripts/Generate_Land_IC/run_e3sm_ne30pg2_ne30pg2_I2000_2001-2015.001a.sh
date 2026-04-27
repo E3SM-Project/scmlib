@@ -124,9 +124,9 @@ echo $'\n----- All done -----\n'
 user_nl() {
 
 cat <<EOF >> user_nl_datm
-streams = "datm.streams.txt.CLM_QIAN.Solar 2001 2001 2023",
-          "datm.streams.txt.CLM_QIAN.Precip 2001 2001 2023",
-          "datm.streams.txt.CLM_QIAN.TPQW 2001 2001 2023",
+streams = "datm.streams.txt.CLM_QIAN.Solar 2001 2001 2025",
+          "datm.streams.txt.CLM_QIAN.Precip 2001 2001 2025",
+          "datm.streams.txt.CLM_QIAN.TPQW 2001 2001 2025",
           "datm.streams.txt.presaero.clim_2000 1 1 1",
           "datm.streams.txt.topo.observed 1 1 1"
 EOF
@@ -436,6 +436,30 @@ clmforc.ERA5.Prec.2023-09.nc
 clmforc.ERA5.Prec.2023-10.nc
 clmforc.ERA5.Prec.2023-11.nc
 clmforc.ERA5.Prec.2023-12.nc
+clmforc.ERA5.Prec.2024-01.nc
+clmforc.ERA5.Prec.2024-02.nc
+clmforc.ERA5.Prec.2024-03.nc
+clmforc.ERA5.Prec.2024-04.nc
+clmforc.ERA5.Prec.2024-05.nc
+clmforc.ERA5.Prec.2024-06.nc
+clmforc.ERA5.Prec.2024-07.nc
+clmforc.ERA5.Prec.2024-08.nc
+clmforc.ERA5.Prec.2024-09.nc
+clmforc.ERA5.Prec.2024-10.nc
+clmforc.ERA5.Prec.2024-11.nc
+clmforc.ERA5.Prec.2024-12.nc
+clmforc.ERA5.Prec.2025-01.nc
+clmforc.ERA5.Prec.2025-02.nc
+clmforc.ERA5.Prec.2025-03.nc
+clmforc.ERA5.Prec.2025-04.nc
+clmforc.ERA5.Prec.2025-05.nc
+clmforc.ERA5.Prec.2025-06.nc
+clmforc.ERA5.Prec.2025-07.nc
+clmforc.ERA5.Prec.2025-08.nc
+clmforc.ERA5.Prec.2025-09.nc
+clmforc.ERA5.Prec.2025-10.nc
+clmforc.ERA5.Prec.2025-11.nc
+clmforc.ERA5.Prec.2025-12.nc
    </fileNames>
    <offset>
       0
@@ -749,6 +773,30 @@ clmforc.ERA5.Solr.2023-09.nc
 clmforc.ERA5.Solr.2023-10.nc
 clmforc.ERA5.Solr.2023-11.nc
 clmforc.ERA5.Solr.2023-12.nc
+clmforc.ERA5.Solr.2024-01.nc
+clmforc.ERA5.Solr.2024-02.nc
+clmforc.ERA5.Solr.2024-03.nc
+clmforc.ERA5.Solr.2024-04.nc
+clmforc.ERA5.Solr.2024-05.nc
+clmforc.ERA5.Solr.2024-06.nc
+clmforc.ERA5.Solr.2024-07.nc
+clmforc.ERA5.Solr.2024-08.nc
+clmforc.ERA5.Solr.2024-09.nc
+clmforc.ERA5.Solr.2024-10.nc
+clmforc.ERA5.Solr.2024-11.nc
+clmforc.ERA5.Solr.2024-12.nc
+clmforc.ERA5.Solr.2025-01.nc
+clmforc.ERA5.Solr.2025-02.nc
+clmforc.ERA5.Solr.2025-03.nc
+clmforc.ERA5.Solr.2025-04.nc
+clmforc.ERA5.Solr.2025-05.nc
+clmforc.ERA5.Solr.2025-06.nc
+clmforc.ERA5.Solr.2025-07.nc
+clmforc.ERA5.Solr.2025-08.nc
+clmforc.ERA5.Solr.2025-09.nc
+clmforc.ERA5.Solr.2025-10.nc
+clmforc.ERA5.Solr.2025-11.nc
+clmforc.ERA5.Solr.2025-12.nc
    </fileNames>
    <offset>
       0
@@ -1065,6 +1113,30 @@ clmforc.ERA5.TPQWL.2023-09.nc
 clmforc.ERA5.TPQWL.2023-10.nc
 clmforc.ERA5.TPQWL.2023-11.nc
 clmforc.ERA5.TPQWL.2023-12.nc
+clmforc.ERA5.TPQWL.2024-01.nc
+clmforc.ERA5.TPQWL.2024-02.nc
+clmforc.ERA5.TPQWL.2024-03.nc
+clmforc.ERA5.TPQWL.2024-04.nc
+clmforc.ERA5.TPQWL.2024-05.nc
+clmforc.ERA5.TPQWL.2024-06.nc
+clmforc.ERA5.TPQWL.2024-07.nc
+clmforc.ERA5.TPQWL.2024-08.nc
+clmforc.ERA5.TPQWL.2024-09.nc
+clmforc.ERA5.TPQWL.2024-10.nc
+clmforc.ERA5.TPQWL.2024-11.nc
+clmforc.ERA5.TPQWL.2024-12.nc
+clmforc.ERA5.TPQWL.2025-01.nc
+clmforc.ERA5.TPQWL.2025-02.nc
+clmforc.ERA5.TPQWL.2025-03.nc
+clmforc.ERA5.TPQWL.2025-04.nc
+clmforc.ERA5.TPQWL.2025-05.nc
+clmforc.ERA5.TPQWL.2025-06.nc
+clmforc.ERA5.TPQWL.2025-07.nc
+clmforc.ERA5.TPQWL.2025-08.nc
+clmforc.ERA5.TPQWL.2025-09.nc
+clmforc.ERA5.TPQWL.2025-10.nc
+clmforc.ERA5.TPQWL.2025-11.nc
+clmforc.ERA5.TPQWL.2025-12.nc
    </fileNames>
    <offset>
       0
