@@ -85,7 +85,7 @@ To assist the user with this, we provide an [example script](https://github.com/
 
 After you have generated the ELM initial condition file you need to make **two** modifications to your run script.
 
-- **Deactivate prescribed surface fluxes:** If you are using the official E3SM SCM scripts found on this repo, simply search for `set do_iop_srf_prop = .false.` and change this to `.true.`.  If you are not using the official E3SM SCM scripts then please set the following `user_nl_eam` namelist parameter: `scm_iop_srf_prop = .true.`.
+- **Deactivate prescribed surface fluxes:** If you are using the official E3SM SCM scripts found on this repo, simply search for `set do_iop_srf_prop = .true.` and change this to `.false.`.  If you are not using the official E3SM SCM scripts then please set the following `user_nl_eam` namelist parameter: `scm_iop_srf_prop = .false.`.
 
 - **Point to ELM Initial condition file:**  As an example:
 ```
@@ -111,7 +111,7 @@ Thus, users must run the preprocessing script [following script](https://github.
 
 After you have generated the ELM initial condition file you need to make **two** modifications to your run script.
 
-- **Deactivate prescribed surface fluxes:** If you are using the official DP-EAMxx scripts found on this repo, simply search for `set do_iop_srf_prop = .false.` and change this to `.true.`.  If you are not using the official DP-EAMxx scripts then please set the following `user_nl_eam` namelist parameter: `scm_iop_srf_prop = .true.`.
+- **Deactivate prescribed surface fluxes:** If you are using the official DP-EAMxx scripts found on this repo, simply search for `set do_iop_srf_prop = .true.` and change this to `.false.`.  If you are not using the official DP-EAMxx scripts then please set the following `user_nl_eam` namelist parameter: `./atmchange iop_srf_prop=false`.
 
 - **Point to ELM Initial condition file:**  As an example:
 ```
