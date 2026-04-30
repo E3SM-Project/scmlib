@@ -103,7 +103,7 @@ Then you are ready to run your E3SM SCM with interactive land.
 ### Put ELM initial conditions on the DPxx grid ###
 DP-EAMxx uses an unstructured horizontal grid that does not align with the native ELM grid, requiring additional processing to initialize the land model. To address this, a preprocessing script identifies the ELM grid cell closest to the target domain and extracts its full land hierarchy (landunits, columns, and PFTs). These data are then replicated across the doubly periodic grid to create a consistent land initial condition file.
 
-Thus, users must run the preprocessing script [following script](https://github.com/E3SM-Project/scmlib/blob/bogensch/interactive_land_doc/support_scripts/Generate_Land_IC/format_land_IC_for_dpxx.py) to map their ELM initial condition file onto the appropriate DPxx grid. Update the script header with your desired settings and submit the job; the processed land initial condition file will be written to the specified output directory. The most critical requirement is that the input parameters `num_ne_x` and `num_ne_y` exactly match the grid configuration used in your DPxx simulation.
+Thus, users must run the [preprocessing script](https://github.com/E3SM-Project/scmlib/blob/bogensch/interactive_land_doc/support_scripts/Generate_Land_IC/format_land_IC_for_dpxx.py) to map their ELM initial condition file onto the appropriate DPxx grid. Update the script header with your desired settings and submit the job; the processed land initial condition file will be written to the specified output directory. The most critical requirement is that the input parameters `num_ne_x` and `num_ne_y` exactly match the grid configuration used in your DPxx simulation.
 
 ### Set up your DPxx simulation ###
 
