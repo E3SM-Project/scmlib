@@ -1625,5 +1625,5 @@ endif
 
 # Move CGILS scripts to their own folder
 mv run_dpxx_scream_CGILS*.csh CGILS
-#mv run_dpxx_scream_EPCAPE*.csh EPCAPE
+mv run_dpxx_scream_EPCAPE*.csh EPCAPE
 mv run_dpxx_scream_LASSO_SGP*.csh LASSO_SGP

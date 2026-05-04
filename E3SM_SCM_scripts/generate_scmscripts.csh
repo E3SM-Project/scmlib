@@ -1343,5 +1343,5 @@ endif
 
 # Move CGILS scripts to their own folder
 mv run_e3sm_scm_CGILS*.csh CGILS
-#mv run_e3sm_scm_EPCAPE*.csh EPCAPE
+mv run_e3sm_scm_EPCAPE*.csh EPCAPE
 mv run_e3sm_scm_LASSO*.csh LASSO_SGP
