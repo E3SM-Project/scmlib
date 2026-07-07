@@ -124,9 +124,8 @@
 # For the vast majority of cases, initializing from ne4 files is sufficient.
 #  However, there are some scenarios where initializing from ne30_ne30 makes more
 #  sense to ensure better surface type.  This will make the SCM about 3 time slower.
-#  DYCOMS is a marine case; we use ne30 instead of ne4 to avoid getting non-zero land fraction.
   if ($dycore == SE) then
-    set grid=ne30_ne30
+    set grid=ne4_ne4
   endif
 
   set CASEID=$casename

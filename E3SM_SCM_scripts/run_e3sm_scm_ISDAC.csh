@@ -232,14 +232,14 @@ EOF
 endif
 
 # if we want to turn off SW radiation, then set appropriate namelist settings here
-  if ($do_turnoff_swrad == true) then
+  if ($do_turnoff_swrad == .true.) then
     set iradsw_in = 0
   else
     set iradsw_in = 1
   endif
 
 # if we want to turn off LW radiation, then set appropriate namelist settings here
-  if ($do_turnoff_lwrad == true) then
+  if ($do_turnoff_lwrad == .true.) then
     set iradlw_in = 0
   else
     set iradlw_in = 1

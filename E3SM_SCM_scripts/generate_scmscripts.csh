@@ -617,6 +617,7 @@ cp -r run_e3sm_scm_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Non-precipitating marine stratocumulus"/ $outfile
 sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CSAEsetres/ne30_ne30/ $outfile
 sed -i s/CASElat/31.5/ $outfile
 sed -i s/CASElon/239.0/ $outfile
 sed -i s/CASEsrfprop/.true./ $outfile
@@ -642,6 +643,7 @@ cp -r run_e3sm_scm_TEMPLATE.csh $outfile
 sed -i s/THECASENAME/$casename/ $outfile
 sed -i s/THECASEDESCRIPTION/"Drizzling marine stratocumulus"/ $outfile
 sed -i s/AEROTYPE/observed/ $outfile
+sed -i s/CSAEsetres/ne30_ne30/ $outfile
 sed -i s/CASElat/31.5/ $outfile
 sed -i s/CASElon/239.0/ $outfile
 sed -i s/CASEsrfprop/.true./ $outfile
@@ -1287,9 +1289,10 @@ sed -i s/CASEstopn/15/ $outfile
 sed -i s/CASEdebug/true/ $outfile
 sed -i s/FORCINGPROVIDER/"Bill Gustafson"/ $outfile
 
-
+# Set defaults and 
 foreach file (*.csh)
   if ($file != run_e3sm_scm_TEMPLATE.csh && $file != generate_scmscripts.csh) then
+    sed -i s/CASEsetres/ne4_ne4/ $file
     sed -i '/OBSERVEDAERO/d' $file
     sed -i '/LENGTHNOTE/d' $file
     sed -i '/CASEstartdate/d' $file
