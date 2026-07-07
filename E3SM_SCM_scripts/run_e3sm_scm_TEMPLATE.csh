@@ -136,7 +136,7 @@
 #  However, there are some scenarios where initializing from ne30_ne30 makes more
 #  sense to ensure better surface type.  This will make the SCM about 3 time slower.
   if ($dycore == SE) then
-    set grid=ne4_ne4
+    set grid=CASEsetres
   endif
 
   set CASEID=$casename
@@ -242,14 +242,14 @@ EOF
 endif
 
 # if we want to turn off SW radiation, then set appropriate namelist settings here
-  if ($do_turnoff_swrad == true) then
+  if ($do_turnoff_swrad == .true.) then
     set iradsw_in = 0
   else
     set iradsw_in = 1
   endif
 
 # if we want to turn off LW radiation, then set appropriate namelist settings here
-  if ($do_turnoff_lwrad == true) then
+  if ($do_turnoff_lwrad == .true.) then
     set iradlw_in = 0
   else
     set iradlw_in = 1
