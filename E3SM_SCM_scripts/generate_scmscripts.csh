@@ -1289,7 +1289,7 @@ sed -i s/CASEstopn/15/ $outfile
 sed -i s/CASEdebug/true/ $outfile
 sed -i s/FORCINGPROVIDER/"Bill Gustafson"/ $outfile
 
-# Set defaults and 
+# Set defaults and delete any unused options
 foreach file (*.csh)
   if ($file != run_e3sm_scm_TEMPLATE.csh && $file != generate_scmscripts.csh) then
     sed -i s/CASEsetres/ne4_ne4/ $file
