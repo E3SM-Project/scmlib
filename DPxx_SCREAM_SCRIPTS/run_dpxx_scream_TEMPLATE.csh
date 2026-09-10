@@ -172,7 +172,7 @@
   set case_run_dir     = $run_root_dir/run
 
 # Create new case
-  ./create_newcase -case $casename --script-root $temp_case_scripts_dir -mach $machine -project $PROJECT -compset $compset -res $grid --compiler $compiler
+  ./create_newcase -case $casename --script-root $temp_case_scripts_dir -mach $machine -project $PROJECT -compset $compset -res $grid --compiler $compiler --driver mct
   cd $temp_case_scripts_dir
 
   ./xmlchange JOB_WALLCLOCK_TIME=$walltime
