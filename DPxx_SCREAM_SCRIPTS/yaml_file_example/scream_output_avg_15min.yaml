@@ -114,5 +114,5 @@ fields:
 #    - w3_horiz_avg
 #    - w_variance_horiz_avg    
 output_control:
-  frequency: 1
-  frequency_units: nhours
+  frequency: 15
+  frequency_units: nmins

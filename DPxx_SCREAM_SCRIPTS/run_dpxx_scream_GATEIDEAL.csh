@@ -23,7 +23,7 @@
 #######  of the scmlib repo to get you started.
 
   # Set the name of your case here
-  setenv casename scream_dpxx_GATEIDEAL
+  setenv casename scream_dpxx_GATEIDEAL.moab.reproduce.001a
 
   # Set the case directory here
   setenv casedirectory /pscratch/sd/b/bogensch/dp_screamxx
@@ -35,12 +35,12 @@
   setenv code_tag E3SM_master
 
   # Name of machine you are running on (i.e. pm-cpu, anvil, etc)
-  setenv machine pm-cpu
+  setenv machine pm-gpu
 
   # Compiler (pm-cpu should use "gnu"; pm-gpu should use "gnugpu"; LC should use "oneapi-ifx", note that
   #           codes before Feb-ish 2026 used "intel" on LC; frontier should use "craygnu-mphipcc")
   #   more machine compiler defaults will be added as they are tested/validated.
-  setenv compiler gnu
+  setenv compiler gnugpu
 
   # Name of project to run on, if submitting to queue
   setenv projectname e3sm
@@ -49,23 +49,23 @@
   #  See example files in DPxx_SCREAM_SCRIPTS/yaml_file_example to get you started.
   # NOTE, you will likely need to edit the section of the script where the yaml files
   #  are appended to your case.  Do a search for "yamlpath" to find this location.
-  setenv yamlpath /pscratch/sd/b/bogensch/dp_scream/codes/scmlib/DPxx_SCREAM_SCRIPTS/yaml_file_example
+  setenv yamlpath /pscratch/sd/b/bogensch/dp_scream/codes/scmlib_reproduce/DPxx_SCREAM_SCRIPTS/yaml_file_example
 
 
   # Set to debug queue?
   # - Some cases are small enough to run on debug queues
   # - Setting to true only supported for NERSC and Livermore Computing,
   #   else user will need to modify script to submit to debug queue
-  setenv debug_queue false
+  setenv debug_queue true
 
   # Set number of processors to use, should be less than or equal
   #   to the total number of elements in your domain.  Note that if you are running
   #   on pm-gpu you will want to set this to either "4" or "8" if running the standard
   #   domain size and resolution (RCE excluded).
-  set num_procs = 384
+  set num_procs = 8
 
   # set walltime
-  set walltime = '01:00:00'
+  set walltime = '00:30:00'
 
   ## SET DOMAIN SIZE AND DYNAMICS RESOLUTION:
   # - Note that these scripts are set to run with dx=dy=3.33 km
@@ -76,12 +76,12 @@
   # (there are 3x3 unique dynamics columns per element, hence the "3" factor)
 
   # Set number of elements in the x&y directions
-  set num_ne_x = 20
-  set num_ne_y = 20
+  set num_ne_x = 75
+  set num_ne_y = 75
 
   # Set domain length [m] in x&y direction
-  set domain_size_x = 200000
-  set domain_size_y = 200000
+  set domain_size_x = 731250
+  set domain_size_y = 731250
 
   # BELOW SETS RESOLUTION DEPENDENT SETTINGS
   # (Note that all default values below are appropriate for dx=dy=3.33 km and do not
@@ -126,7 +126,7 @@
   set do_iop_subsidence = true # compute LS vertical transport?
   set startdate = 1974-08-30 # Start date in IOP file
   set start_in_sec = 0 # start time in seconds in IOP file
-  set stop_option = ndays
+  set stop_option = nhours
   set stop_n = 1
   set iop_file = GATEIDEAL_iopfile_4scam.nc #IOP file name
   set do_turnoff_swrad = true # Turn off SW calculation (if false, keep false)
@@ -158,7 +158,7 @@
   set case_run_dir     = $run_root_dir/run
 
 # Create new case
-  ./create_newcase -case $casename --script-root $temp_case_scripts_dir -mach $machine -project $PROJECT -compset $compset -res $grid --compiler $compiler --driver mct
+  ./create_newcase -case $casename --script-root $temp_case_scripts_dir -mach $machine -project $PROJECT -compset $compset -res $grid --compiler $compiler
   cd $temp_case_scripts_dir
 
   ./xmlchange JOB_WALLCLOCK_TIME=$walltime
@@ -258,9 +258,9 @@
  # configure yaml output
  # See the example yaml files in the DPxx_SCREAM_SCRIPTS/yaml_file_example
  # Note that you can have as many output streams (yaml files) as you want!
-cp ${yamlpath}/scream_output_avg_1hour.yaml .
+cp ${yamlpath}/scream_output_avg_15min.yaml .
 cp ${yamlpath}/scream_horiz_avg_output_15min.yaml .
-./atmchange output_yaml_files="./scream_output_avg_1hour.yaml"
+./atmchange output_yaml_files="./scream_output_avg_15min.yaml"
 ./atmchange output_yaml_files+="./scream_horiz_avg_output_15min.yaml"
 
 # avoid the monthly cice file from writing as this
