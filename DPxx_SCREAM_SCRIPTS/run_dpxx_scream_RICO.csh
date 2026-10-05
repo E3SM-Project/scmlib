@@ -35,12 +35,12 @@
   setenv code_tag E3SM_master
 
   # Name of machine you are running on (i.e. pm-cpu, anvil, etc)
-  setenv machine pm-cpu
+  setenv machine pm-gpu
 
   # Compiler (pm-cpu should use "gnu"; pm-gpu should use "gnugpu"; LC should use "intel";
   #   frontier should use "craygnu-mphipcc") more machine compiler defaults will be added
   #   as they are tested/validated.
-  setenv compiler gnu
+  setenv compiler gnugpu
 
   # Name of project to run on, if submitting to queue
   setenv projectname e3sm
@@ -56,16 +56,16 @@
   # - Some cases are small enough to run on debug queues
   # - Setting to true only supported for NERSC and Livermore Computing,
   #   else user will need to modify script to submit to debug queue
-  setenv debug_queue true
+  setenv debug_queue false
 
   # Set number of processors to use, should be less than or equal
   #   to the total number of elements in your domain.  Note that if you are running
   #   on pm-gpu you will want to set this to either "4" or "8" if running the standard
   #   domain size and resolution (RCE excluded).
-  set num_procs = 24
+  set num_procs = 8
 
   # set walltime
-  set walltime = '00:30:00'
+  set walltime = '01:00:00'
 
   ## SET DOMAIN SIZE AND DYNAMICS RESOLUTION:
   # - Note that these scripts are set to run with dx=dy=3.33 km
@@ -76,12 +76,12 @@
   # (there are 3x3 unique dynamics columns per element, hence the "3" factor)
 
   # Set number of elements in the x&y directions
-  set num_ne_x = 5
-  set num_ne_y = 5
+  set num_ne_x = 34
+  set num_ne_y = 34
 
   # Set domain length [m] in x&y direction
-  set domain_size_x = 50000
-  set domain_size_y = 50000
+  set domain_size_x = 20400
+  set domain_size_y = 20400
 
   # BELOW SETS RESOLUTION DEPENDENT SETTINGS
   # (Note that all default values below are appropriate for dx=dy=3.33 km and do not
@@ -95,12 +95,12 @@
   # model/physics time step [s]:
   #  As a rule, a factor of 2 increase in resolution should equate to a factor of 2
   #  decrease of the model/physics step.  This needs to be an integer number.
-  set model_dtime = 100
+  set model_dtime = 10
 
   # dynamics time step [s]:
   #  should divide evenly into model_dtime.  As a general rule of thumb, divide
   #   model_dtime by 12 to get your dynamics time step.
-  set dyn_dtime = 8.3333333333333
+  set dyn_dtime = 0.8333333333333
 
   # SET SECOND ORDER VISCOSITY NEAR MODEL TOP
   #  NOTE that if you decrease resolution you will also need to reduce
@@ -109,7 +109,7 @@
   #  factor of 2 decrease for this value
 
   # second order visocosity near model top [m2/s]
-  set nu_top_dyn = 1e4
+  set nu_top_dyn = 555.556
 
 ####### END (mandatory) USER DEFINED SETTINGS, but see above about output
 ###########################################################################
