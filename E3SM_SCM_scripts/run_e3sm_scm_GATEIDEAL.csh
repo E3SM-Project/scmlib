@@ -164,7 +164,7 @@
     ./xmlchange --id JOB_QUEUE --val 'debug'
   endif
 
-  if ($machine == 'quartz' || $machine == 'syrah') then
+  if ($machine == 'dane') then
     ./xmlchange --id JOB_QUEUE --val 'pdebug'
   endif
 
