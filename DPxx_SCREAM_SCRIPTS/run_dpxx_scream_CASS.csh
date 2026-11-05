@@ -164,7 +164,11 @@
 
   ./xmlchange JOB_WALLCLOCK_TIME=$walltime
   
- ./xmlchange SCREAM_CMAKE_OPTIONS="`./xmlquery -value SCREAM_CMAKE_OPTIONS | sed 's/SCREAM_NUM_VERTICAL_LEV [0-9][0-9]*/SCREAM_NUM_VERTICAL_LEV 128/'`"  
+  set scream_cmake_options = `./xmlquery -value SCREAM_CMAKE_OPTIONS | sed 's/SCREAM_NUM_VERTICAL_LEV [0-9][0-9]*/SCREAM_NUM_VERTICAL_LEV 128/'`
+  # Use the E3SM unified Python environment, which contains torch for the
+  # embedded SHOC emulator.  The generic NERSC Python lacks this package.
+  set inference_python = /global/common/software/e3sm/anaconda_envs/e3smu_1_13_0/pm-cpu/pixi_login/.pixi/envs/default/bin/python
+  ./xmlchange SCREAM_CMAKE_OPTIONS="${scream_cmake_options} EAMXX_ENABLE_INFERENCE ON Python3_EXECUTABLE ${inference_python}"
 
 # Define executable and run directories
   ./xmlchange --id EXEROOT --val "${case_build_dir}"
@@ -240,6 +244,8 @@
   ./atmchange set_cld_frac_r_to_one=true
   ./atmchange iop_nudge_uv=$do_iop_nudge_uv
   ./atmchange iop_nudge_tq=$do_iop_nudge_tq
+  ./atmchange use_emulated_moment_w2=true
+  ./atmchange use_emulated_moment_w3=true
   
 # Set default physics process ordering (NOTE: if you add/remove a process or change ordering,
 # all DPxx runs NEED to have "iop_forcing" process in the list somewhere).
@@ -291,6 +297,12 @@ EOF
   ./case.build
 
 # Submit the case
+  # Keep compiler/system libraries ahead of the Python environment.  The
+  # latter is appended only to provide libpython, MKL, and Torch dependencies.
+  set compiler_libfile = `gcc -print-file-name=libgomp.so`
+  set compiler_libdir = $compiler_libfile:h
+  set inference_python_root = /global/common/software/e3sm/anaconda_envs/e3smu_1_13_0/pm-cpu/pixi_login/.pixi/envs/default
+  setenv LD_LIBRARY_PATH "/usr/lib64:${compiler_libdir}:${LD_LIBRARY_PATH}:${inference_python_root}/lib"
   ./case.submit
 
   exit
