@@ -50,7 +50,7 @@
   #  See example files in DPxx_SCREAM_SCRIPTS/yaml_file_example to get you started.
   # NOTE, you will likely need to edit the section of the script where the yaml files
   #  are appended to your case.  Do a search for "yamlpath" to find this location.
-  setenv yamlpath /pscratch/sd/b/bogensch/dp_scream/codes/scmlib/DPxx_SCREAM_SCRIPTS/yaml_file_example
+  setenv yamlpath /global/homes/b/bogensch/scmlib/DPxx_SCREAM_SCRIPTS/yaml_file_example
 
 
   # Set to debug queue?
