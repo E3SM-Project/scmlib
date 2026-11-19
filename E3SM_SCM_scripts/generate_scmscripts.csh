@@ -1289,6 +1289,62 @@ sed -i s/CASEstopn/15/ $outfile
 sed -i s/CASEdebug/true/ $outfile
 sed -i s/FORCINGPROVIDER/"Bill Gustafson"/ $outfile
 
+################################
+# ENA 2017-07-18
+################################
+
+set casename = ENA_2017-07-18
+set outfile = run_e3sm_scm_$casename.csh
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"ENA 2017-07-18"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/39.0916/ $outfile
+sed -i s/CASElon/331.9743/ $outfile
+sed -i s/CASEsrfprop/.true./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASErelax/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEprecipoff/.false./ $outfile
+sed -i s/CASEnccons/100.0D6/ $outfile
+sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i s/CASEstartdate/2017-07-18/ $outfile
+sed -i s/CASEstartinsec/14400/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/10/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/FORCINGPROVIDER/"Lin Lin"/ $outfile
+
+################################
+# ENA 2018-01-25
+################################
+
+set casename = ENA_2018-01-25
+set outfile = run_e3sm_scm_$casename.csh
+cp -r run_e3sm_scm_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"ENA 2018-01-25"/ $outfile
+sed -i s/AEROTYPE/prescribed/ $outfile
+sed -i s/CASElat/39.0916/ $outfile
+sed -i s/CASElon/331.9743/ $outfile
+sed -i s/CASEsrfprop/.true./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASErelax/.false./ $outfile
+sed -i s/CASEswoff/.false./ $outfile
+sed -i s/CASElwoff/.false./ $outfile
+sed -i s/CASEprecipoff/.false./ $outfile
+sed -i s/CASEnccons/100.0D6/ $outfile
+sed -i s/CASEnicons/0.0001D6/ $outfile
+sed -i s/CASEstartdate/2018-01-25/ $outfile
+sed -i s/CASEstartinsec/32400/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/8/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/FORCINGPROVIDER/"Lin Lin"/ $outfile
+
 # Set defaults and delete any unused options
 foreach file (*.csh)
   if ($file != run_e3sm_scm_TEMPLATE.csh && $file != generate_scmscripts.csh) then
@@ -1348,3 +1404,4 @@ endif
 mv run_e3sm_scm_CGILS*.csh CGILS
 mv run_e3sm_scm_EPCAPE*.csh EPCAPE
 mv run_e3sm_scm_LASSO*.csh LASSO_SGP
+mv run_e3sm_scm_ENA*.csh ENA

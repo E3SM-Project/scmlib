@@ -1530,6 +1530,66 @@ sed -i s/CASEwalltime/00:30:00/ $outfile
 sed -i s/CASEnhtfrq/-1/ $outfile
 sed -i s/FORCINGPROVIDER/"Bill Gustafson"/ $outfile
 
+################################
+# ENA 2017-07-18
+################################
+
+set casename = ENA_2017-07-18
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"ENA 2017-07-18"/ $outfile
+sed -i s/CASElat/39.0916/ $outfile
+sed -i s/CASElon/331.9743/ $outfile
+sed -i s/CASEsrfprop/true/ $outfile
+sed -i s/CASEstartdate/2017-07-18/ $outfile
+sed -i s/CASEstartinsec/14400/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/10/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
+sed -i s/CASEnex/5/ $outfile
+sed -i s/CASEney/5/ $outfile
+sed -i s/CASElex/50000/ $outfile
+sed -i s/CASEley/50000/ $outfile
+sed -i s/CASEtqnudge/false/ $outfile
+sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/true/ $outfile
+sed -i s/CASEdosub/true/ $outfile
+sed -i s/CASEwalltime/00:30:00/ $outfile
+sed -i s/CASEnhtfrq/-1/ $outfile
+sed -i s/FORCINGPROVIDER/"Lin Lin"/ $outfile
+
+################################
+# ENA 2018-01-25
+################################
+
+set casename = ENA_2018-01-25
+set outfile = run_dpxx_scream_$casename.csh
+cp -r run_dpxx_scream_TEMPLATE.csh $outfile
+sed -i s/THECASENAME/$casename/ $outfile
+sed -i s/THECASEDESCRIPTION/"ENA 2018-01-25"/ $outfile
+sed -i s/CASElat/39.0916/ $outfile
+sed -i s/CASElon/331.9743/ $outfile
+sed -i s/CASEsrfprop/true/ $outfile
+sed -i s/CASEstartdate/2018-01-25/ $outfile
+sed -i s/CASEstartinsec/32400/ $outfile
+sed -i s/CASEstopoption/nhours/ $outfile
+sed -i s/CASEstopn/8/ $outfile
+sed -i s/CASEdebug/true/ $outfile
+sed -i s/CASEnumprocs/24/ $outfile
+sed -i s/CASEnex/5/ $outfile
+sed -i s/CASEney/5/ $outfile
+sed -i s/CASElex/50000/ $outfile
+sed -i s/CASEley/50000/ $outfile
+sed -i s/CASEtqnudge/false/ $outfile
+sed -i s/CASEuvnudge/false/ $outfile
+sed -i s/CASEcoriolis/true/ $outfile
+sed -i s/CASEdosub/true/ $outfile
+sed -i s/CASEwalltime/00:30:00/ $outfile
+sed -i s/CASEnhtfrq/-1/ $outfile
+sed -i s/FORCINGPROVIDER/"Lin Lin"/ $outfile
+
 foreach file (*.csh)
   if ($file != run_dpxx_scream_TEMPLATE.csh && $file != generate_dpscripts.csh) then
     sed -i '/OBSERVEDAERO/d' $file
@@ -1627,3 +1687,4 @@ endif
 mv run_dpxx_scream_CGILS*.csh CGILS
 mv run_dpxx_scream_EPCAPE*.csh EPCAPE
 mv run_dpxx_scream_LASSO_SGP*.csh LASSO_SGP
+mv run_dpxx_scream_ENA*.csh ENA
