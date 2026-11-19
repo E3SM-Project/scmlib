@@ -77,12 +77,12 @@
   # (there are 3x3 unique dynamics columns per element, hence the "3" factor)
 
   # Set number of elements in the x&y directions
-  set num_ne_x = 5
-  set num_ne_y = 5
+  set num_ne_x = 20
+  set num_ne_y = 20
 
   # Set domain length [m] in x&y direction
-  set domain_size_x = 50000
-  set domain_size_y = 50000
+  set domain_size_x = 200000
+  set domain_size_y = 200000
 
   # BELOW SETS RESOLUTION DEPENDENT SETTINGS
   # (Note that all default values below are appropriate for dx=dy=3.33 km and do not
@@ -122,13 +122,13 @@
   set lon = 331.9743 # longitude
   set do_iop_srf_prop = true # Use surface fluxes in IOP file?
   set do_iop_nudge_tq = false # Relax T&Q to observations?
-  set do_iop_nudge_uv = false # Relax U&V to observations?
-  set do_iop_nudge_coriolis = true # Nudge to geostrophic winds?
+  set do_iop_nudge_uv = true # Relax U&V to observations?
+  set do_iop_nudge_coriolis = false # Nudge to geostrophic winds?
   set do_iop_subsidence = true # compute LS vertical transport?
   set startdate = 2017-07-18 # Start date in IOP file
-  set start_in_sec = 14400 # start time in seconds in IOP file
+  set start_in_sec = 21600 # start time in seconds in IOP file
   set stop_option = nhours
-  set stop_n = 10
+  set stop_n = 8
   set iop_file = ENA_2017-07-18_iopfile_4scam.nc #IOP file name
   set do_turnoff_swrad = false # Turn off SW calculation (if false, keep false)
 # End Case specific stuff here
