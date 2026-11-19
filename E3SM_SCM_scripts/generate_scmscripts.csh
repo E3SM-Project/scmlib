@@ -1311,7 +1311,7 @@ sed -i s/CASEprecipoff/.false./ $outfile
 sed -i s/CASEnccons/100.0D6/ $outfile
 sed -i s/CASEnicons/0.0001D6/ $outfile
 sed -i s/CASEstartdate/2017-07-18/ $outfile
-sed -i s/CASEstartinsec/14400/ $outfile
+sed -i s/CASEstartinsec/21600/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEstopn/10/ $outfile
 sed -i s/CASEdebug/true/ $outfile
@@ -1339,7 +1339,7 @@ sed -i s/CASEprecipoff/.false./ $outfile
 sed -i s/CASEnccons/100.0D6/ $outfile
 sed -i s/CASEnicons/0.0001D6/ $outfile
 sed -i s/CASEstartdate/2018-01-25/ $outfile
-sed -i s/CASEstartinsec/32400/ $outfile
+sed -i s/CASEstartinsec/36000/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEstopn/8/ $outfile
 sed -i s/CASEdebug/true/ $outfile

@@ -79,7 +79,7 @@
   set micro_nccons_val = 100.0D6 # cons_droplet value for liquid
   set micro_nicons_val = 0.0001D6 # cons_droplet value for ice
   set startdate = 2018-01-25 # Start date in IOP file
-  set start_in_sec = 32400 # start time in seconds in IOP file
+  set start_in_sec = 36000 # start time in seconds in IOP file
   set stop_option = nhours
   set stop_n = 8
   set iop_file = ENA_2018-01-25_iopfile_4scam.nc #IOP file name
