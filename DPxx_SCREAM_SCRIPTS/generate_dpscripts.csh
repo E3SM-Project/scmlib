@@ -1547,7 +1547,7 @@ sed -i s/CASEstartinsec/21600/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEstopn/8/ $outfile
 sed -i s/CASEdebug/true/ $outfile
-sed -i s/CASEnumprocs/24/ $outfile
+sed -i s/CASEnumprocs/384/ $outfile
 sed -i s/CASEnex/20/ $outfile
 sed -i s/CASEney/20/ $outfile
 sed -i s/CASElex/200000/ $outfile
@@ -1577,7 +1577,7 @@ sed -i s/CASEstartinsec/36000/ $outfile
 sed -i s/CASEstopoption/nhours/ $outfile
 sed -i s/CASEstopn/5/ $outfile
 sed -i s/CASEdebug/true/ $outfile
-sed -i s/CASEnumprocs/24/ $outfile
+sed -i s/CASEnumprocs/384/ $outfile
 sed -i s/CASEnex/20/ $outfile
 sed -i s/CASEney/20/ $outfile
 sed -i s/CASElex/200000/ $outfile
