@@ -27,13 +27,13 @@
   setenv casename scream_dpxx_CASS
 
   # Set the case directory here
-  setenv casedirectory /pscratch/sd/b/bogensch/dp_screamxx
+  setenv casedirectory /pscratch/sd/b/bogensch/dp_screamxx_shoc_emulate
 
   # Directory where code lives
   setenv code_dir /pscratch/sd/b/bogensch/dp_scream/codes
 
   # Code tag name
-  setenv code_tag E3SM_master
+  setenv code_tag E3SM_shoc_emulator
 
   # Name of machine you are running on (i.e. pm-cpu, anvil, etc)
   setenv machine pm-cpu
@@ -50,7 +50,7 @@
   #  See example files in DPxx_SCREAM_SCRIPTS/yaml_file_example to get you started.
   # NOTE, you will likely need to edit the section of the script where the yaml files
   #  are appended to your case.  Do a search for "yamlpath" to find this location.
-  setenv yamlpath /pscratch/sd/b/bogensch/dp_scream/codes/scmlib/DPxx_SCREAM_SCRIPTS/yaml_file_example
+  setenv yamlpath /global/homes/b/bogensch/STITCH/online_tests/dpxx_scripts/scmlib/DPxx_SCREAM_SCRIPTS/yaml_file_example
 
 
   # Set to debug queue?
@@ -168,6 +168,7 @@
   # Use the E3SM unified Python environment, which contains torch for the
   # embedded SHOC emulator.  The generic NERSC Python lacks this package.
   set inference_python = /global/common/software/e3sm/anaconda_envs/e3smu_1_13_0/pm-cpu/pixi_login/.pixi/envs/default/bin/python
+  set inference_python_root = /global/common/software/e3sm/anaconda_envs/e3smu_1_13_0/pm-cpu/pixi_login/.pixi/envs/default
   ./xmlchange SCREAM_CMAKE_OPTIONS="${scream_cmake_options} EAMXX_ENABLE_INFERENCE ON Python3_EXECUTABLE ${inference_python}"
 
 # Define executable and run directories
@@ -241,9 +242,11 @@
   ./atmchange iop_dosubsidence=$do_iop_subsidence
   ./atmchange iop_coriolis=$do_iop_nudge_coriolis
   ./atmchange extra_shoc_diags=true
-  ./atmchange set_cld_frac_r_to_one=true
+  ./atmchange set_cld_frac_r_to_one=false
   ./atmchange iop_nudge_uv=$do_iop_nudge_uv
   ./atmchange iop_nudge_tq=$do_iop_nudge_tq
+  ./atmchange spa_ccn_to_nc_factor=1.0
+  ./atmchange spa_ccn_to_nc_exponent=1.0
   ./atmchange use_emulated_moment_w2=true
   ./atmchange use_emulated_moment_w3=true
   
@@ -290,6 +293,11 @@ EOF
 
   ./case.setup
 
+  # Make the Python/MKL libraries available inside the submitted batch job.
+  # env_mach_specific.xml reconstructs LD_LIBRARY_PATH during case startup,
+  # so setting it only before case.submit is not sufficient.
+  sed -i '/<env name="LD_LIBRARY_PATH">/c\    <env name="LD_LIBRARY_PATH">/global/common/software/e3sm/anaconda_envs/e3smu_1_13_0/pm-cpu/pixi_login/.pixi/envs/default/lib:$ENV{CRAY_LD_LIBRARY_PATH}:$ENV{LD_LIBRARY_PATH}</env>' env_mach_specific.xml
+
 # Write restart files at the end of model simulation
   ./xmlchange PIO_TYPENAME="pnetcdf"
 
@@ -301,7 +309,6 @@ EOF
   # latter is appended only to provide libpython, MKL, and Torch dependencies.
   set compiler_libfile = `gcc -print-file-name=libgomp.so`
   set compiler_libdir = $compiler_libfile:h
-  set inference_python_root = /global/common/software/e3sm/anaconda_envs/e3smu_1_13_0/pm-cpu/pixi_login/.pixi/envs/default
   setenv LD_LIBRARY_PATH "/usr/lib64:${compiler_libdir}:${LD_LIBRARY_PATH}:${inference_python_root}/lib"
   ./case.submit
 
